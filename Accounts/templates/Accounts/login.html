@@ -1,0 +1,13 @@
+{% extends 'Accounts/base_accounts.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body_form_title %}Login ...{% endblock %}
+
+{% block body_form_header %}Have an account?{% endblock %}
+
+{% block body_form %}
+    {% csrf_token %}
+    {{ form }}
+{% endblock %}
+

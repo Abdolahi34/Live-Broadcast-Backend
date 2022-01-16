@@ -1,0 +1,13 @@
+{% extends 'Accounts/base_accounts.html' %}
+
+{% block title %}Signup{% endblock %}
+
+{% block body_form_title %}Signup ...{% endblock %}
+
+{% block body_form_header %}Have an account?{% endblock %}
+
+{% block body_form %}
+    {% csrf_token %}
+    {{ form }}
+    <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+{% endblock %}
