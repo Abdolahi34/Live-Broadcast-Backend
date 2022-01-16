@@ -22,13 +22,14 @@ from django.conf import settings
 
 urlpatterns = [
     path('superuser/', admin.site.urls, name='superuser'),
+    path('', views.main, name='main'),
     path('profile/', include('Accounts.urls')),
     path('login', views.login_view),
     path('signup', views.signup_view),
     path('logout', views.logout_view),
     path('changepassword', views.change_pass),
     path('programs/', include('Programs.urls')),
-    path('', views.main, name='main'),
+    path('api/', include('Api.urls')),
     path('<etc>', views.etc),
 ]
 

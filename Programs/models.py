@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Program(models.Model):
@@ -27,16 +28,16 @@ class Program(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
     logo_link = models.URLField()
-    logo = models.ImageField(upload_to='images', default='images\logo.png')
+    logo = models.ImageField(upload_to='images', default='')
     stream = models.CharField(max_length=3, choices=StreamChoices.choices, default=StreamChoices.video)
-    voice_link = models.URLField(blank=True, default='')
-    stat_voice_link = models.URLField(blank=True, default='')
-    stat_voice_type = models.CharField(max_length=20, choices=StatType.choices, blank=True)
     video_link = models.URLField(blank=True, default='')
     stat_video_link = models.URLField(blank=True, default='')
     stat_video_type = models.CharField(max_length=20, choices=StatType.choices, blank=True)
+    voice_link = models.URLField(blank=True, default='')
+    stat_voice_link = models.URLField(blank=True, default='')
+    stat_voice_type = models.CharField(max_length=20, choices=StatType.choices, blank=True)
     is_active = models.BooleanField(default=True)
-    # author = models.
+    author = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
         return self.title

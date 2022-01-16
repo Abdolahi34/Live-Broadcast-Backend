@@ -1,14 +1,14 @@
 from django.shortcuts import render, HttpResponse
-from . import models
+from . import models, forms
 from BroadcastSite.views import etc
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required,login_required
 
 
 def programs(request):
     # Angular
     pass
 
-
+# TODO
 def stream(request, title_slug, stream_slug):
     program_obj = models.Program.objects.all()
     title_slugs = []
@@ -23,7 +23,16 @@ def stream(request, title_slug, stream_slug):
         etc()
 
 
+# TODO
 @login_required(login_url='Accounts:login')
+@permission_required(['Programs_program.can_add_program'])
 def add_program(request):
-    pass
+    if request.method == 'GET':
+        form = forms.AddProgramForm()
+    else:
+        form = forms.AddProgramForm(request.POST, request.FILES)
+        if form.is_valid():
+            pass
+    args = {'form': form}
+    return render(request, 'BroadcastSite/access_denied.html', args)
 

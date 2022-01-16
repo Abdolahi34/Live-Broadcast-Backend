@@ -5,14 +5,17 @@
 {% block title %}Change Password{% endblock %}
 
 {% block head %}
-    <script src="{% static 'Accounts/change_pass/js/scripts_change_pass.js' %}"></script>
-    {% if if_code == 3 %}
-        <script>not_login_alert()</script>
-        <meta http-equiv="Refresh" content="0; url='{% url "Accounts:login" %}'" />
-        {% elif if_code == 2 %}
-            <script>password_changed_alert()</script>
-            <meta http-equiv="Refresh" content="0; url='{% url "Accounts:login" %}'" />
-    {% endif %}
+{% if if_code == 2 %}
+    <script>
+        alert("You aren't logged in.")
+        location.replace('{% url "Accounts:login" %}?next=/changepassword')
+    </script>
+{% elif if_code == 1 %}
+    <script>
+        alert('You Password was successfully changed.')
+        location.replace("{% url 'main' %}")
+    </script>
+{% endif %}
 {% endblock %}
 
 {% block body_form_title %}Hi, {{ username }}{% endblock %}
@@ -20,8 +23,6 @@
 {% block body_form_header %}Change Password ...{% endblock %}
 
 {% block body_form %}
-    {% if if_code == 1 %}
-        {% csrf_token %}
-        {{ form }}
-    {% endif %}
+    {% csrf_token %}
+    {{ form }}
 {% endblock %}

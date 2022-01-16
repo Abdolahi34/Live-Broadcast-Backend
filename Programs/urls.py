@@ -5,6 +5,6 @@ app_name = 'Programs'
 urlpatterns = [
     path('', views.programs, name='programs'),
     path('add', views.add_program, name='add_program'),
-    path('<title_slug>/<stream_slug>', views.stream, name='stream'),
+    path('<title_slug>/<stream_slug>', views.stream, name='stream'), # TODO
 ]
 

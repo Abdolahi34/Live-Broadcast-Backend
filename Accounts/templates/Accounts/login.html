@@ -2,6 +2,25 @@
 
 {% block title %}Login{% endblock %}
 
+{% block head %}
+{% if if_code == 1 %}
+    <script>
+        alert('You are already logged in.')
+        location.replace('{% url "main" %}')
+    </script>
+{% elif if_code == 2 %}
+    <script>
+        alert('You are successfully logged in.')
+        location.replace("{{ next_post }}")
+    </script>
+{% elif if_code == 3 %}
+    <script>
+        alert('You are successfully logged in.')
+        location.replace("{% url 'main' %}")
+    </script>
+{% endif %} 
+{% endblock %}
+
 {% block body_form_title %}Login ...{% endblock %}
 
 {% block body_form_header %}Have an account?{% endblock %}
