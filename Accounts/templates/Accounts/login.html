@@ -28,5 +28,6 @@
 {% block body_form %}
     {% csrf_token %}
     {{ form }}
+    <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
 {% endblock %}
 

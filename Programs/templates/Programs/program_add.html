@@ -2,9 +2,23 @@
 
 {% block title %}Add Program{% endblock %}
 
+{% block head %}
+    {% if if_code %}
+            <script>
+                alert('Your Program successfully Saved.')
+                location.replace("{% url 'Programs:program' %}")
+            </script>
+    {% endif %}
+{% endblock %}
+
 {% block body %}
+    Your Username : {{ username }}<br><br>
     <form action="" method="post">
-        {{ form }}
+    {% csrf_token %}
+        {% for field in form %}
+            {{ field.label }} : {{ field }}<br><br>
+            {{ field.errors }}
+        {% endfor %}
         <input type="submit">
     </form>
 {% endblock %}

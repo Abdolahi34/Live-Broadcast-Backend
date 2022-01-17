@@ -1,14 +1,36 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth import login, logout, get_user, decorators
 from django.contrib.auth import update_session_auth_hash
 from . import forms
 
 
-def user_view(request):
-    form = UserChangeForm()
-    args = {'form': form, 'a': get_user(request)}
-    return render(request, 'Accounts/profile.html', args)
+@decorators.login_required(login_url='Accounts:login')
+def profile_view(request):
+    def profile_attrs():
+        form.fields['username'].widget.attrs['class'] = 'form-control'
+        form.fields['username'].widget.attrs['placeholder'] = 'Username'
+        form.fields['first_name'].widget.attrs['class'] = 'form-control'
+        form.fields['first_name'].widget.attrs['placeholder'] = 'First Name'
+        form.fields['last_name'].widget.attrs['class'] = 'form-control'
+        form.fields['last_name'].widget.attrs['placeholder'] = 'Last Name'
+        form.fields['email'].widget.attrs['class'] = 'form-control'
+        form.fields['email'].widget.attrs['placeholder'] = 'Email Address'
+    if request.method == 'GET':
+        form = UserChangeForm(instance=request.user)
+        if_valid = False
+        profile_attrs()
+        args = {'form': form, 'username': get_user(request), 'if_valid': if_valid}
+        return render(request, 'Accounts/profile.html', args)
+    else:
+        form = UserChangeForm(request.POST, instance=request.user)
+        if_valid = False
+        if form.is_valid():
+            form.save()
+            if_valid = True
+        profile_attrs()
+        args = {'form': form, 'if_valid': if_valid, 'username': get_user(request)}
+        return render(request, 'Accounts/profile.html', args)
 
 
 def signup_view(request):
@@ -44,15 +66,15 @@ def login_view(request):
     else:
         form = forms.LoginForm(request, data=request.POST)
         if form.is_valid():
-            if 'next' in request.POST:
+            if 'next' in request.GET:
                 if_code = 2
-                args = {'if_code': if_code, 'next_post': request.POST.get('next')}
+                args = {'if_code': if_code, 'next_post': request.GET.get('next')}
             else:
                 if_code = 3
                 args = {'if_code': if_code}
             login(request, user=form.get_user())
             return render(request, 'Accounts/login.html', args)
-    args = {'form': form}
+    args = {'form': form, 'request': request}
     return render(request, 'Accounts/login.html', args)
 
 
@@ -88,4 +110,25 @@ def change_pass(request):
         if_code = 2
         args = {'if_code': if_code}
         return render(request, 'Accounts/change_pass.html', args)
+
+
+@decorators.login_required(login_url='Accounts:login')
+def profile_view2(request):
+    return redirect('Accounts:profile')
+
+
+def signup_view2(request):
+    return redirect('Accounts:signup')
+
+
+def login_view2(request):
+    return redirect('Accounts:login')
+
+
+def logout_view2(request):
+    return redirect('Accounts:logout')
+
+
+def change_pass2(request):
+    return redirect('Accounts:change_pass')
 

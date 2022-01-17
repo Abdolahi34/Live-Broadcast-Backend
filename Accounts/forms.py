@@ -1,4 +1,4 @@
-import django
+from django.contrib.auth import password_validation
 from django import forms
 from django.forms import widgets
 from django.contrib.auth.forms import AuthenticationForm, UsernameField, UserCreationForm, PasswordChangeForm
@@ -7,16 +7,15 @@ from django.utils.translation import gettext_lazy as _
 
 class LoginForm(AuthenticationForm):
     username = UsernameField(
-        label='',
+        label='Username :',
         widget=widgets.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Username',
     }))
     password = forms.CharField(
-        label='',
+        label='Password :',
         widget=widgets.PasswordInput(attrs={
-            'id': 'password-field',
-            'class': 'form-control',
+            'class': 'form-control password-field',
             'placeholder': 'Password',
     }))
 
@@ -58,7 +57,7 @@ class ChangePassForm(PasswordChangeForm):
             'placeholder': 'New password',
         }),
         strip=False,
-        help_text=django.contrib.auth.password_validation.password_validators_help_text_html(),
+        help_text=password_validation.password_validators_help_text_html(),
     )
 
     new_password2 = forms.CharField(

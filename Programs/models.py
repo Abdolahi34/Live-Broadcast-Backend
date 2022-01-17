@@ -4,9 +4,9 @@ from django.contrib.auth.models import User
 
 class Program(models.Model):
     class StreamChoices(models.TextChoices):
-        video = 'vid'
-        audio = 'aud'
-        video_audio = 'v_a'
+        صوتی = 'audio'
+        تصویری = 'video'
+        صوتی_و_تصویری = 'video_audio'
 
     class DayChoices(models.TextChoices):
         شنبه = 'shanbe'
@@ -23,21 +23,22 @@ class Program(models.Model):
 
     title = models.CharField(max_length=100)
     slug = models.SlugField(max_length=70, unique=True)
-    day = models.CharField(max_length=8, choices=DayChoices.choices, null=True)
-    date = models.DateField(null=True)
+    day = models.CharField(max_length=8, choices=DayChoices.choices, blank=True, null=True)
+    date = models.DateField(null=True, blank=True)
     start_time = models.TimeField()
     end_time = models.TimeField()
-    logo_link = models.URLField()
-    logo = models.ImageField(upload_to='images', default='')
-    stream = models.CharField(max_length=3, choices=StreamChoices.choices, default=StreamChoices.video)
-    video_link = models.URLField(blank=True, default='')
-    stat_video_link = models.URLField(blank=True, default='')
-    stat_video_type = models.CharField(max_length=20, choices=StatType.choices, blank=True)
-    voice_link = models.URLField(blank=True, default='')
-    stat_voice_link = models.URLField(blank=True, default='')
-    stat_voice_type = models.CharField(max_length=20, choices=StatType.choices, blank=True)
-    is_active = models.BooleanField(default=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    logo_link = models.URLField(default='https://lesansedgh.ir')
+    logo = models.ImageField(upload_to='Programs/images/%Y_%m_%d', default='Programs/images/default_logo.png')
+    stream = models.CharField(max_length=11, choices=StreamChoices.choices, default=StreamChoices.تصویری)
+    video_link = models.URLField(blank=True, null=True, default='')
+    stat_video_link = models.URLField(blank=True, default='', null=True)
+    stat_video_type = models.CharField(max_length=20, choices=StatType.choices, blank=True, null=True)
+    voice_link = models.URLField(blank=True, default='', null=True)
+    stat_voice_link = models.URLField(blank=True, default='', null=True)
+    stat_voice_type = models.CharField(max_length=20, choices=StatType.choices, blank=True, null=True)
+    is_active = models.BooleanField(default=False)
+    # created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title

@@ -1,14 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<form action="" method="post">
-    {{ a }}
-    {{ form }}
+{% extends 'Accounts/base_accounts.html' %}
 
-</form>
-</body>
-</html>
+{% block head %}
+{% if if_valid %}
+        <script>alert('Your data was successfully saved.')</script>
+{% endif %}
+{% endblock %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block body_form_title %}Hi, {{ username }}{% endblock %}
+
+{% block body_form_header %}Edit Profile ...{% endblock %}
+
+{% block body_form %}
+{% csrf_token %}
+    {{ form.username.label }} :{{ form.username }}
+    {{ form.username.errors }}
+    {{ form.first_name.label }} :{{ form.first_name }}
+    {{ form.first_name.errors }}
+    {{ form.last_name.label }} :{{ form.last_name }}
+    {{ form.last_name.errors }}
+    {{ form.email.label }} :{{ form.email }}
+    {{ form.email.errors }}
+{% endblock %}
