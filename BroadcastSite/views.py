@@ -1,9 +1,4 @@
-from django.shortcuts import redirect, render, HttpResponse
-from django.http import Http404
-
-
-def main(request):
-    return redirect('Programs:program')
+from django.shortcuts import redirect, render
 
 
 def login_redirect(request):
@@ -26,14 +21,13 @@ def profile_view_redirect(request):
     return redirect('Accounts:profile')
 
 
-def program_redirect(request):
-    return redirect('Programs:program')
+def status_code_403_forbidden(request, exception=None):
+    return render(request, 'BroadcastSite/403.html', status=403)
 
 
-def access_denied(request):
-    return render(request, 'BroadcastSite/access_denied.html')
+def status_code_404_not_found(request, exception=None):
+    return render(request, 'BroadcastSite/404.html', status=404)
 
 
-def etc(request, etc):
-    raise Http404()
-
+def status_code_500_internal_server_error(request, exception=None):
+    return render(request, 'BroadcastSite/500.html', status=500)

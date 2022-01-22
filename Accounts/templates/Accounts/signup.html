@@ -6,7 +6,7 @@
     {% if if_code == 1 %}
         <script>
             alert('You are already logged in.')
-            location.replace('{% url "main" %}')
+            location.replace('/programs/')
         </script>
     {% elif if_code == 2 %}
         <script>
@@ -16,7 +16,7 @@
     {% elif if_code == 3 %}
         <script>
             alert('You are successfully logged in.')
-            location.replace("{% url 'main' %}")
+            location.replace("/programs/")
         </script>
     {% endif %}
 {% endblock %}

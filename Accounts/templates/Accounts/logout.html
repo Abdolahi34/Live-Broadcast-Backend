@@ -1,23 +1,21 @@
-{% extends 'BroadcastSite/base.html' %}
-{% load static %}
-{% block title %}Logout{% endblock %}
-
-{% block head %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Logout</title>
     {% if is_auth %}
-        <script>alert('You are Successfully logged out.')</script>
-        <meta http-equiv="refresh" content="2; url='{% url "main" %}'" />
+        <script>
+            alert('You are Successfully logged out.')
+            location.replace('/programs/')
+        </script>
     {% else %}
-        <script>alert("You aren't logged in ...\nFirst Login.")</script>
-        <meta http-equiv="refresh" content="2; url='{% url "Accounts:login" %}'" />
+        <script>
+            alert("You aren't logged in ...\nFirst Login.")
+            location.replace('{% url "Accounts:login" %}')
+        </script>
     {% endif %}
-{% endblock %}
+</head>
+<body>
 
-{% block body %}
-    {% if is_auth %}
-        <h1>see you later {{ username }}</h1>
-        <h2>You are being redirected.</h2>
-    {% else %}
-        <h1>You are being redirected.</h1>
-    {% endif %}
-{% endblock %}
-
+</body>
+</html>
