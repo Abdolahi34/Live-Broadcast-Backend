@@ -1,24 +1,61 @@
 {% extends 'BroadcastSite/base.html' %}
-
+{% load jalali_tags %}
+{% load static %}
 {% block title %}Add Program{% endblock %}
 
 {% block head %}
     {% if if_code %}
-            <script>
-                alert('Your Program successfully Saved.')
-                location.replace("/programs/")
-            </script>
+        <script>
+            alert('Your Program successfully Saved.')
+            location.replace("/programs/")
+        </script>
     {% endif %}
+{% endblock %}
+
+{% block body_in %}
+    dir='rtl'
 {% endblock %}
 
 {% block body %}
     Your Username : {{ username }}<br><br>
     <form action="" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-        {% for field in form %}
-            {{ field.label }} : {{ field }}<br><br>
-            {{ field.errors }}
-        {% endfor %}
+        {% csrf_token %}
+        {{ form.title.label }} : {{ form.title }}<br><br>
+        {{ form.title.errors }}<br>
+        {{ form.slug.label }} : {{ form.slug }}<br><br>
+        {{ form.slug.errors }}<br>
+
+        {{ form.date.day_type.label }} : {{ form.date.day_type }}<br>
+        {{ form.date.day_type.errors }}<br>
+        {{ form.date.day.label }} : {{ form.date.day }}<br>
+        {{ form.date.day.errors }}<br>
+        {{ form.date.specified_date.label }} : {{ form.date.specified_date }}<br><br>
+        {{ form.date.specified_date.errors }}<br>
+
+        {{ form.start_time.label }} : {{ form.start_time }}<br><br>
+        {{ form.start_time.errors }}<br>
+        {{ form.end_time.label }} : {{ form.end_time }}<br><br>
+        {{ form.end_time.errors }}<br>
+        {{ form.logo_link.label }} : {{ form.logo_link }}<br><br>
+        {{ form.logo_link.errors }}<br>
+        {{ form.logo.label }} : {{ form.logo }}<br><br>
+        {{ form.logo.errors }}<br>
+        {{ form.stream_type.label }} : {{ form.stream_type }}<br><br>
+        {{ form.stream_type.errors }}<br>
+        {{ form.voice_link.label }} : {{ form.voice_link }}<br><br>
+        {{ form.voice_link.errors }}<br>
+        {{ form.voice_stat_link.label }} : {{ form.voice_stat_link }}<br><br>
+        {{ form.voice_stat_link.errors }}<br>
+        {{ form.voice_stat_type.label }} : {{ form.voice_stat_type }}<br><br>
+        {{ form.voice_stat_type.errors }}<br>
+        {{ form.video_link.label }} : {{ form.video_link }}<br><br>
+        {{ form.video_link.errors }}<br>
+        {{ form.video_stat_link.label }} : {{ form.video_stat_link }}<br><br>
+        {{ form.video_stat_link.errors }}<br>
+        {{ form.video_stat_type.label }} : {{ form.video_stat_type }}<br><br>
+        {{ form.video_stat_type.errors }}<br>
         <input type="submit">
     </form>
+    <link rel="stylesheet" href="{% static 'admin/jquery.ui.datepicker.jalali/themes/base/jquery-ui.min.css' %}">
+    <script src="{% static 'admin/js/django_jalali.min.js' %}"></script>
 {% endblock %}

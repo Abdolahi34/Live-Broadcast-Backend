@@ -10,12 +10,12 @@
         </script>
     {% elif if_code == 2 %}
         <script>
-        alert('You are successfully logged in.')
-        location.replace("{{ next_post }}")
+            alert('You are successfully registered.')
+            location.replace("{{ next_post }}")
         </script>
     {% elif if_code == 3 %}
         <script>
-            alert('You are successfully logged in.')
+            alert('You are successfully registered.')
             location.replace("/programs/")
         </script>
     {% endif %}
@@ -28,6 +28,6 @@
 {% block body_form %}
     {% csrf_token %}
     {{ form }}
-    <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
-    <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+    <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span> {#TODO#}
+    <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span> {#TODO#}
 {% endblock %}

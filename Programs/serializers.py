@@ -4,18 +4,6 @@ from django.contrib.auth.models import User
 from Programs import models
 
 
-class LastModifiedBySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username']
-
-
-class CreatedBySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username']
-
-
 class DateTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.DateType
@@ -62,8 +50,8 @@ class StreamTypeSerializer(serializers.ModelSerializer):
 class ProgramSerializer(serializers.ModelSerializer):
     date_type = DateTypeSerializer()
     stream = StreamTypeSerializer()
-    created_by = CreatedBySerializer()
-    last_modified_by = LastModifiedBySerializer()
+    created_by = serializers.CharField(max_length=150)
+    last_modified_by = serializers.CharField(max_length=150)
 
     class Meta:
         model = models.Program

@@ -1,9 +1,9 @@
 {% extends 'Accounts/base_accounts.html' %}
 
 {% block head %}
-{% if if_valid %}
+    {% if if_valid %}
         <script>alert('Your data was successfully saved.')</script>
-{% endif %}
+    {% endif %}
 {% endblock %}
 
 {% block title %}Edit Profile{% endblock %}
@@ -13,7 +13,7 @@
 {% block body_form_header %}Edit Profile ...{% endblock %}
 
 {% block body_form %}
-{% csrf_token %}
+    {% csrf_token %}
     {{ form.username.label }} :{{ form.username }}
     {{ form.username.errors }}
     {{ form.first_name.label }} :{{ form.first_name }}

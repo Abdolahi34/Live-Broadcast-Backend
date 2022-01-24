@@ -5,17 +5,17 @@
 {% block title %}Change Password{% endblock %}
 
 {% block head %}
-{% if if_code == 2 %}
-    <script>
-        alert("You aren't logged in.")
-        location.replace('{% url "Accounts:login" %}?next=/changepassword')
-    </script>
-{% elif if_code == 1 %}
-    <script>
-        alert('You Password was successfully changed.')
-        location.replace("/programs/")
-    </script>
-{% endif %}
+    {% if if_code == 1 %}
+        <script>
+            alert("You aren't logged in.")
+            location.replace('{% url "Accounts:login" %}?next=/changepassword')
+        </script>
+    {% elif if_code == 2 %}
+        <script>
+            alert('You Password was successfully changed.')
+            location.replace("/programs/")
+        </script>
+    {% endif %}
 {% endblock %}
 
 {% block body_form_title %}Hi, {{ username }}{% endblock %}
@@ -25,7 +25,7 @@
 {% block body_form %}
     {% csrf_token %}
     {{ form }}
-    <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
-    <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
-    <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+    <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span> {#TODO#}
+    <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span> {#TODO#}
+    <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span> {#TODO#}
 {% endblock %}

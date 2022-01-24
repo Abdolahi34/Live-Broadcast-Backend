@@ -1,24 +1,4 @@
-from django.shortcuts import redirect, render
-
-
-def login_redirect(request):
-    return redirect('Accounts:login')
-
-
-def signup_redirect(request):
-    return redirect('Accounts:signup')
-
-
-def logout_redirect(request):
-    return redirect('Accounts:logout')
-
-
-def change_pass_redirect(request):
-    return redirect('Accounts:change_pass')
-
-
-def profile_view_redirect(request):
-    return redirect('Accounts:profile')
+from django.shortcuts import render
 
 
 def status_code_403_forbidden(request, exception=None):

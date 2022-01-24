@@ -1,7 +1,8 @@
 from django.contrib import admin
-from . import models
+from Programs import models
 
 
+@admin.register(models.Program)
 class ProgramAdmin(admin.ModelAdmin):
     list_filter = ['is_active', 'created_by', 'last_modified_by']
     search_fields = ['title', 'slug', 'start_time', 'end_time', 'logo_link', 'date_created']
@@ -18,6 +19,7 @@ class ProgramAdmin(admin.ModelAdmin):
         'last_modified_by',
         'is_active',
     ]
+    ordering = ['-id']
 
     def save_model(self, request, obj, form, change):
         if obj.created_by_id is None:
@@ -26,7 +28,7 @@ class ProgramAdmin(admin.ModelAdmin):
         super(ProgramAdmin, self).save_model(request, obj, form, change)
 
 
-
+@admin.register(models.StreamType)
 class StreamTypeAdmin(admin.ModelAdmin):
     list_filter = ['stream_type']
     search_fields = ['voice_content', 'video_content']
@@ -36,8 +38,10 @@ class StreamTypeAdmin(admin.ModelAdmin):
         'voice_content',
         'video_content',
     ]
+    ordering = ['-id']
 
 
+@admin.register(models.VideoContent)
 class VideoContentAdmin(admin.ModelAdmin):
     search_fields = ['video_link', 'video_stat']
     list_per_page = 20
@@ -45,8 +49,10 @@ class VideoContentAdmin(admin.ModelAdmin):
         'video_link',
         'video_stat',
     ]
+    ordering = ['-id']
 
 
+@admin.register(models.VideoStat)
 class VideoStatAdmin(admin.ModelAdmin):
     list_filter = ['video_stat_type']
     search_fields = ['video_stat_link']
@@ -55,17 +61,21 @@ class VideoStatAdmin(admin.ModelAdmin):
         'video_stat_link',
         'video_stat_type',
     ]
+    ordering = ['-id']
 
 
+@admin.register(models.VoiceContent)
 class VoiceContentAdmin(admin.ModelAdmin):
-    search_fields = ['voice_link', 'voice_stat']  # TODO
+    search_fields = ['voice_link', 'voice_stat']
     list_per_page = 20
     list_display = [
         'voice_link',
         'voice_stat',
     ]
+    ordering = ['-id']
 
 
+@admin.register(models.VoiceStat)
 class VoiceStatAdmin(admin.ModelAdmin):
     list_filter = ['voice_stat_type']
     search_fields = ['voice_stat_link']
@@ -74,8 +84,10 @@ class VoiceStatAdmin(admin.ModelAdmin):
         'voice_stat_link',
         'voice_stat_type',
     ]
+    ordering = ['-id']
 
 
+@admin.register(models.DateType)
 class DateTypeAdmin(admin.ModelAdmin):
     list_filter = ['day_type', 'day']
     search_fields = ['specified_date']
@@ -85,12 +97,4 @@ class DateTypeAdmin(admin.ModelAdmin):
         'day',
         'specified_date',
     ]
-
-
-admin.site.register(models.Program, ProgramAdmin)
-admin.site.register(models.StreamType, StreamTypeAdmin)
-admin.site.register(models.VideoContent, VideoContentAdmin)
-admin.site.register(models.VideoStat, VideoStatAdmin)
-admin.site.register(models.VoiceContent, VoiceContentAdmin)
-admin.site.register(models.VoiceStat, VoiceStatAdmin)
-admin.site.register(models.DateType, DateTypeAdmin)
+    ordering = ['-id']

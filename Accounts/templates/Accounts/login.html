@@ -3,22 +3,22 @@
 {% block title %}Login{% endblock %}
 
 {% block head %}
-{% if if_code == 1 %}
-    <script>
-        alert('You are already logged in.')
-        location.replace('/programs/')
-    </script>
-{% elif if_code == 2 %}
-    <script>
-        alert('You are successfully logged in.')
-        location.replace("{{ next_post }}")
-    </script>
-{% elif if_code == 3 %}
-    <script>
-        alert('You are successfully logged in.')
-        location.replace("/programs/")
-    </script>
-{% endif %} 
+    {% if if_code == 1 %}
+        <script>
+            alert('You are already logged in.')
+            location.replace('/programs/')
+        </script>
+    {% elif if_code == 2 %}
+        <script>
+            alert('You are successfully logged in.')
+            location.replace("{{ next_post }}")
+        </script>
+    {% elif if_code == 3 %}
+        <script>
+            alert('You are successfully logged in.')
+            location.replace("/programs/")
+        </script>
+    {% endif %}
 {% endblock %}
 
 {% block body_form_title %}Login ...{% endblock %}
@@ -28,6 +28,6 @@
 {% block body_form %}
     {% csrf_token %}
     {{ form }}
-    <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+    <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span> {#TODO#}
 {% endblock %}
 
