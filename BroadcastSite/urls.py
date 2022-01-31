@@ -19,15 +19,19 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 from django.views.generic import RedirectView
+from BroadcastSite import views
 
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
     path('profile/', include('Accounts.urls')),
+    path('profile/', include('Accounts.urls_2')),
     path('login/', RedirectView.as_view(pattern_name='Accounts:login')),
     path('signup/', RedirectView.as_view(pattern_name='Accounts:signup')),
     path('logout/', RedirectView.as_view(pattern_name='Accounts:logout')),
-    path('changepassword/', RedirectView.as_view(pattern_name='Accounts:change_pass')),
+    path('password_change/', RedirectView.as_view(pattern_name='Accounts:change_pass')),
+    path('password_reset/', RedirectView.as_view(pattern_name='password_reset')),
     path('programs/', include('Programs.urls')),
+    path('contact-us/', views.ContactUs.as_view(), name='contact_us'),
 ]
 
 handler403 = 'BroadcastSite.views.status_code_403_forbidden'

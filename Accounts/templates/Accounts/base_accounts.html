@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="{% static 'Accounts/base_account/css/style.css' %}">
     {% block head %}
     {% endblock %}
+    <script src="https://www.google.com/recaptcha/api.js"
+            async defer>
+    </script>
 </head>
 <body class="img js-fullheight"
       style="background-image: url({% static 'Accounts/base_account/images/bg.jpg' %}); background-attachment: fixed; "
@@ -32,6 +35,9 @@
                         </div>
                         <br>
                         <div class="form-group">
+                            {% block re_captcha %}
+                            {% endblock %}
+                            <br>
                             <button type="submit" class="form-control btn btn-primary submit px-3">Submit</button>
                         </div>
 

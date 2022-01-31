@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth.forms import UserChangeForm
-from django.contrib.auth import login, logout, get_user, decorators
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import login, logout, get_user, decorators, update_session_auth_hash, models
 from django.views.generic import View
 from django.utils.decorators import method_decorator
+
+
 from Accounts import forms
 
 
@@ -49,26 +50,38 @@ class ProfileView(View):
 
 class SignupView(View):
     def get(self, request):
+        def signup_attrs():
+            form.fields['username'].widget.attrs['class'] = 'form-control'
+            form.fields['username'].widget.attrs['placeholder'] = 'نام کاربری'
+            form.fields['email'].widget.attrs['class'] = 'form-control'
+            form.fields['email'].widget.attrs['placeholder'] = 'ایمیل'
+
         if request.user.is_authenticated:
             if_code = 1
             args = {'if_code': if_code}
             return render(request, 'Accounts/signup.html', args)
+
         form = forms.SignupForm()
+        signup_attrs()
         args = {'form': form}
         return render(request, 'Accounts/signup.html', args)
 
     def post(self, request):
+        def signup_attrs():
+            form.fields['username'].widget.attrs['class'] = 'form-control'
+            form.fields['username'].widget.attrs['placeholder'] = 'نام کاربری'
+            form.fields['email'].widget.attrs['class'] = 'form-control'
+            form.fields['email'].widget.attrs['placeholder'] = 'ایمیل'
+
         form = forms.SignupForm(request.POST)
+        signup_attrs()
         if form.is_valid():
-            login(request, user=form.save())
-            if 'next' in request.POST:
-                if_code = 2
-                args = {'if_code': if_code, 'next_post': request.POST.get('next')}
-                return render(request, 'Accounts/signup.html', args)
-            else:
-                if_code = 3
-                args = {'if_code': if_code}
-                return render(request, 'Accounts/signup.html', args)
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            if_code = 2
+            args = {'if_code': if_code}
+            return render(request, 'Accounts/signup.html', args)
         args = {'form': form}
         return render(request, 'Accounts/signup.html', args)
 
@@ -129,3 +142,4 @@ class ChangePass(View):
             if_code = 2
             args = {'if_code': if_code}
         return render(request, 'Accounts/change_pass.html', args)
+

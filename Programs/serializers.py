@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
 
 from Programs import models
 
@@ -56,4 +55,4 @@ class ProgramSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Program
         fields = ['title', 'slug', 'date_type', 'start_time', 'end_time', 'logo_link', 'logo', 'stream', 'created_by',
-                  'last_modified_by', 'is_active', 'date_created']
+                  'last_modified_by', 'is_active', 'date_created', 'date_modified']

@@ -11,11 +11,6 @@
     {% elif if_code == 2 %}
         <script>
             alert('You are successfully registered.')
-            location.replace("{{ next_post }}")
-        </script>
-    {% elif if_code == 3 %}
-        <script>
-            alert('You are successfully registered.')
             location.replace("/programs/")
         </script>
     {% endif %}
@@ -27,7 +22,23 @@
 
 {% block body_form %}
     {% csrf_token %}
-    {{ form }}
+    {{ form.username.label }}
+    {{ form.username }}
+    {{ form.username.errors }}
+    {{ form.email.label }}
+    {{ form.email }}
+    {{ form.email.errors }}
+    {{ form.password1.label }}
+    {{ form.password1 }}
+    {{ form.password1.errors }}
+    {{ form.password2.label }}
+    {{ form.password2 }}
+    {{ form.password2.errors }}
+
     <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span> {#TODO#}
     <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span> {#TODO#}
+{% endblock %}
+
+{% block re_captcha %}
+    {{ form.re_captcha }}
 {% endblock %}

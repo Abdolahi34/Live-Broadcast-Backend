@@ -1,0 +1,41 @@
+{% extends 'BroadcastSite/base.html' %}
+
+{% block title %}Delete Program{% endblock %}
+
+{% block body_in %}
+    dir='rtl'
+{% endblock %}
+
+{% block body %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <label for="site-search">جستجو در برنامه ها :</label>
+        <input type="search" placeholder="نام برنامه" name="search_value">
+        <input type="submit" value="جستجو">
+        <br>
+        <br>
+    </form>
+    {% if if_code == 1 %}
+        {% for program in selected_programs %}
+            <a href="{% url 'Programs:view_program_before_delete' slug=program.slug %}">
+            <img src="{{ program.logo.url }}" alt="logo" height="300px" width="300px"><br><br>
+            <h4>عنوان : {{ program.title }}</h4>
+            <h4>slug : {{ program.slug }}</h4>
+            <h4>تاریخ : {{ program.date_type }}</h4>
+            <h4>زمان شروع : {{ program.start_time }}</h4>
+            <h4>زمان پایان : {{ program.end_time }}</h4>
+            <h4>لینک لوگو : {{ program.logo_link }}</h4>
+            <h4>محتویات برنامه : {{ program.stream }}</h4>
+            <h4>ایجاد کننده : {{ program.created_by }}</h4>
+            <h4>آخرین تغییر دهنده : {{ program.last_modified_by }}</h4>
+            <h4>وضعیت : {{ program.is_active }}</h4>
+            <h4>تاریخ ایجاد : {{ program.date_created }}</h4>
+            </a>
+            <hr>
+        {% endfor %}
+    {% endif %}
+
+    {% if if_code == 2 %}
+        <h1>برنامه ای با شرایط مدنظر شما وجود ندارد.</h1>
+    {% endif %}
+{% endblock %}

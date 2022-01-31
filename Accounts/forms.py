@@ -4,6 +4,9 @@ from django.forms import widgets
 from django.contrib.auth.forms import AuthenticationForm, UsernameField, UserCreationForm, PasswordChangeForm
 from django.utils.translation import gettext_lazy as _
 
+from captcha.widgets import ReCaptchaV2Checkbox
+from captcha.fields import ReCaptchaField
+
 
 class LoginForm(AuthenticationForm):
     username = UsernameField(
@@ -11,29 +14,38 @@ class LoginForm(AuthenticationForm):
         widget=widgets.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Username',
-    }))
+        }))
     password = forms.CharField(
         label='Password :',
         widget=widgets.PasswordInput(attrs={
             'class': 'form-control password-field',
             'placeholder': 'Password',
-    }))
+        }))
+    re_captcha = ReCaptchaField(
+        widget=ReCaptchaV2Checkbox,
+    )
 
 
 class SignupForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        fields = ("username", "email")
+
     password1 = forms.CharField(
-        label='',
+        label='پسورد',
         widget=forms.PasswordInput(attrs={
             'class': 'form-control password-field',
-            'placeholder': 'Password',
+            'placeholder': 'پسورد',
         }),
     )
     password2 = forms.CharField(
-        label='',
+        label='تایید پسورد',
         widget=forms.PasswordInput(attrs={
             'class': 'form-control password-field',
-            'placeholder': 'Password Confirmation',
+            'placeholder': 'تایید پسورد',
         }),
+    )
+    re_captcha = ReCaptchaField(
+        widget=ReCaptchaV2Checkbox,
     )
 
 
@@ -69,4 +81,6 @@ class ChangePassForm(PasswordChangeForm):
             'placeholder': 'New password confirmation'
         }),
     )
-
+    re_captcha = ReCaptchaField(
+        widget=ReCaptchaV2Checkbox,
+    )

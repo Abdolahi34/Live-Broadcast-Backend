@@ -27,7 +27,17 @@
 
 {% block body_form %}
     {% csrf_token %}
-    {{ form }}
+    {{ form.username.label }}
+    {{ form.username }}
+    {{ form.username.errors }}
+    {{ form.password.label }}
+    {{ form.password }}
+    {{ form.password.errors }}
+
+
     <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span> {#TODO#}
 {% endblock %}
 
+{% block re_captcha %}
+    {{ form.re_captcha }}
+{% endblock %}

@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
-
+from django.contrib.auth import get_user_model
 
 class DateType(models.Model):
     class DayTypeChoices(models.TextChoices):
@@ -131,12 +130,13 @@ class Program(models.Model):
     logo = models.ImageField(upload_to='Programs/images/%Y_%m_%d', default='Programs/images/default_logo.png',
                              verbose_name='عکس')
     stream = models.ForeignKey(StreamType, on_delete=models.CASCADE, verbose_name='محتویات برنامه')
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, verbose_name='ایجاد کننده',
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False, verbose_name='ایجاد کننده',
                                    related_name='created')
-    last_modified_by = models.ForeignKey(User, on_delete=models.CASCADE, editable=False,
+    last_modified_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False,
                                          verbose_name='آخرین تغییر دهنده', related_name='last_modified')
     is_active = models.BooleanField(default=False, verbose_name='وضعیت')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
+    date_modified = models.DateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
 
     def __str__(self):
         return self.title
