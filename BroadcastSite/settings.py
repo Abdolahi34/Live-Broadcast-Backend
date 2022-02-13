@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'jalali_date',
     'captcha',
     'Accounts',
     'Programs',
@@ -60,7 +59,7 @@ ROOT_URLCONF = 'BroadcastSite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
+        'DIRS': config('TEMPLATES_DIRS')
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -82,11 +81,11 @@ WSGI_APPLICATION = 'BroadcastSite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'broadcastsite_db',
+        'NAME': config('DATABASES_default_NAME'),
         'USER': config('DATABASES_default_USER'),
         'PASSWORD': config('DATABASES_default_PASSWORD'),
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'HOST': config('DATABASES_HOST'),
+        'PORT': config('DATABASES_PORT'),
     }
 }
 
@@ -179,8 +178,9 @@ LOGOUT_REDIRECT_URL = '/programs/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_USE_TLS = True
+EMAIL_USE_TLS = config('EMAIL_USE_TLS')
 EMAIL_PORT = config('EMAIL_PORT')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
