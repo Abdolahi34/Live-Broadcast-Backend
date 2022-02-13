@@ -1,6 +1,5 @@
-from django.urls import path, re_path
+from django.urls import path
 from django.contrib.auth import views as auth_views
-from Accounts import views
 
 urlpatterns = [
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
