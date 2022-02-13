@@ -12,7 +12,7 @@ from Programs import models, forms, serializers
 
 class ProgramApi(views.APIView):
     def get(self, request):
-        queryset = models.Program.objects.all().order_by('-date_created')
+        queryset = models.Program.objects.filter(is_active=True).order_by('num_order')
         serializer = serializers.ProgramSerializer(queryset, many=True)
         return response.Response(serializer.data, status=status.HTTP_200_OK)
 

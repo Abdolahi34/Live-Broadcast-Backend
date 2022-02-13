@@ -49,10 +49,8 @@ class StreamTypeSerializer(serializers.ModelSerializer):
 class ProgramSerializer(serializers.ModelSerializer):
     date_type = DateTypeSerializer()
     stream = StreamTypeSerializer()
-    created_by = serializers.CharField(max_length=150)
-    last_modified_by = serializers.CharField(max_length=150)
+
 
     class Meta:
         model = models.Program
-        fields = ['title', 'slug', 'date_type', 'start_time', 'end_time', 'logo_link', 'logo', 'stream', 'created_by',
-                  'last_modified_by', 'is_active', 'date_created', 'date_modified']
+        fields = ['title', 'slug', 'date_type', 'start_time', 'end_time', 'logo_link', 'logo', 'stream']

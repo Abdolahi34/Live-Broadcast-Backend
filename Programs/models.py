@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
+from django.core.validators import MaxValueValidator
+
 class DateType(models.Model):
     class DayTypeChoices(models.TextChoices):
         هفتگی = 'weekly'
@@ -134,9 +136,10 @@ class Program(models.Model):
                                    related_name='created')
     last_modified_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False,
                                          verbose_name='آخرین تغییر دهنده', related_name='last_modified')
-    is_active = models.BooleanField(default=False, verbose_name='وضعیت')
+    is_active = models.BooleanField(default=False, verbose_name='فعال / غیر فعال')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
     date_modified = models.DateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    num_order = models.PositiveIntegerField(verbose_name='ردیف', unique=True)
 
     def __str__(self):
         return self.title

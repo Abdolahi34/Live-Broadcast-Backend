@@ -8,6 +8,7 @@ class ProgramAdmin(admin.ModelAdmin):
     search_fields = ['title', 'slug', 'start_time', 'end_time', 'logo_link', 'date_created', 'date_modified']
     list_per_page = 20
     list_display = [
+        'num_order',
         'title',
         'slug',
         'date_type',
@@ -20,7 +21,9 @@ class ProgramAdmin(admin.ModelAdmin):
         'last_modified_by',
         'is_active',
     ]
-    ordering = ['-id']
+    list_editable = ['num_order']
+    list_display_links = ['title']
+    ordering = ['num_order']
 
     def save_model(self, request, obj, form, change):
         if obj.created_by_id is None:
