@@ -174,7 +174,7 @@ RECAPTCHA_PRIVATE_KEY = config('RECAPTCHA_PRIVATE_KEY')
 
 LOGIN_REDIRECT_URL = 'Accounts:profile'
 LOGIN_URL = 'Accounts:login'
-LOGOUT_REDIRECT_URL = '/programs/'
+LOGOUT_REDIRECT_URL = 'Accounts:login'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST')

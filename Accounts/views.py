@@ -4,7 +4,6 @@ from django.contrib.auth import login, logout, get_user, decorators, update_sess
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 
-
 from Accounts import forms
 
 

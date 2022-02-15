@@ -25,6 +25,7 @@ class ProgramAdmin(admin.ModelAdmin):
     list_display_links = ['title']
     ordering = ['num_order']
 
+
     def save_model(self, request, obj, form, change):
         if obj.created_by_id is None:
             obj.created_by = request.user
