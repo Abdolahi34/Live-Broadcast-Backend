@@ -4,6 +4,10 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator
 
 class DateType(models.Model):
+    class Meta:
+        verbose_name = 'زمان برنامه'
+        verbose_name_plural = 'زمان برنامه ها'
+
     class DayTypeChoices(models.TextChoices):
         هفتگی = 'weekly'
         مناسبتی = 'occasional'
@@ -26,6 +30,10 @@ class DateType(models.Model):
 
 
 class VoiceStat(models.Model):
+    class Meta:
+        verbose_name = 'آمار پخش صوتی'
+        verbose_name_plural = 'آمار پخش های صوتی'
+
     class StatTypeChoices(models.TextChoices):
         shoutcast = 'shoutcast'
         wowza = 'wowza'
@@ -47,6 +55,10 @@ class VoiceStat(models.Model):
 
 
 class VoiceContent(models.Model):
+    class Meta:
+        verbose_name = 'محتوا پخش صوتی'
+        verbose_name_plural = 'محتوا پخش های صوتی'
+
     voice_link = models.URLField(blank=True, null=True, verbose_name='لینک پخش زنده صوتی')
     voice_stat = models.ForeignKey(VoiceStat, on_delete=models.CASCADE, verbose_name='Voice Stat')
 
@@ -63,6 +75,10 @@ class VoiceContent(models.Model):
 
 
 class VideoStat(models.Model):
+    class Meta:
+        verbose_name = 'آمار پخش تصویری'
+        verbose_name_plural = 'آمار پخش های تصویری'
+
     class StatTypeChoices(models.TextChoices):
         shoutcast = 'shoutcast'
         wowza = 'wowza'
@@ -84,6 +100,10 @@ class VideoStat(models.Model):
 
 
 class VideoContent(models.Model):
+    class Meta:
+        verbose_name = 'محتوا پخش تصویری'
+        verbose_name_plural = 'محتوا پخش های تصویری'
+
     video_link = models.URLField(blank=True, null=True, verbose_name='لینک پخش زنده صوتی')
     video_stat = models.ForeignKey(VideoStat, on_delete=models.CASCADE, verbose_name='Video Stat')
 
@@ -100,6 +120,10 @@ class VideoContent(models.Model):
 
 
 class StreamType(models.Model):
+    class Meta:
+        verbose_name = 'محتوا پخش زنده'
+        verbose_name_plural = 'محتوا پخش زنده ها'
+
     class StreamTypeChoices(models.TextChoices):
         صوتی = 'audio'
         تصویری = 'video'
@@ -123,6 +147,10 @@ class StreamType(models.Model):
 
 
 class Program(models.Model):
+    class Meta:
+        verbose_name = 'برنامه'
+        verbose_name_plural = 'برنامه ها'
+
     title = models.CharField(max_length=100, verbose_name='عنوان')
     slug = models.SlugField(max_length=70, unique=True, db_index=True, verbose_name='slug')
     date_type = models.ForeignKey(DateType, on_delete=models.CASCADE, verbose_name='تاریخ')
@@ -132,7 +160,8 @@ class Program(models.Model):
     logo = models.ImageField(upload_to='Programs/images/%Y_%m_%d', default='Programs/images/default_logo.png',
                              verbose_name='عکس')
     stream = models.ForeignKey(StreamType, on_delete=models.CASCADE, verbose_name='محتویات برنامه')
-    created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False, verbose_name='ایجاد کننده',
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False,
+                                   verbose_name='ایجاد کننده',
                                    related_name='created')
     last_modified_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False,
                                          verbose_name='آخرین تغییر دهنده', related_name='last_modified')
