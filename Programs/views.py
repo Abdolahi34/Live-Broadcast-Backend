@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required, login_required
 from django.contrib.auth import get_user
 from django.views import View
@@ -13,7 +13,7 @@ from Programs import models, forms, serializers
 class ProgramApi(views.APIView):
     def get(self, request):
         queryset = models.Program.objects.filter(is_active=True).order_by('num_order')
-        serializer = serializers.ProgramSerializer(queryset, many=True)
+        serializer = serializers.ProgramSerializer(queryset, context={'request': request}, many=True)
         return response.Response(serializer.data, status=status.HTTP_200_OK)
 
 

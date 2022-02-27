@@ -6,13 +6,13 @@ from Programs import models
 class DateTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.DateType
-        fields = '__all__'
+        fields = ['day_type', 'day', 'specified_date']
 
 
 class VoiceStatSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.VoiceStat
-        fields = '__all__'
+        fields = ['voice_stat_link', 'voice_stat_type']
 
 
 class VoiceContentSerializer(serializers.ModelSerializer):
@@ -26,7 +26,7 @@ class VoiceContentSerializer(serializers.ModelSerializer):
 class VideoStatSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.VideoStat
-        fields = '__all__'
+        fields = ['video_stat_link', 'video_stat_type']
 
 
 class VideoContentSerializer(serializers.ModelSerializer):
@@ -48,9 +48,14 @@ class StreamTypeSerializer(serializers.ModelSerializer):
 
 class ProgramSerializer(serializers.ModelSerializer):
     date_type = DateTypeSerializer()
+    logo = serializers.SerializerMethodField()
     stream = StreamTypeSerializer()
-
 
     class Meta:
         model = models.Program
         fields = ['title', 'slug', 'date_type', 'start_time', 'end_time', 'logo_link', 'logo', 'stream']
+
+    def get_logo(self, queryset):
+        request = self.context.get('request')
+        logo = queryset.logo.url
+        return request.build_absolute_uri(logo)

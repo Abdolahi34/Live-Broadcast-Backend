@@ -145,30 +145,6 @@ DATETIME_FORMAT = 'N j, Y, G:i:s'
 SHORT_DATETIME_FORMAT = 'm/d/Y G:i:s'
 FIRST_DAY_OF_WEEK = 6
 
-JALALI_DATE_DEFAULTS = {
-    'Strftime': {
-        'date': '%y/%m/%d',
-        'datetime': '%H:%M:%S _ %y/%m/%d',
-    },
-    'Static': {
-        'js': [
-            # loading datepicker
-            'admin/js/django_jalali.min.js',
-            # OR
-            # 'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.core.js',
-            # 'admin/jquery.ui.datepicker.jalali/scripts/calendar.js',
-            # 'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc.js',
-            # 'admin/jquery.ui.datepicker.jalali/scripts/jquery.ui.datepicker-cc-fa.js',
-            # 'admin/js/main.js',
-        ],
-        'css': {
-            'all': [
-                'admin/jquery.ui.datepicker.jalali/themes/base/jquery-ui.min.css',
-            ]
-        }
-    },
-}
-
 RECAPTCHA_PUBLIC_KEY = config('RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY = config('RECAPTCHA_PRIVATE_KEY')
 
