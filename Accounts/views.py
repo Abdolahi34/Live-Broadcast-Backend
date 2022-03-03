@@ -1,7 +1,10 @@
 from django.shortcuts import render
+
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth import login, logout, get_user, decorators, update_session_auth_hash, models
+
 from django.views.generic import View
+
 from django.utils.decorators import method_decorator
 
 from Accounts import forms
@@ -141,4 +144,3 @@ class ChangePass(View):
             if_code = 2
             args = {'if_code': if_code}
         return render(request, 'Accounts/change_pass.html', args)
-

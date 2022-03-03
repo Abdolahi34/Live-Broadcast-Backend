@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from Programs import models
 
 
@@ -24,7 +25,6 @@ class ProgramAdmin(admin.ModelAdmin):
     list_editable = ['num_order']
     list_display_links = ['title']
     ordering = ['num_order']
-
 
     def save_model(self, request, obj, form, change):
         if obj.created_by_id is None:

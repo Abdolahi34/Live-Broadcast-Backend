@@ -18,8 +18,10 @@ from django.urls import path, include
 
 from django.conf.urls.static import static
 from django.conf import settings
+
 from django.views.generic import RedirectView
-from BroadcastSite import views
+
+from LesanLive import views
 
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
@@ -34,9 +36,9 @@ urlpatterns = [
     path('contact-us/', views.ContactUs.as_view(), name='contact_us'),
 ]
 
-handler403 = 'BroadcastSite.views.status_code_403_forbidden'
-handler404 = 'BroadcastSite.views.status_code_404_not_found'
-handler500 = 'BroadcastSite.views.status_code_500_internal_server_error'
+handler403 = 'LesanLive.views.status_code_403_forbidden'
+handler404 = 'LesanLive.views.status_code_404_not_found'
+handler500 = 'LesanLive.views.status_code_500_internal_server_error'
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
