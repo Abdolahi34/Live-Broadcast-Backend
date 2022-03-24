@@ -1,3 +1,4 @@
+'''
 from django.shortcuts import render
 
 from django.contrib.auth.decorators import permission_required, login_required
@@ -6,10 +7,14 @@ from django.utils.decorators import method_decorator
 
 from django.views import View
 from django.db.models.query_utils import Q
+'''
 
 from rest_framework import views, response, status
 
-from Programs import models, forms, serializers
+from Programs import models, serializers
+
+
+# from Programs import forms
 
 
 class ProgramApi(views.APIView):
@@ -19,6 +24,7 @@ class ProgramApi(views.APIView):
         return response.Response(serializer.data, status=status.HTTP_200_OK)
 
 
+'''
 @method_decorator(login_required(login_url='Accounts:login'), name='dispatch')
 @method_decorator(permission_required('Programs.add_program', raise_exception=True), name='dispatch')
 class AddProgramView(View):
@@ -140,19 +146,19 @@ class AddVoiceStatView(View):
 @method_decorator(permission_required('Programs.add_program', raise_exception=True), name='dispatch')
 class AddDateTypeView(View):
     def get(self, request):
-        date_type_form = forms.AddDateTypeForm()
+        datetype_form = forms.AddDateTypeForm()
         if_code = False
-        args = {'date_type_form': date_type_form, 'if_code': if_code, 'username': get_user(request)}
-        return render(request, 'Programs/date_type_add.html', args)
+        args = {'datetype_form': datetype_form, 'if_code': if_code, 'username': get_user(request)}
+        return render(request, 'Programs/datetype_add.html', args)
 
     def post(self, request):
-        date_type_form = forms.AddDateTypeForm(request.POST)
+        datetype_form = forms.AddDateTypeForm(request.POST)
         if_code = False
-        if date_type_form.is_valid():
-            form = date_type_form.save()
+        if datetype_form.is_valid():
+            form = datetype_form.save()
             if_code = True
-        args = {'date_type_form': date_type_form, 'if_code': if_code, 'username': get_user(request)}
-        return render(request, 'Programs/date_type_add.html', args)
+        args = {'datetype_form': datetype_form, 'if_code': if_code, 'username': get_user(request)}
+        return render(request, 'Programs/datetype_add.html', args)
 
 
 @method_decorator(login_required(login_url='Accounts:login'), name='dispatch')
@@ -193,3 +199,4 @@ class ProgramViewBeforeDelete(View):
         if_code = 3
         args = {'if_code': if_code}
         return render(request, 'Programs/view_program_before_delete.html', args)
+'''

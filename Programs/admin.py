@@ -6,13 +6,13 @@ from Programs import models
 @admin.register(models.Program)
 class ProgramAdmin(admin.ModelAdmin):
     list_filter = ['is_active', 'created_by', 'last_modified_by']
-    search_fields = ['title', 'slug', 'start_time', 'end_time', 'logo_link', 'date_created', 'date_modified']
+    search_fields = ['title', 'slug', 'start_time', 'end_time', 'logo', 'date_created', 'date_modified']
     list_per_page = 20
     list_display = [
         'num_order',
         'title',
         'slug',
-        'date_type',
+        'datetype',
         'start_time',
         'end_time',
         'stream',

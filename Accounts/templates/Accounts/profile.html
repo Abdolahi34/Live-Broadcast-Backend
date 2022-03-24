@@ -1,4 +1,5 @@
 {% extends 'Accounts/base_accounts.html' %}
+{% load widget_tweaks %}
 
 {% block head %}
     {% if if_valid %}
@@ -14,14 +15,15 @@
 
 {% block body_form %}
     {% csrf_token %}
-    {{ form.username.label }} :{{ form.username }}
+    {{ form.username.label }} :{% render_field form.username class="form-control" style="direction:rtl" placeholder="نام کاربری" %}
     {{ form.username.errors }}
-    {{ form.first_name.label }} :{{ form.first_name }}
+    {{ form.first_name.label }} :{% render_field form.first_name class="form-control" style="direction:rtl" placeholder="نام" %}
     {{ form.first_name.errors }}
-    {{ form.last_name.label }} :{{ form.last_name }}
+    {{ form.last_name.label }} :{% render_field form.last_name class="form-control" style="direction:rtl" placeholder="نام خانوادگی" %}
     {{ form.last_name.errors }}
-    {{ form.email.label }} :{{ form.email }}
+    {{ form.email.label }} :{% render_field form.email class="form-control" style="direction:rtl" placeholder="ایمیل" %}
     {{ form.email.errors }}
+    {{ form. }}
 {% endblock %}
 
 {% block re_captcha %}

@@ -1,6 +1,5 @@
 from django.contrib.auth import password_validation
 from django import forms
-from django.forms import widgets
 from django.contrib.auth.forms import AuthenticationForm, UsernameField, UserCreationForm, PasswordChangeForm
 from django.utils.translation import gettext_lazy as _
 
@@ -10,17 +9,11 @@ from captcha.fields import ReCaptchaField
 
 class LoginForm(AuthenticationForm):
     username = UsernameField(
-        label='Username :',
-        widget=widgets.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Username',
-        }))
+        label='نام کاربری :',
+        )
     password = forms.CharField(
-        label='Password :',
-        widget=widgets.PasswordInput(attrs={
-            'class': 'form-control password-field',
-            'placeholder': 'Password',
-        }))
+        label='رمز عبور :',
+        )
     re_captcha = ReCaptchaField(
         widget=ReCaptchaV2Checkbox,
     )

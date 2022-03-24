@@ -19,14 +19,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = 'django-insecure-z+$l=9*s&abb31q790h#$c=_5^6!32i2!p9(7y5q3(9ncce^(4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG')
+DEBUG = True
 
-ALLOWED_HOSTS = []
-if DEBUG == False:
-    ALLOWED_HOSTS.append(os.environ.get('ALLOWED_HOSTS'))
+ALLOWED_HOSTS = ['radio-api.rahh.ir', '127.0.0.1']
+# if DEBUG == False:
+#     ALLOWED_HOSTS.append(os.environ.get('ALLOWED_HOSTS'))
 
 # Application definition
 
@@ -39,9 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'captcha',
     'rest_framework',
+    'widget_tweaks',
     'Accounts',
     'Programs',
     'LesanLive',
+    'Admin',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +61,7 @@ ROOT_URLCONF = 'LesanLive.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': os.environ.get('TEMPLATES_DIRS')
+        'DIRS': [BASE_DIR / 'templates']
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -81,11 +83,11 @@ WSGI_APPLICATION = 'LesanLive.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DATABASES_default_NAME'),
-        'USER': os.environ.get('DATABASES_default_USER'),
-        'PASSWORD': os.environ.get('DATABASES_default_PASSWORD'),
-        'HOST': os.environ.get('DATABASES_HOST'),
-        'PORT': os.environ.get('DATABASES_PORT'),
+        'NAME': 'radio_db',
+        'USER': 'radio_usr',
+        'PASSWORD': 'ejDOI@Uoopfi3jo',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
     }
 }
 
@@ -122,10 +124,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'static')
-# ]
+
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+else:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static')
+    ]
 
 MEDIA_URL = 'assets/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'assets')
@@ -145,18 +150,18 @@ DATETIME_FORMAT = 'N j, Y, G:i:s'
 SHORT_DATETIME_FORMAT = 'm/d/Y G:i:s'
 FIRST_DAY_OF_WEEK = 6
 
-RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY')
-RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY')
+RECAPTCHA_PUBLIC_KEY = '6LdQY0IeAAAAAM_o0HMcG2sECXWbrW1rHBxLdVKl'
+RECAPTCHA_PRIVATE_KEY = '6LdQY0IeAAAAADILRDs1HktXyTfstmVgUxvYoccA'
 
 LOGIN_REDIRECT_URL = 'Accounts:profile'
 LOGIN_URL = 'Accounts:login'
 LOGOUT_REDIRECT_URL = 'Accounts:login'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS')
-EMAIL_PORT = os.environ.get('EMAIL_PORT')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
+DEFAULT_FROM_EMAIL = 'admin@radio-api.rahh.ir'

@@ -47,13 +47,13 @@ class StreamTypeSerializer(serializers.ModelSerializer):
 
 
 class ProgramSerializer(serializers.ModelSerializer):
-    date_type = DateTypeSerializer()
+    datetype = DateTypeSerializer()
     logo = serializers.SerializerMethodField()
     stream = StreamTypeSerializer()
 
     class Meta:
         model = models.Program
-        fields = ['title', 'slug', 'date_type', 'start_time', 'end_time', 'logo_link', 'logo', 'stream']
+        fields = ['title', 'slug', 'datetype', 'start_time', 'end_time', 'logo_onclick_link', 'logo', 'stream']
 
     def get_logo(self, queryset):
         request = self.context.get('request')

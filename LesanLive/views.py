@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 from django.views import View
 from django.core.mail import send_mail
 from django.conf import settings
@@ -14,6 +14,11 @@ def status_code_404_not_found(request, exception=None):
 
 def status_code_500_internal_server_error(request, exception=None):
     return render(request, 'LesanLive/500.html', status=500)
+
+
+class Home(View):
+    def get(self, request):
+        return HttpResponse('پخش زنده - لسان صدق')
 
 
 class ContactUs(View):

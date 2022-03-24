@@ -1,4 +1,5 @@
 {% extends 'Accounts/base_accounts.html' %}
+{% load widget_tweaks %}
 
 {% block title %}Login{% endblock %}
 
@@ -27,13 +28,12 @@
 
 {% block body_form %}
     {% csrf_token %}
-    {{ form.username.label }}
-    {{ form.username }}
+    {{ form.username.label }}<br>
+    {% render_field form.username class="form-control" style="direction:rtl" placeholder="نام کاربری" %}<br>
     {{ form.username.errors }}
-    {{ form.password.label }}
-    {{ form.password }}
+    {{ form.password.label }}<br>
+    {% render_field form.password class="form-control password-field" style="direction:rtl" placeholder="رمز عبور" %}<br>
     {{ form.password.errors }}
-
 
     <span toggle=".password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span> {#TODO#}
 {% endblock %}

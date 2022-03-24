@@ -1,0 +1,104 @@
+{% extends 'Admin/admin_base.html' %}
+
+{% block head %}
+    <script>
+        {% if temp_var == 1 %}
+            alert("تاریخ مدنظر شما قبلا حذف شده است.")
+        {% elif temp_var == 2 %}
+            alert("تاریخ مدنظر شما با موفقیت حذف شد.")
+        {% endif %}
+        function delete_datetype(delete_id) {
+            if (confirm('آیا می خواهید این تاریخ را حذف کنید؟') == true) {
+                location.replace("{% url 'Admin:datetype' %}?del_id=" + delete_id)
+            } else {
+                alert("تاریخ به در خواست شما حذف نشد.")
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block message %}
+    {% if temp_var == 6 %}
+        <blockquote class="quote-warning">
+            <h5 id="note">توجه !</h5>
+            <p>.تاریخ ای وجود ندارد</p>
+        </blockquote>
+        <div class="col-12">
+            {#                TODO#}
+            <a href="{% url 'Admin:datetype' %}" class="btn btn-info">افزودن برنامه</a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block main_content %}
+    <section class="content">
+        <!-- Default box -->
+        {% if temp_var != 6 %}
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">تاریخ برنامه ها</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-striped projects">
+                        <thead>
+                        <tr>
+                            <th>
+                                نوع
+                            </th>
+                            <th>
+                                هفتگی
+                            </th>
+                            <th>
+                                مناسبتی
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for datetype in datetypes %}
+                            <tr>
+                                <td>
+                                    {{ datetype.day_type }}
+                                </td>
+                                <td>
+                                    {{ datetype.day }}
+                                </td>
+                                <td>
+                                    {{ datetype.specified_date }}
+                                </td>
+                                <td class="project-actions text-right">
+                                    <a class="btn btn-primary btn-sm" href="{% url 'Admin:datetype_view' datetype.id %}">
+                                        <i class="fas fa-folder">
+                                        </i>
+                                        View
+                                    </a>
+                                    <a class="btn btn-info btn-sm" href="{% url 'Admin:datetype_edit' datetype.id %}">
+                                        <i class="fas fa-pencil-alt">
+                                        </i>
+                                        Edit
+                                    </a>
+                                    <button class="btn btn-danger btn-sm" onclick="delete_datetype({{ datetype.id }})">
+                                        <i class="fas fa-trash">
+                                        </i>
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        {% endif %}
+        <!-- /.card -->
+    </section>
+{% endblock %}

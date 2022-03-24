@@ -151,16 +151,16 @@ class Program(models.Model):
         verbose_name_plural = 'برنامه ها'
 
     title = models.CharField(max_length=100, verbose_name='عنوان')
-    slug = models.SlugField(max_length=70, unique=True, db_index=True, verbose_name='slug')
-    date_type = models.ForeignKey(DateType, on_delete=models.CASCADE, verbose_name='تاریخ')
+    slug = models.SlugField(max_length=70, unique=True, db_index=True, verbose_name='عنوان در url')
+    datetype = models.ForeignKey(DateType, on_delete=models.CASCADE, verbose_name='تاریخ')
     start_time = models.TimeField(verbose_name='زمان شروع')
     end_time = models.TimeField(verbose_name='زمان پایان')
-    logo_link = models.URLField(default='https://lesansedgh.ir', verbose_name='لینک لوگو')
+    logo_onclick_link = models.URLField(default='https://lesansedgh.ir', verbose_name='لینک کلیک روی لوگو')
     logo = models.ImageField(upload_to='Programs/images/%Y_%m_%d', default='Programs/images/default_logo.png',
                              verbose_name='عکس')
     stream = models.ForeignKey(StreamType, on_delete=models.CASCADE, verbose_name='محتویات برنامه')
     created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False,
-                                   verbose_name='ایجاد کننده',
+                                   verbose_name='سازنده',
                                    related_name='created')
     last_modified_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False,
                                          verbose_name='آخرین تغییر دهنده', related_name='last_modified')

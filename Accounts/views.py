@@ -9,74 +9,40 @@ from django.utils.decorators import method_decorator
 
 from Accounts import forms
 
+from captcha.widgets import ReCaptchaV2Checkbox
+from captcha.fields import ReCaptchaField
 
 @method_decorator(decorators.login_required(login_url='Accounts:login'), name='dispatch')
 class ProfileView(View):
     def get(self, request):
-        def profile_attrs():
-            form.fields['username'].widget.attrs['class'] = 'form-control'
-            form.fields['username'].widget.attrs['placeholder'] = 'Username'
-            form.fields['first_name'].widget.attrs['class'] = 'form-control'
-            form.fields['first_name'].widget.attrs['placeholder'] = 'First Name'
-            form.fields['last_name'].widget.attrs['class'] = 'form-control'
-            form.fields['last_name'].widget.attrs['placeholder'] = 'Last Name'
-            form.fields['email'].widget.attrs['class'] = 'form-control'
-            form.fields['email'].widget.attrs['placeholder'] = 'Email Address'
-
         form = UserChangeForm(instance=request.user)
+        form.re_captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
         if_valid = False
-        profile_attrs()
         args = {'form': form, 'username': get_user(request), 'if_valid': if_valid}
         return render(request, 'Accounts/profile.html', args)
 
     def post(self, request):
-        def profile_attrs():
-            form.fields['username'].widget.attrs['class'] = 'form-control'
-            form.fields['username'].widget.attrs['placeholder'] = 'Username'
-            form.fields['first_name'].widget.attrs['class'] = 'form-control'
-            form.fields['first_name'].widget.attrs['placeholder'] = 'First Name'
-            form.fields['last_name'].widget.attrs['class'] = 'form-control'
-            form.fields['last_name'].widget.attrs['placeholder'] = 'Last Name'
-            form.fields['email'].widget.attrs['class'] = 'form-control'
-            form.fields['email'].widget.attrs['placeholder'] = 'Email Address'
-
         form = UserChangeForm(request.POST, instance=request.user)
         if_valid = False
         if form.is_valid():
             form.save()
             if_valid = True
-        profile_attrs()
         args = {'form': form, 'if_valid': if_valid, 'username': get_user(request)}
         return render(request, 'Accounts/profile.html', args)
 
-
 class SignupView(View):
     def get(self, request):
-        def signup_attrs():
-            form.fields['username'].widget.attrs['class'] = 'form-control'
-            form.fields['username'].widget.attrs['placeholder'] = 'نام کاربری'
-            form.fields['email'].widget.attrs['class'] = 'form-control'
-            form.fields['email'].widget.attrs['placeholder'] = 'ایمیل'
-
         if request.user.is_authenticated:
             if_code = 1
             args = {'if_code': if_code}
             return render(request, 'Accounts/signup.html', args)
 
         form = forms.SignupForm()
-        signup_attrs()
         args = {'form': form}
         return render(request, 'Accounts/signup.html', args)
 
     def post(self, request):
-        def signup_attrs():
-            form.fields['username'].widget.attrs['class'] = 'form-control'
-            form.fields['username'].widget.attrs['placeholder'] = 'نام کاربری'
-            form.fields['email'].widget.attrs['class'] = 'form-control'
-            form.fields['email'].widget.attrs['placeholder'] = 'ایمیل'
-
         form = forms.SignupForm(request.POST)
-        signup_attrs()
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False

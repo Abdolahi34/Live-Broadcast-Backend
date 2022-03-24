@@ -24,9 +24,10 @@ from django.views.generic import RedirectView
 from LesanLive import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls, name='admin'),
+    path('', views.Home.as_view(), name='home'),
+    path('admin2/', admin.site.urls, name='admin'),
+    path('admin/', include('Admin.urls')),
     path('profile/', include('Accounts.urls')),
-    path('profile/', include('Accounts.urls_2')),
     path('login/', RedirectView.as_view(pattern_name='Accounts:login')),
     path('signup/', RedirectView.as_view(pattern_name='Accounts:signup')),
     path('logout/', RedirectView.as_view(pattern_name='Accounts:logout')),
@@ -35,6 +36,7 @@ urlpatterns = [
     path('programs/', include('Programs.urls')),
     path('contact-us/', views.ContactUs.as_view(), name='contact_us'),
 ]
+
 
 handler403 = 'LesanLive.views.status_code_403_forbidden'
 handler404 = 'LesanLive.views.status_code_404_not_found'
