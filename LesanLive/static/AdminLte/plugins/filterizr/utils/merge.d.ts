@@ -1,4 +1,5 @@
-import { Dictionary } from '../types/interfaces/Dictionary';
+import {Dictionary} from '../types/interfaces/Dictionary';
+
 /**
  * Deep merge two objects.
  */

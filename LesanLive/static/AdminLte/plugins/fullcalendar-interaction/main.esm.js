@@ -4,7 +4,55 @@ Docs & License: https://fullcalendar.io/
 (c) 2019 Adam Shaw
 */
 
-import { config, elementClosest, EmitterMixin, applyStyle, whenTransitionDone, removeElement, ScrollController, ElementScrollController, computeInnerRect, WindowScrollController, preventSelection, preventContextMenu, allowSelection, allowContextMenu, ElementDragging, computeRect, getClippingParents, pointInsideRect, isDateSpansEqual, constrainPoint, intersectRects, getRectCenter, diffPoints, mapHash, rangeContainsRange, interactionSettingsToStore, Interaction, enableCursor, disableCursor, compareNumbers, getElSeg, getRelevantEvents, EventApi, createEmptyEventStore, applyMutationToEventStore, interactionSettingsStore, startOfDay, diffDates, createDuration, eventTupleToStore, isInteractionValid, parseDragMeta, elementMatches, parseEventDef, createEventInstance, globalDefaults, createPlugin } from '@fullcalendar/core';
+import {
+    config,
+    elementClosest,
+    EmitterMixin,
+    applyStyle,
+    whenTransitionDone,
+    removeElement,
+    ScrollController,
+    ElementScrollController,
+    computeInnerRect,
+    WindowScrollController,
+    preventSelection,
+    preventContextMenu,
+    allowSelection,
+    allowContextMenu,
+    ElementDragging,
+    computeRect,
+    getClippingParents,
+    pointInsideRect,
+    isDateSpansEqual,
+    constrainPoint,
+    intersectRects,
+    getRectCenter,
+    diffPoints,
+    mapHash,
+    rangeContainsRange,
+    interactionSettingsToStore,
+    Interaction,
+    enableCursor,
+    disableCursor,
+    compareNumbers,
+    getElSeg,
+    getRelevantEvents,
+    EventApi,
+    createEmptyEventStore,
+    applyMutationToEventStore,
+    interactionSettingsStore,
+    startOfDay,
+    diffDates,
+    createDuration,
+    eventTupleToStore,
+    isInteractionValid,
+    parseDragMeta,
+    elementMatches,
+    parseEventDef,
+    createEventInstance,
+    globalDefaults,
+    createPlugin
+} from '@fullcalendar/core';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -22,20 +70,28 @@ and limitations under the License.
 ***************************************************************************** */
 /* global Reflect, Promise */
 
-var extendStatics = function(d, b) {
+var extendStatics = function (d, b) {
     extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        ({__proto__: []} instanceof Array && function (d, b) {
+            d.__proto__ = b;
+        }) ||
+        function (d, b) {
+            for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+        };
     return extendStatics(d, b);
 };
 
 function __extends(d, b) {
     extendStatics(d, b);
-    function __() { this.constructor = d; }
+
+    function __() {
+        this.constructor = d;
+    }
+
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 }
 
-var __assign = function() {
+var __assign = function () {
     __assign = Object.assign || function __assign(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
             s = arguments[i];
@@ -165,12 +221,13 @@ var PointerDragging = /** @class */ (function () {
         this.containerEl = containerEl;
         this.emitter = new EmitterMixin();
         containerEl.addEventListener('mousedown', this.handleMouseDown);
-        containerEl.addEventListener('touchstart', this.handleTouchStart, { passive: true });
+        containerEl.addEventListener('touchstart', this.handleTouchStart, {passive: true});
         listenerCreated();
     }
+
     PointerDragging.prototype.destroy = function () {
         this.containerEl.removeEventListener('mousedown', this.handleMouseDown);
-        this.containerEl.removeEventListener('touchstart', this.handleTouchStart, { passive: true });
+        this.containerEl.removeEventListener('touchstart', this.handleTouchStart, {passive: true});
         listenerDestroyed();
     };
     PointerDragging.prototype.tryStart = function (ev) {
@@ -197,8 +254,7 @@ var PointerDragging = /** @class */ (function () {
     PointerDragging.prototype.querySubjectEl = function (ev) {
         if (this.selector) {
             return elementClosest(ev.target, this.selector);
-        }
-        else {
+        } else {
             return this.containerEl;
         }
     };
@@ -241,8 +297,7 @@ var PointerDragging = /** @class */ (function () {
         if (isFirst) {
             this.origPageX = ev.pageX;
             this.origPageY = ev.pageY;
-        }
-        else {
+        } else {
             deltaX = ev.pageX - this.origPageX;
             deltaY = ev.pageY - this.origPageY;
         }
@@ -267,8 +322,7 @@ var PointerDragging = /** @class */ (function () {
         if (touches && touches.length) {
             pageX = touches[0].pageX;
             pageY = touches[0].pageY;
-        }
-        else {
+        } else {
             pageX = ev.pageX;
             pageY = ev.pageY;
         }
@@ -276,8 +330,7 @@ var PointerDragging = /** @class */ (function () {
         if (isFirst) {
             this.origPageX = pageX;
             this.origPageY = pageY;
-        }
-        else {
+        } else {
             deltaX = pageX - this.origPageX;
             deltaY = pageY - this.origPageY;
         }
@@ -293,10 +346,12 @@ var PointerDragging = /** @class */ (function () {
     };
     return PointerDragging;
 }());
+
 // Returns a boolean whether this was a left mouse click and no ctrl key (which means right click on Mac)
 function isPrimaryMouseButton(ev) {
     return ev.button === 0 && !ev.ctrlKey;
 }
+
 // Ignoring fake mouse events generated by touch
 // ----------------------------------------------------------------------------------------------------
 function startIgnoringMouse() {
@@ -305,18 +360,21 @@ function startIgnoringMouse() {
         ignoreMouseDepth--;
     }, config.touchMouseIgnoreWait);
 }
+
 // We want to attach touchmove as early as possible for Safari
 // ----------------------------------------------------------------------------------------------------
 function listenerCreated() {
     if (!(listenerCnt++)) {
-        window.addEventListener('touchmove', onWindowTouchMove, { passive: false });
+        window.addEventListener('touchmove', onWindowTouchMove, {passive: false});
     }
 }
+
 function listenerDestroyed() {
     if (!(--listenerCnt)) {
-        window.removeEventListener('touchmove', onWindowTouchMove, { passive: false });
+        window.removeEventListener('touchmove', onWindowTouchMove, {passive: false});
     }
 }
+
 function onWindowTouchMove(ev) {
     if (isWindowTouchMoveCancelled) {
         ev.preventDefault();
@@ -339,6 +397,7 @@ var ElementMirror = /** @class */ (function () {
         this.zIndex = 9999;
         this.revertDuration = 0;
     }
+
     ElementMirror.prototype.start = function (sourceEl, pageX, pageY) {
         this.sourceEl = sourceEl;
         this.sourceElRect = this.sourceEl.getBoundingClientRect();
@@ -363,8 +422,7 @@ var ElementMirror = /** @class */ (function () {
                 this.isVisible = bool; // needs to happen before updateElPosition
                 this.updateElPosition(); // because was not updating the position while invisible
             }
-        }
-        else {
+        } else {
             if (this.isVisible) {
                 if (this.mirrorEl) {
                     this.mirrorEl.style.display = 'none';
@@ -387,8 +445,7 @@ var ElementMirror = /** @class */ (function () {
             (this.deltaX || this.deltaY) // if same coords, transition won't work
         ) {
             this.doRevertAnimation(done, this.revertDuration);
-        }
-        else {
+        } else {
             setTimeout(done, 0);
         }
     };
@@ -397,7 +454,7 @@ var ElementMirror = /** @class */ (function () {
         var finalSourceElRect = this.sourceEl.getBoundingClientRect(); // because autoscrolling might have happened
         mirrorEl.style.transition =
             'top ' + revertDuration + 'ms,' +
-                'left ' + revertDuration + 'ms';
+            'left ' + revertDuration + 'ms';
         applyStyle(mirrorEl, {
             left: finalSourceElRect.left,
             top: finalSourceElRect.top
@@ -459,6 +516,7 @@ The cache can be in one of two modes:
 */
 var ScrollGeomCache = /** @class */ (function (_super) {
     __extends(ScrollGeomCache, _super);
+
     function ScrollGeomCache(scrollController, doesListening) {
         var _this = _super.call(this) || this;
         _this.handleScroll = function () {
@@ -480,6 +538,7 @@ var ScrollGeomCache = /** @class */ (function (_super) {
         }
         return _this;
     }
+
     ScrollGeomCache.prototype.destroy = function () {
         if (this.doesListening) {
             this.getEventTarget().removeEventListener('scroll', this.handleScroll);
@@ -527,9 +586,11 @@ var ScrollGeomCache = /** @class */ (function (_super) {
 }(ScrollController));
 var ElementScrollGeomCache = /** @class */ (function (_super) {
     __extends(ElementScrollGeomCache, _super);
+
     function ElementScrollGeomCache(el, doesListening) {
         return _super.call(this, new ElementScrollController(el), doesListening) || this;
     }
+
     ElementScrollGeomCache.prototype.getEventTarget = function () {
         return this.scrollController.el;
     };
@@ -540,9 +601,11 @@ var ElementScrollGeomCache = /** @class */ (function (_super) {
 }(ScrollGeomCache));
 var WindowScrollGeomCache = /** @class */ (function (_super) {
     __extends(WindowScrollGeomCache, _super);
+
     function WindowScrollGeomCache(doesListening) {
         return _super.call(this, new WindowScrollController(), doesListening) || this;
     }
+
     WindowScrollGeomCache.prototype.getEventTarget = function () {
         return window;
     };
@@ -597,13 +660,13 @@ var AutoScroller = /** @class */ (function () {
                     var now = getTime();
                     _this.handleSide(edge, (now - _this.msSinceRequest) / 1000);
                     _this.requestAnimation(now);
-                }
-                else {
+                } else {
                     _this.isAnimating = false; // will stop animation
                 }
             }
         };
     }
+
     AutoScroller.prototype.start = function (pageX, pageY) {
         if (this.isEnabled) {
             this.scrollCaches = this.buildCaches();
@@ -624,14 +687,12 @@ var AutoScroller = /** @class */ (function () {
             var xDelta = this.pointerScreenX === null ? 0 : pointerScreenX - this.pointerScreenX;
             if (yDelta < 0) {
                 this.everMovedUp = true;
-            }
-            else if (yDelta > 0) {
+            } else if (yDelta > 0) {
                 this.everMovedDown = true;
             }
             if (xDelta < 0) {
                 this.everMovedLeft = true;
-            }
-            else if (xDelta > 0) {
+            } else if (xDelta > 0) {
                 this.everMovedRight = true;
             }
             this.pointerScreenX = pointerScreenX;
@@ -661,7 +722,7 @@ var AutoScroller = /** @class */ (function () {
         var edgeThreshold = this.edgeThreshold;
         var invDistance = edgeThreshold - edge.distance;
         var velocity = // the closer to the edge, the faster we scroll
-         (invDistance * invDistance) / (edgeThreshold * edgeThreshold) * // quadratic
+            (invDistance * invDistance) / (edgeThreshold * edgeThreshold) * // quadratic
             this.maxVelocity * seconds;
         var sign = 1;
         switch (edge.name) {
@@ -694,19 +755,19 @@ var AutoScroller = /** @class */ (function () {
             if (leftDist >= 0 && rightDist >= 0 && topDist >= 0 && bottomDist >= 0) {
                 if (topDist <= edgeThreshold && this.everMovedUp && scrollCache.canScrollUp() &&
                     (!bestSide || bestSide.distance > topDist)) {
-                    bestSide = { scrollCache: scrollCache, name: 'top', distance: topDist };
+                    bestSide = {scrollCache: scrollCache, name: 'top', distance: topDist};
                 }
                 if (bottomDist <= edgeThreshold && this.everMovedDown && scrollCache.canScrollDown() &&
                     (!bestSide || bestSide.distance > bottomDist)) {
-                    bestSide = { scrollCache: scrollCache, name: 'bottom', distance: bottomDist };
+                    bestSide = {scrollCache: scrollCache, name: 'bottom', distance: bottomDist};
                 }
                 if (leftDist <= edgeThreshold && this.everMovedLeft && scrollCache.canScrollLeft() &&
                     (!bestSide || bestSide.distance > leftDist)) {
-                    bestSide = { scrollCache: scrollCache, name: 'left', distance: leftDist };
+                    bestSide = {scrollCache: scrollCache, name: 'left', distance: leftDist};
                 }
                 if (rightDist <= edgeThreshold && this.everMovedRight && scrollCache.canScrollRight() &&
                     (!bestSide || bestSide.distance > rightDist)) {
-                    bestSide = { scrollCache: scrollCache, name: 'right', distance: rightDist };
+                    bestSide = {scrollCache: scrollCache, name: 'right', distance: rightDist};
                 }
             }
         }
@@ -716,8 +777,7 @@ var AutoScroller = /** @class */ (function () {
         return this.queryScrollEls().map(function (el) {
             if (el === window) {
                 return new WindowScrollGeomCache(false); // false = don't listen to user-generated scrolls
-            }
-            else {
+            } else {
                 return new ElementScrollGeomCache(el, false); // false = don't listen to user-generated scrolls
             }
         });
@@ -728,8 +788,7 @@ var AutoScroller = /** @class */ (function () {
             var query = _a[_i];
             if (typeof query === 'object') {
                 els.push(query);
-            }
-            else {
+            } else {
                 els.push.apply(els, Array.prototype.slice.call(document.querySelectorAll(query)));
             }
         }
@@ -746,6 +805,7 @@ Monitors dragging on an element. Has a number of high-level features:
 */
 var FeaturefulElementDragging = /** @class */ (function (_super) {
     __extends(FeaturefulElementDragging, _super);
+
     function FeaturefulElementDragging(containerEl) {
         var _this = _super.call(this, containerEl) || this;
         // options that can be directly set by caller
@@ -830,6 +890,7 @@ var FeaturefulElementDragging = /** @class */ (function (_super) {
         _this.autoScroller = new AutoScroller();
         return _this;
     }
+
     FeaturefulElementDragging.prototype.destroy = function () {
         this.pointer.destroy();
     };
@@ -840,8 +901,7 @@ var FeaturefulElementDragging = /** @class */ (function (_super) {
                 _this.delayTimeoutId = null;
                 _this.handleDelayEnd(ev);
             }, this.delay); // not assignable to number!
-        }
-        else {
+        } else {
             this.handleDelayEnd(ev);
         }
     };
@@ -908,6 +968,7 @@ var OffsetTracker = /** @class */ (function () {
             return new ElementScrollGeomCache(el, true); // listen=true
         });
     }
+
     OffsetTracker.prototype.destroy = function () {
         for (var _i = 0, _a = this.scrollCaches; _i < _a.length; _i++) {
             var scrollCache = _a[_i];
@@ -931,7 +992,7 @@ var OffsetTracker = /** @class */ (function () {
         return top;
     };
     OffsetTracker.prototype.isWithinClipping = function (pageX, pageY) {
-        var point = { left: pageX, top: pageY };
+        var point = {left: pageX, top: pageY};
         for (var _i = 0, _a = this.scrollCaches; _i < _a.length; _i++) {
             var scrollCache = _a[_i];
             if (!isIgnoredClipping(scrollCache.getEventTarget()) &&
@@ -982,8 +1043,7 @@ var HitDragging = /** @class */ (function () {
             if (_this.initialHit || !_this.requireInitial) {
                 dragging.setIgnoreMove(false);
                 _this.emitter.trigger('pointerdown', ev); // TODO: fire this before computing processFirstCoord, so listeners can cancel. this gets fired by almost every handler :(
-            }
-            else {
+            } else {
                 dragging.setIgnoreMove(true);
             }
         };
@@ -1016,10 +1076,11 @@ var HitDragging = /** @class */ (function () {
         this.dragging = dragging;
         this.emitter = new EmitterMixin();
     }
+
     // sets initialHit
     // sets coordAdjust
     HitDragging.prototype.processFirstCoord = function (ev) {
-        var origPoint = { left: ev.pageX, top: ev.pageY };
+        var origPoint = {left: ev.pageX, top: ev.pageY};
         var adjustedPoint = origPoint;
         var subjectEl = ev.subjectEl;
         var subjectRect;
@@ -1036,9 +1097,8 @@ var HitDragging = /** @class */ (function () {
                 }
             }
             this.coordAdjust = diffPoints(adjustedPoint, origPoint);
-        }
-        else {
-            this.coordAdjust = { left: 0, top: 0 };
+        } else {
+            this.coordAdjust = {left: 0, top: 0};
         }
     };
     HitDragging.prototype.handleMove = function (ev, forceHandle) {
@@ -1076,14 +1136,14 @@ var HitDragging = /** @class */ (function () {
                 var width = origRect.right - origRect.left;
                 var height = origRect.bottom - origRect.top;
                 if (
-                // must be within the element's bounds
-                positionLeft >= 0 && positionLeft < width &&
+                    // must be within the element's bounds
+                    positionLeft >= 0 && positionLeft < width &&
                     positionTop >= 0 && positionTop < height) {
                     var hit = component.queryHit(positionLeft, positionTop, width, height);
                     if (hit &&
                         (
-                        // make sure the hit is within activeRange, meaning it's not a deal cell
-                        !component.props.dateProfile || // hack for DayTile
+                            // make sure the hit is within activeRange, meaning it's not a deal cell
+                            !component.props.dateProfile || // hack for DayTile
                             rangeContainsRange(component.props.dateProfile.activeRange, hit.dateSpan.range)) &&
                         (!bestHit || hit.layer > bestHit.layer)) {
                         // TODO: better way to re-orient rectangle
@@ -1100,6 +1160,7 @@ var HitDragging = /** @class */ (function () {
     };
     return HitDragging;
 }());
+
 function isHitsEqual(hit0, hit1) {
     if (!hit0 && !hit1) {
         return true;
@@ -1116,6 +1177,7 @@ A pointerdown+pointerup on the same "hit" constitutes a click.
 */
 var DateClicking = /** @class */ (function (_super) {
     __extends(DateClicking, _super);
+
     function DateClicking(settings) {
         var _this = _super.call(this, settings) || this;
         _this.handlePointerDown = function (ev) {
@@ -1143,6 +1205,7 @@ var DateClicking = /** @class */ (function (_super) {
         hitDragging.emitter.on('dragend', _this.handleDragEnd);
         return _this;
     }
+
     DateClicking.prototype.destroy = function () {
         this.dragging.destroy();
     };
@@ -1155,6 +1218,7 @@ constituted by a drag over date cells, with a possible delay at the beginning of
 */
 var DateSelecting = /** @class */ (function (_super) {
     __extends(DateSelecting, _super);
+
     function DateSelecting(settings) {
         var _this = _super.call(this, settings) || this;
         _this.dragSelection = null;
@@ -1182,15 +1246,13 @@ var DateSelecting = /** @class */ (function (_super) {
                 }
             }
             if (dragSelection) {
-                calendar.dispatch({ type: 'SELECT_DATES', selection: dragSelection });
-            }
-            else if (!isFinal) { // only unselect if moved away while dragging
-                calendar.dispatch({ type: 'UNSELECT_DATES' });
+                calendar.dispatch({type: 'SELECT_DATES', selection: dragSelection});
+            } else if (!isFinal) { // only unselect if moved away while dragging
+                calendar.dispatch({type: 'UNSELECT_DATES'});
             }
             if (!isInvalid) {
                 enableCursor();
-            }
-            else {
+            } else {
                 disableCursor();
             }
             if (!isFinal) {
@@ -1216,11 +1278,13 @@ var DateSelecting = /** @class */ (function (_super) {
         hitDragging.emitter.on('pointerup', _this.handlePointerUp);
         return _this;
     }
+
     DateSelecting.prototype.destroy = function () {
         this.dragging.destroy();
     };
     return DateSelecting;
 }(Interaction));
+
 function getComponentTouchDelay(component) {
     var delay = component.opt('selectLongPressDelay');
     if (delay == null) {
@@ -1228,6 +1292,7 @@ function getComponentTouchDelay(component) {
     }
     return delay;
 }
+
 function joinHitsIntoSelection(hit0, hit1, dateSelectionTransformers) {
     var dateSpan0 = hit0.dateSpan;
     var dateSpan1 = hit1.dateSpan;
@@ -1244,18 +1309,18 @@ function joinHitsIntoSelection(hit0, hit1, dateSelectionTransformers) {
         var res = transformer(hit0, hit1);
         if (res === false) {
             return null;
-        }
-        else if (res) {
+        } else if (res) {
             __assign(props, res);
         }
     }
-    props.range = { start: ms[0], end: ms[3] };
+    props.range = {start: ms[0], end: ms[3]};
     props.allDay = dateSpan0.allDay;
     return props;
 }
 
 var EventDragging = /** @class */ (function (_super) {
     __extends(EventDragging, _super);
+
     function EventDragging(settings) {
         var _this = _super.call(this, settings) || this;
         // internal state
@@ -1298,12 +1363,11 @@ var EventDragging = /** @class */ (function (_super) {
             if (ev.isTouch) {
                 // need to select a different event?
                 if (eventInstanceId !== _this.component.props.eventSelection) {
-                    initialCalendar.dispatch({ type: 'SELECT_EVENT', eventInstanceId: eventInstanceId });
+                    initialCalendar.dispatch({type: 'SELECT_EVENT', eventInstanceId: eventInstanceId});
                 }
-            }
-            else {
+            } else {
                 // if now using mouse, but was previous touch interaction, clear selected event
-                initialCalendar.dispatch({ type: 'UNSELECT_EVENT' });
+                initialCalendar.dispatch({type: 'UNSELECT_EVENT'});
             }
             if (_this.isDragging) {
                 initialCalendar.unselect(ev); // unselect *date* selection
@@ -1351,16 +1415,14 @@ var EventDragging = /** @class */ (function (_super) {
                             interaction.mutatedEvents = createEmptyEventStore();
                         }
                     }
-                }
-                else {
+                } else {
                     receivingCalendar = null;
                 }
             }
             _this.displayDrag(receivingCalendar, interaction);
             if (!isInvalid) {
                 enableCursor();
-            }
-            else {
+            } else {
                 disableCursor();
             }
             if (!isFinal) {
@@ -1415,17 +1477,24 @@ var EventDragging = /** @class */ (function (_super) {
                             var transformer = _b[_i];
                             __assign(transformed, transformer(validMutation, initialCalendar_1));
                         }
-                        var eventDropArg = __assign({}, transformed, { el: ev.subjectEl, delta: validMutation.datesDelta, oldEvent: eventApi, event: new EventApi(// the data AFTER the mutation
-                            initialCalendar_1, mutatedRelevantEvents.defs[eventDef.defId], eventInstance ? mutatedRelevantEvents.instances[eventInstance.instanceId] : null), revert: function () {
+                        var eventDropArg = __assign({}, transformed, {
+                            el: ev.subjectEl,
+                            delta: validMutation.datesDelta,
+                            oldEvent: eventApi,
+                            event: new EventApi(// the data AFTER the mutation
+                                initialCalendar_1, mutatedRelevantEvents.defs[eventDef.defId], eventInstance ? mutatedRelevantEvents.instances[eventInstance.instanceId] : null),
+                            revert: function () {
                                 initialCalendar_1.dispatch({
                                     type: 'MERGE_EVENTS',
                                     eventStore: relevantEvents_1
                                 });
-                            }, jsEvent: ev.origEvent, view: initialView });
+                            },
+                            jsEvent: ev.origEvent,
+                            view: initialView
+                        });
                         initialCalendar_1.publiclyTrigger('eventDrop', [eventDropArg]);
                         // dropped in different calendar
-                    }
-                    else if (receivingCalendar) {
+                    } else if (receivingCalendar) {
                         initialCalendar_1.publiclyTrigger('eventLeave', [
                             {
                                 draggedEl: ev.subjectEl,
@@ -1447,20 +1516,20 @@ var EventDragging = /** @class */ (function (_super) {
                                 eventInstanceId: eventInstance.instanceId
                             });
                         }
-                        var dropArg = __assign({}, receivingCalendar.buildDatePointApi(finalHit.dateSpan), { draggedEl: ev.subjectEl, jsEvent: ev.origEvent, view: finalHit.component // should this be finalHit.component.view? See #4644
-                         });
+                        var dropArg = __assign({}, receivingCalendar.buildDatePointApi(finalHit.dateSpan), {
+                            draggedEl: ev.subjectEl, jsEvent: ev.origEvent, view: finalHit.component // should this be finalHit.component.view? See #4644
+                        });
                         receivingCalendar.publiclyTrigger('drop', [dropArg]);
                         receivingCalendar.publiclyTrigger('eventReceive', [
                             {
                                 draggedEl: ev.subjectEl,
                                 event: new EventApi(// the data AFTER the mutation
-                                receivingCalendar, mutatedRelevantEvents.defs[eventDef.defId], mutatedRelevantEvents.instances[eventInstance.instanceId]),
+                                    receivingCalendar, mutatedRelevantEvents.defs[eventDef.defId], mutatedRelevantEvents.instances[eventInstance.instanceId]),
                                 view: finalHit.component // should this be finalHit.component.view? See #4644
                             }
                         ]);
                     }
-                }
-                else {
+                } else {
                     initialCalendar_1.publiclyTrigger('_noEventDrop');
                 }
             }
@@ -1480,6 +1549,7 @@ var EventDragging = /** @class */ (function (_super) {
         hitDragging.emitter.on('dragend', _this.handleDragEnd);
         return _this;
     }
+
     EventDragging.prototype.destroy = function () {
         this.dragging.destroy();
     };
@@ -1502,24 +1572,23 @@ var EventDragging = /** @class */ (function (_super) {
                     }
                 });
                 // completely clear the old calendar if it wasn't the initial
-            }
-            else {
-                prevCalendar.dispatch({ type: 'UNSET_EVENT_DRAG' });
+            } else {
+                prevCalendar.dispatch({type: 'UNSET_EVENT_DRAG'});
             }
         }
         if (nextCalendar) {
-            nextCalendar.dispatch({ type: 'SET_EVENT_DRAG', state: state });
+            nextCalendar.dispatch({type: 'SET_EVENT_DRAG', state: state});
         }
     };
     EventDragging.prototype.clearDrag = function () {
         var initialCalendar = this.component.calendar;
         var receivingCalendar = this.receivingCalendar;
         if (receivingCalendar) {
-            receivingCalendar.dispatch({ type: 'UNSET_EVENT_DRAG' });
+            receivingCalendar.dispatch({type: 'UNSET_EVENT_DRAG'});
         }
         // the initial calendar might have an dummy drag state from displayDrag
         if (initialCalendar !== receivingCalendar) {
-            initialCalendar.dispatch({ type: 'UNSET_EVENT_DRAG' });
+            initialCalendar.dispatch({type: 'UNSET_EVENT_DRAG'});
         }
     };
     EventDragging.prototype.cleanup = function () {
@@ -1534,6 +1603,7 @@ var EventDragging = /** @class */ (function (_super) {
     EventDragging.SELECTOR = '.fc-draggable, .fc-resizable'; // TODO: test this in IE11
     return EventDragging;
 }(Interaction));
+
 function computeEventMutation(hit0, hit1, massagers) {
     var dateSpan0 = hit0.dateSpan;
     var dateSpan1 = hit1.dateSpan;
@@ -1565,6 +1635,7 @@ function computeEventMutation(hit0, hit1, massagers) {
     }
     return mutation;
 }
+
 function getComponentTouchDelay$1(component) {
     var delay = component.opt('eventLongPressDelay');
     if (delay == null) {
@@ -1575,6 +1646,7 @@ function getComponentTouchDelay$1(component) {
 
 var EventDragging$1 = /** @class */ (function (_super) {
     __extends(EventDragging, _super);
+
     function EventDragging(settings) {
         var _this = _super.call(this, settings) || this;
         // internal state
@@ -1639,14 +1711,12 @@ var EventDragging$1 = /** @class */ (function (_super) {
                     type: 'SET_EVENT_RESIZE',
                     state: interaction
                 });
-            }
-            else {
-                calendar.dispatch({ type: 'UNSET_EVENT_RESIZE' });
+            } else {
+                calendar.dispatch({type: 'UNSET_EVENT_RESIZE'});
             }
             if (!isInvalid) {
                 enableCursor();
-            }
-            else {
+            } else {
                 disableCursor();
             }
             if (!isFinal) {
@@ -1685,7 +1755,7 @@ var EventDragging$1 = /** @class */ (function (_super) {
                         endDelta: _this.validMutation.endDelta || createDuration(0),
                         prevEvent: eventApi,
                         event: new EventApi(// the data AFTER the mutation
-                        calendar, mutatedRelevantEvents.defs[eventDef.defId], eventInstance ? mutatedRelevantEvents.instances[eventInstance.instanceId] : null),
+                            calendar, mutatedRelevantEvents.defs[eventDef.defId], eventInstance ? mutatedRelevantEvents.instances[eventInstance.instanceId] : null),
                         revert: function () {
                             calendar.dispatch({
                                 type: 'MERGE_EVENTS',
@@ -1696,8 +1766,7 @@ var EventDragging$1 = /** @class */ (function (_super) {
                         view: view
                     }
                 ]);
-            }
-            else {
+            } else {
                 calendar.publiclyTrigger('_noEventResize');
             }
             // reset all internal state
@@ -1718,6 +1787,7 @@ var EventDragging$1 = /** @class */ (function (_super) {
         hitDragging.emitter.on('dragend', _this.handleDragEnd);
         return _this;
     }
+
     EventDragging.prototype.destroy = function () {
         this.dragging.destroy();
     };
@@ -1726,6 +1796,7 @@ var EventDragging$1 = /** @class */ (function (_super) {
     };
     return EventDragging;
 }(Interaction));
+
 function computeMutation(hit0, hit1, isFromStart, instanceRange, transforms) {
     var dateEnv = hit0.component.dateEnv;
     var date0 = hit0.dateSpan.range.start;
@@ -1737,8 +1808,7 @@ function computeMutation(hit0, hit1, isFromStart, instanceRange, transforms) {
         var res = transform(hit0, hit1);
         if (res === false) {
             return null;
-        }
-        else if (res) {
+        } else if (res) {
             __assign(props, res);
         }
     }
@@ -1747,8 +1817,7 @@ function computeMutation(hit0, hit1, isFromStart, instanceRange, transforms) {
             props.startDelta = delta;
             return props;
         }
-    }
-    else {
+    } else {
         if (dateEnv.add(instanceRange.end, delta) > instanceRange.start) {
             props.endDelta = delta;
             return props;
@@ -1783,7 +1852,7 @@ var UnselectAuto = /** @class */ (function () {
                 if (state.eventSelection && // an existing event selected?
                     !elementClosest(documentPointer.downEl, EventDragging.SELECTOR) // interaction DIDN'T start on an event
                 ) {
-                    calendar.dispatch({ type: 'UNSELECT_EVENT' });
+                    calendar.dispatch({type: 'UNSELECT_EVENT'});
                 }
             }
             _this.isRecentPointerDateSelect = false;
@@ -1798,6 +1867,7 @@ var UnselectAuto = /** @class */ (function () {
         */
         calendar.on('select', this.onSelect);
     }
+
     UnselectAuto.prototype.destroy = function () {
         this.calendar.off('select', this.onSelect);
         this.documentPointer.destroy();
@@ -1849,8 +1919,7 @@ var ExternalElementDragging = /** @class */ (function () {
             dragging.setMirrorIsVisible(isFinal || !droppableEvent || !document.querySelector('.fc-mirror'));
             if (!isInvalid) {
                 enableCursor();
-            }
-            else {
+            } else {
                 disableCursor();
             }
             if (!isFinal) {
@@ -1866,7 +1935,11 @@ var ExternalElementDragging = /** @class */ (function () {
                 var finalHit = _this.hitDragging.finalHit;
                 var finalView = finalHit.component.view;
                 var dragMeta = _this.dragMeta;
-                var arg = __assign({}, receivingCalendar.buildDatePointApi(finalHit.dateSpan), { draggedEl: pev.subjectEl, jsEvent: pev.origEvent, view: finalView });
+                var arg = __assign({}, receivingCalendar.buildDatePointApi(finalHit.dateSpan), {
+                    draggedEl: pev.subjectEl,
+                    jsEvent: pev.origEvent,
+                    view: finalView
+                });
                 receivingCalendar.publiclyTrigger('drop', [arg]);
                 if (dragMeta.create) {
                     receivingCalendar.dispatch({
@@ -1899,37 +1972,35 @@ var ExternalElementDragging = /** @class */ (function () {
         hitDragging.emitter.on('dragend', this.handleDragEnd);
         this.suppliedDragMeta = suppliedDragMeta;
     }
+
     ExternalElementDragging.prototype.buildDragMeta = function (subjectEl) {
         if (typeof this.suppliedDragMeta === 'object') {
             return parseDragMeta(this.suppliedDragMeta);
-        }
-        else if (typeof this.suppliedDragMeta === 'function') {
+        } else if (typeof this.suppliedDragMeta === 'function') {
             return parseDragMeta(this.suppliedDragMeta(subjectEl));
-        }
-        else {
+        } else {
             return getDragMetaFromEl(subjectEl);
         }
     };
     ExternalElementDragging.prototype.displayDrag = function (nextCalendar, state) {
         var prevCalendar = this.receivingCalendar;
         if (prevCalendar && prevCalendar !== nextCalendar) {
-            prevCalendar.dispatch({ type: 'UNSET_EVENT_DRAG' });
+            prevCalendar.dispatch({type: 'UNSET_EVENT_DRAG'});
         }
         if (nextCalendar) {
-            nextCalendar.dispatch({ type: 'SET_EVENT_DRAG', state: state });
+            nextCalendar.dispatch({type: 'SET_EVENT_DRAG', state: state});
         }
     };
     ExternalElementDragging.prototype.clearDrag = function () {
         if (this.receivingCalendar) {
-            this.receivingCalendar.dispatch({ type: 'UNSET_EVENT_DRAG' });
+            this.receivingCalendar.dispatch({type: 'UNSET_EVENT_DRAG'});
         }
     };
     ExternalElementDragging.prototype.canDropElOnCalendar = function (el, receivingCalendar) {
         var dropAccept = receivingCalendar.opt('dropAccept');
         if (typeof dropAccept === 'function') {
             return dropAccept(el);
-        }
-        else if (typeof dropAccept === 'string' && dropAccept) {
+        } else if (typeof dropAccept === 'string' && dropAccept) {
             return Boolean(elementMatches(el, dropAccept));
         }
         return true;
@@ -1945,7 +2016,7 @@ function computeEventForDateSpan(dateSpan, dragMeta, calendar) {
         __assign(defProps, transform(dateSpan, dragMeta));
     }
     var def = parseEventDef(defProps, dragMeta.sourceId, dateSpan.allDay, calendar.opt('forceEventDuration') || Boolean(dragMeta.duration), // hasEnd
-    calendar);
+        calendar);
     var start = dateSpan.range.start;
     // only rely on time info if drop zone is all-day,
     // otherwise, we already know the time
@@ -1955,19 +2026,22 @@ function computeEventForDateSpan(dateSpan, dragMeta, calendar) {
     var end = dragMeta.duration ?
         calendar.dateEnv.add(start, dragMeta.duration) :
         calendar.getDefaultEventEnd(dateSpan.allDay, start);
-    var instance = createEventInstance(def.defId, { start: start, end: end });
-    return { def: def, instance: instance };
+    var instance = createEventInstance(def.defId, {start: start, end: end});
+    return {def: def, instance: instance};
 }
+
 // Utils for extracting data from element
 // ----------------------------------------------------------------------------------------------------
 function getDragMetaFromEl(el) {
     var str = getEmbeddedElData(el, 'event');
     var obj = str ?
         JSON.parse(str) :
-        { create: false }; // if no embedded data, assume no event creation
+        {create: false}; // if no embedded data, assume no event creation
     return parseDragMeta(obj);
 }
+
 config.dataAttrPrefix = '';
+
 function getEmbeddedElData(el, name) {
     var prefix = config.dataAttrPrefix;
     var prefixedName = (prefix ? prefix + '-' : '') + name;
@@ -1982,7 +2056,9 @@ Leverages FullCalendar's internal drag-n-drop functionality WITHOUT a third-part
 var ExternalDraggable = /** @class */ (function () {
     function ExternalDraggable(el, settings) {
         var _this = this;
-        if (settings === void 0) { settings = {}; }
+        if (settings === void 0) {
+            settings = {};
+        }
         this.handlePointerDown = function (ev) {
             var dragging = _this.dragging;
             var _a = _this.settings, minDistance = _a.minDistance, longPressDelay = _a.longPressDelay;
@@ -2015,6 +2091,7 @@ var ExternalDraggable = /** @class */ (function () {
         dragging.emitter.on('dragstart', this.handleDragStart);
         new ExternalElementDragging(dragging, settings.eventData);
     }
+
     ExternalDraggable.prototype.destroy = function () {
         this.dragging.destroy();
     };
@@ -2029,6 +2106,7 @@ It also has the ability to hide the moving element (the "mirror") during the dra
 */
 var InferredElementDragging = /** @class */ (function (_super) {
     __extends(InferredElementDragging, _super);
+
     function InferredElementDragging(containerEl) {
         var _this = _super.call(this, containerEl) || this;
         _this.shouldIgnoreMove = false;
@@ -2059,6 +2137,7 @@ var InferredElementDragging = /** @class */ (function (_super) {
         pointer.emitter.on('pointerup', _this.handlePointerUp);
         return _this;
     }
+
     InferredElementDragging.prototype.destroy = function () {
         this.pointer.destroy();
     };
@@ -2073,8 +2152,7 @@ var InferredElementDragging = /** @class */ (function (_super) {
                 this.currentMirrorEl.style.visibility = '';
                 this.currentMirrorEl = null;
             }
-        }
-        else {
+        } else {
             var mirrorEl = this.mirrorSelector ?
                 document.querySelector(this.mirrorSelector) :
                 null;
@@ -2095,20 +2173,18 @@ var ThirdPartyDraggable = /** @class */ (function () {
     function ThirdPartyDraggable(containerOrSettings, settings) {
         var containerEl = document;
         if (
-        // wish we could just test instanceof EventTarget, but doesn't work in IE11
-        containerOrSettings === document ||
+            // wish we could just test instanceof EventTarget, but doesn't work in IE11
+            containerOrSettings === document ||
             containerOrSettings instanceof Element) {
             containerEl = containerOrSettings;
             settings = settings || {};
-        }
-        else {
+        } else {
             settings = (containerOrSettings || {});
         }
         var dragging = this.dragging = new InferredElementDragging(containerEl);
         if (typeof settings.itemSelector === 'string') {
             dragging.pointer.selector = settings.itemSelector;
-        }
-        else if (containerEl === document) {
+        } else if (containerEl === document) {
             dragging.pointer.selector = '[data-event]';
         }
         if (typeof settings.mirrorSelector === 'string') {
@@ -2116,6 +2192,7 @@ var ThirdPartyDraggable = /** @class */ (function () {
         }
         new ExternalElementDragging(dragging, settings.eventData);
     }
+
     ThirdPartyDraggable.prototype.destroy = function () {
         this.dragging.destroy();
     };
@@ -2129,4 +2206,4 @@ var main = createPlugin({
 });
 
 export default main;
-export { ExternalDraggable as Draggable, FeaturefulElementDragging, PointerDragging, ThirdPartyDraggable };
+export {ExternalDraggable as Draggable, FeaturefulElementDragging, PointerDragging, ThirdPartyDraggable};

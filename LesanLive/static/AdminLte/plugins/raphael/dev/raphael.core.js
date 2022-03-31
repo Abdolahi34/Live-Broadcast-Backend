@@ -1,4 +1,4 @@
-define(["eve"], function(eve) {
+define(["eve"], function (eve) {
 
     /*\
      * Raphael
@@ -67,6 +67,7 @@ define(["eve"], function(eve) {
             }
         }
     }
+
     R.version = "2.3.0";
     R.eve = eve;
     var loaded,
@@ -236,7 +237,8 @@ define(["eve"], function(eve) {
         sortByNumber = function (a, b) {
             return toFloat(a) - toFloat(b);
         },
-        fun = function () {},
+        fun = function () {
+        },
         pipe = function (x) {
             return x;
         },
@@ -276,7 +278,7 @@ define(["eve"], function(eve) {
                 var bbox = el._getBBox();
                 return rectPath(bbox.x, bbox.y, bbox.width, bbox.height);
             },
-            set : function(el) {
+            set: function (el) {
                 var bbox = el._getBBox();
                 return rectPath(bbox.x, bbox.y, bbox.width, bbox.height);
             }
@@ -388,11 +390,11 @@ define(["eve"], function(eve) {
         if (type == "array") {
             return o instanceof Array;
         }
-        return  (type == "null" && o === null) ||
-                (type == typeof o && o !== null) ||
-                (type == "object" && o === Object(o)) ||
-                (type == "array" && Array.isArray && Array.isArray(o)) ||
-                objectToString.call(o).slice(8, -1).toLowerCase() == type;
+        return (type == "null" && o === null) ||
+            (type == typeof o && o !== null) ||
+            (type == "object" && o === Object(o)) ||
+            (type == "array" && Array.isArray && Array.isArray(o)) ||
+            objectToString.call(o).slice(8, -1).toLowerCase() == type;
     };
 
     function clone(obj) {
@@ -454,7 +456,7 @@ define(["eve"], function(eve) {
      = (number) angle in degrees.
     \*/
     R.deg = function (rad) {
-        return Math.round ((rad * 180 / PI% 360)* 1000) / 1000;
+        return Math.round((rad * 180 / PI % 360) * 1000) / 1000;
     };
     /*\
      * Raphael.snapTo
@@ -520,84 +522,84 @@ define(["eve"], function(eve) {
         }
     };
     var toHex = function (color) {
-        if (R.vml) {
-            // http://dean.edwards.name/weblog/2009/10/convert-any-colour-value-to-hex-in-msie/
-            var trim = /^\s+|\s+$/g;
-            var bod;
-            try {
-                var docum = new ActiveXObject("htmlfile");
-                docum.write("<body>");
-                docum.close();
-                bod = docum.body;
-            } catch(e) {
-                bod = createPopup().document.body;
-            }
-            var range = bod.createTextRange();
-            toHex = cacher(function (color) {
+            if (R.vml) {
+                // http://dean.edwards.name/weblog/2009/10/convert-any-colour-value-to-hex-in-msie/
+                var trim = /^\s+|\s+$/g;
+                var bod;
                 try {
-                    bod.style.color = Str(color).replace(trim, E);
-                    var value = range.queryCommandValue("ForeColor");
-                    value = ((value & 255) << 16) | (value & 65280) | ((value & 16711680) >>> 16);
-                    return "#" + ("000000" + value.toString(16)).slice(-6);
-                } catch(e) {
-                    return "none";
+                    var docum = new ActiveXObject("htmlfile");
+                    docum.write("<body>");
+                    docum.close();
+                    bod = docum.body;
+                } catch (e) {
+                    bod = createPopup().document.body;
                 }
-            });
-        } else {
-            var i = g.doc.createElement("i");
-            i.title = "Rapha\xebl Colour Picker";
-            i.style.display = "none";
-            g.doc.body.appendChild(i);
-            toHex = cacher(function (color) {
-                i.style.color = color;
-                return g.doc.defaultView.getComputedStyle(i, E).getPropertyValue("color");
-            });
-        }
-        return toHex(color);
-    },
-    hsbtoString = function () {
-        return "hsb(" + [this.h, this.s, this.b] + ")";
-    },
-    hsltoString = function () {
-        return "hsl(" + [this.h, this.s, this.l] + ")";
-    },
-    rgbtoString = function () {
-        return this.hex;
-    },
-    prepareRGB = function (r, g, b) {
-        if (g == null && R.is(r, "object") && "r" in r && "g" in r && "b" in r) {
-            b = r.b;
-            g = r.g;
-            r = r.r;
-        }
-        if (g == null && R.is(r, string)) {
-            var clr = R.getRGB(r);
-            r = clr.r;
-            g = clr.g;
-            b = clr.b;
-        }
-        if (r > 1 || g > 1 || b > 1) {
-            r /= 255;
-            g /= 255;
-            b /= 255;
-        }
+                var range = bod.createTextRange();
+                toHex = cacher(function (color) {
+                    try {
+                        bod.style.color = Str(color).replace(trim, E);
+                        var value = range.queryCommandValue("ForeColor");
+                        value = ((value & 255) << 16) | (value & 65280) | ((value & 16711680) >>> 16);
+                        return "#" + ("000000" + value.toString(16)).slice(-6);
+                    } catch (e) {
+                        return "none";
+                    }
+                });
+            } else {
+                var i = g.doc.createElement("i");
+                i.title = "Rapha\xebl Colour Picker";
+                i.style.display = "none";
+                g.doc.body.appendChild(i);
+                toHex = cacher(function (color) {
+                    i.style.color = color;
+                    return g.doc.defaultView.getComputedStyle(i, E).getPropertyValue("color");
+                });
+            }
+            return toHex(color);
+        },
+        hsbtoString = function () {
+            return "hsb(" + [this.h, this.s, this.b] + ")";
+        },
+        hsltoString = function () {
+            return "hsl(" + [this.h, this.s, this.l] + ")";
+        },
+        rgbtoString = function () {
+            return this.hex;
+        },
+        prepareRGB = function (r, g, b) {
+            if (g == null && R.is(r, "object") && "r" in r && "g" in r && "b" in r) {
+                b = r.b;
+                g = r.g;
+                r = r.r;
+            }
+            if (g == null && R.is(r, string)) {
+                var clr = R.getRGB(r);
+                r = clr.r;
+                g = clr.g;
+                b = clr.b;
+            }
+            if (r > 1 || g > 1 || b > 1) {
+                r /= 255;
+                g /= 255;
+                b /= 255;
+            }
 
-        return [r, g, b];
-    },
-    packageRGB = function (r, g, b, o) {
-        r *= 255;
-        g *= 255;
-        b *= 255;
-        var rgb = {
-            r: r,
-            g: g,
-            b: b,
-            hex: R.rgb(r, g, b),
-            toString: rgbtoString
+            return [r, g, b];
+        },
+        packageRGB = function (r, g, b, o) {
+            r *= 255;
+            g *= 255;
+            b *= 255;
+            var rgb = {
+                r: r,
+                g: g,
+                b: b,
+                hex: R.rgb(r, g, b),
+                toString: rgbtoString
+            };
+            R.is(o, "finite") && (rgb.opacity = o);
+            return rgb;
         };
-        R.is(o, "finite") && (rgb.opacity = o);
-        return rgb;
-    };
 
     /*\
      * Raphael.color
@@ -756,10 +758,10 @@ define(["eve"], function(eve) {
         V = mmax(r, g, b);
         C = V - mmin(r, g, b);
         H = (C == 0 ? null :
-             V == r ? (g - b) / C :
-             V == g ? (b - r) / C + 2 :
-                      (r - g) / C + 4
-            );
+                V == r ? (g - b) / C :
+                    V == g ? (b - r) / C + 2 :
+                        (r - g) / C + 4
+        );
         H = ((H + 360) % 6) * 60 / 360;
         S = C == 0 ? 0 : C / V;
         return {h: H, s: S, b: V, toString: hsbtoString};
@@ -791,24 +793,26 @@ define(["eve"], function(eve) {
         m = mmin(r, g, b);
         C = M - m;
         H = (C == 0 ? null :
-             M == r ? (g - b) / C :
-             M == g ? (b - r) / C + 2 :
-                      (r - g) / C + 4);
+            M == r ? (g - b) / C :
+                M == g ? (b - r) / C + 2 :
+                    (r - g) / C + 4);
         H = ((H + 360) % 6) * 60 / 360;
         L = (M + m) / 2;
         S = (C == 0 ? 0 :
-             L < .5 ? C / (2 * L) :
-                      C / (2 - 2 * L));
+            L < .5 ? C / (2 * L) :
+                C / (2 - 2 * L));
         return {h: H, s: S, l: L, toString: hsltoString};
     };
     R._path2string = function () {
         return this.join(",").replace(p2s, "$1");
     };
+
     function repush(array, item) {
         for (var i = 0, ii = array.length; i < ii; i++) if (array[i] === item) {
             return array.push(array.splice(i, 1)[0]);
         }
     }
+
     function cacher(f, scope, postprocessor) {
         function newf() {
             var arg = Array.prototype.slice.call(arguments, 0),
@@ -824,6 +828,7 @@ define(["eve"], function(eve) {
             cache[args] = f[apply](scope, arg);
             return postprocessor ? postprocessor(cache[args]) : cache[args];
         }
+
         return newf;
     }
 
@@ -984,7 +989,10 @@ define(["eve"], function(eve) {
      = (string) hex representation of the colour.
     \*/
     R.rgb = cacher(function (r, g, b) {
-        function round(x) { return (x + 0.5) | 0; }
+        function round(x) {
+            return (x + 0.5) | 0;
+        }
+
         return "#" + (16777216 | round(b) | (round(g) << 8) | (round(r) << 16)).toString(16).slice(1);
     });
     /*\
@@ -1022,11 +1030,11 @@ define(["eve"], function(eve) {
         var d = [];
         for (var i = 0, iLen = crp.length; iLen - 2 * !z > i; i += 2) {
             var p = [
-                        {x: +crp[i - 2], y: +crp[i - 1]},
-                        {x: +crp[i],     y: +crp[i + 1]},
-                        {x: +crp[i + 2], y: +crp[i + 3]},
-                        {x: +crp[i + 4], y: +crp[i + 5]}
-                    ];
+                {x: +crp[i - 2], y: +crp[i - 1]},
+                {x: +crp[i], y: +crp[i + 1]},
+                {x: +crp[i + 2], y: +crp[i + 3]},
+                {x: +crp[i + 4], y: +crp[i + 5]}
+            ];
             if (z) {
                 if (!i) {
                     p[0] = {x: +crp[iLen - 2], y: +crp[iLen - 1]};
@@ -1044,17 +1052,18 @@ define(["eve"], function(eve) {
                 }
             }
             d.push(["C",
-                  (-p[0].x + 6 * p[1].x + p[2].x) / 6,
-                  (-p[0].y + 6 * p[1].y + p[2].y) / 6,
-                  (p[1].x + 6 * p[2].x - p[3].x) / 6,
-                  (p[1].y + 6*p[2].y - p[3].y) / 6,
-                  p[2].x,
-                  p[2].y
+                (-p[0].x + 6 * p[1].x + p[2].x) / 6,
+                (-p[0].y + 6 * p[1].y + p[2].y) / 6,
+                (p[1].x + 6 * p[2].x - p[3].x) / 6,
+                (p[1].y + 6 * p[2].y - p[3].y) / 6,
+                p[2].x,
+                p[2].y
             ]);
         }
 
         return d;
     }
+
     /*\
      * Raphael.parsePathString
      [ method ]
@@ -1138,7 +1147,7 @@ define(["eve"], function(eve) {
         }
         data.toString = R._path2string;
         return data;
-    }, this, function(elem) {
+    }, this, function (elem) {
         if (!elem) return elem;
         var newData = [];
         for (var i = 0; i < elem.length; i++) {
@@ -1148,7 +1157,8 @@ define(["eve"], function(eve) {
             }
             newData.push(newLevel);
         }
-      return newData; } );
+        return newData;
+    });
     // PATHS
     var paths = function (ps) {
         var p = paths.ps = paths.ps || {};
@@ -1320,11 +1330,13 @@ define(["eve"], function(eve) {
             || (bbox1.x < bbox2.x2 && bbox1.x > bbox2.x || bbox2.x < bbox1.x2 && bbox2.x > bbox1.x)
             && (bbox1.y < bbox2.y2 && bbox1.y > bbox2.y || bbox2.y < bbox1.y2 && bbox2.y > bbox1.y);
     };
+
     function base3(t, p1, p2, p3, p4) {
         var t1 = -3 * p1 + 9 * p2 - 9 * p3 + 3 * p4,
             t2 = t * t1 + 6 * p1 - 12 * p2 + 6 * p3;
         return t * t2 - 3 * p1 + 3 * p2;
     }
+
     function bezlen(x1, y1, x2, y2, x3, y3, x4, y4, z) {
         if (z == null) {
             z = 1;
@@ -1332,8 +1344,8 @@ define(["eve"], function(eve) {
         z = z > 1 ? 1 : z < 0 ? 0 : z;
         var z2 = z / 2,
             n = 12,
-            Tvalues = [-0.1252,0.1252,-0.3678,0.3678,-0.5873,0.5873,-0.7699,0.7699,-0.9041,0.9041,-0.9816,0.9816],
-            Cvalues = [0.2491,0.2491,0.2335,0.2335,0.2032,0.2032,0.1601,0.1601,0.1069,0.1069,0.0472,0.0472],
+            Tvalues = [-0.1252, 0.1252, -0.3678, 0.3678, -0.5873, 0.5873, -0.7699, 0.7699, -0.9041, 0.9041, -0.9816, 0.9816],
+            Cvalues = [0.2491, 0.2491, 0.2335, 0.2335, 0.2032, 0.2032, 0.1601, 0.1601, 0.1069, 0.1069, 0.0472, 0.0472],
             sum = 0;
         for (var i = 0; i < n; i++) {
             var ct = z2 * Tvalues[i] + z2,
@@ -1344,6 +1356,7 @@ define(["eve"], function(eve) {
         }
         return z2 * sum;
     }
+
     function getTatLen(x1, y1, x2, y2, x3, y3, x4, y4, ll) {
         if (ll < 0 || bezlen(x1, y1, x2, y2, x3, y3, x4, y4) < ll) {
             return;
@@ -1361,6 +1374,7 @@ define(["eve"], function(eve) {
         }
         return t2;
     }
+
     function intersect(x1, y1, x2, y2, x3, y3, x4, y4) {
         if (
             mmax(x1, x2) < mmin(x3, x4) ||
@@ -1395,12 +1409,15 @@ define(["eve"], function(eve) {
         }
         return {x: px, y: py};
     }
+
     function inter(bez1, bez2) {
         return interHelper(bez1, bez2);
     }
+
     function interCount(bez1, bez2) {
         return interHelper(bez1, bez2, 1);
     }
+
     function interHelper(bez1, bez2, justCount) {
         var bbox1 = R.bezierBBox(bez1),
             bbox2 = R.bezierBBox(bez2);
@@ -1456,6 +1473,7 @@ define(["eve"], function(eve) {
         }
         return res;
     }
+
     /*\
      * Raphael.pathIntersection
      [ method ]
@@ -1486,6 +1504,7 @@ define(["eve"], function(eve) {
     R.pathIntersectionNumber = function (path1, path2) {
         return interPathHelper(path1, path2, 1);
     };
+
     function interPathHelper(path1, path2, justCount) {
         path1 = R._path2curve(path1);
         path2 = R._path2curve(path2);
@@ -1539,6 +1558,7 @@ define(["eve"], function(eve) {
         }
         return res;
     }
+
     /*\
      * Raphael.isPointInsidePath
      [ method ]
@@ -1555,7 +1575,7 @@ define(["eve"], function(eve) {
     R.isPointInsidePath = function (path, x, y) {
         var bbox = R.pathBBox(path);
         return R.isPointInsideBBox(bbox, x, y) &&
-               interPathHelper(path, [["M", x, y], ["H", bbox.x2 + 10]], 1) % 2 == 1;
+            interPathHelper(path, [["M", x, y], ["H", bbox.x2 + 10]], 1) % 2 == 1;
     };
     R._removedFactory = function (methodname) {
         return function () {
@@ -1584,53 +1604,53 @@ define(["eve"], function(eve) {
      o }
     \*/
     var pathDimensions = R.pathBBox = function (path) {
-        var pth = paths(path);
-        if (pth.bbox) {
-            return clone(pth.bbox);
-        }
-        if (!path) {
-            return {x: 0, y: 0, width: 0, height: 0, x2: 0, y2: 0};
-        }
-        path = path2curve(path);
-        var x = 0,
-            y = 0,
-            X = [],
-            Y = [],
-            p;
-        for (var i = 0, ii = path.length; i < ii; i++) {
-            p = path[i];
-            if (p[0] == "M") {
-                x = p[1];
-                y = p[2];
-                X.push(x);
-                Y.push(y);
-            } else {
-                var dim = curveDim(x, y, p[1], p[2], p[3], p[4], p[5], p[6]);
-                X = X[concat](dim.min.x, dim.max.x);
-                Y = Y[concat](dim.min.y, dim.max.y);
-                x = p[5];
-                y = p[6];
+            var pth = paths(path);
+            if (pth.bbox) {
+                return clone(pth.bbox);
             }
-        }
-        var xmin = mmin[apply](0, X),
-            ymin = mmin[apply](0, Y),
-            xmax = mmax[apply](0, X),
-            ymax = mmax[apply](0, Y),
-            width = xmax - xmin,
-            height = ymax - ymin,
+            if (!path) {
+                return {x: 0, y: 0, width: 0, height: 0, x2: 0, y2: 0};
+            }
+            path = path2curve(path);
+            var x = 0,
+                y = 0,
+                X = [],
+                Y = [],
+                p;
+            for (var i = 0, ii = path.length; i < ii; i++) {
+                p = path[i];
+                if (p[0] == "M") {
+                    x = p[1];
+                    y = p[2];
+                    X.push(x);
+                    Y.push(y);
+                } else {
+                    var dim = curveDim(x, y, p[1], p[2], p[3], p[4], p[5], p[6]);
+                    X = X[concat](dim.min.x, dim.max.x);
+                    Y = Y[concat](dim.min.y, dim.max.y);
+                    x = p[5];
+                    y = p[6];
+                }
+            }
+            var xmin = mmin[apply](0, X),
+                ymin = mmin[apply](0, Y),
+                xmax = mmax[apply](0, X),
+                ymax = mmax[apply](0, Y),
+                width = xmax - xmin,
+                height = ymax - ymin,
                 bb = {
-                x: xmin,
-                y: ymin,
-                x2: xmax,
-                y2: ymax,
-                width: width,
-                height: height,
-                cx: xmin + width / 2,
-                cy: ymin + height / 2
-            };
-        pth.bbox = clone(bb);
-        return bb;
-    },
+                    x: xmin,
+                    y: ymin,
+                    x2: xmax,
+                    y2: ymax,
+                    width: width,
+                    height: height,
+                    cx: xmin + width / 2,
+                    cy: ymin + height / 2
+                };
+            pth.bbox = clone(bb);
+            return bb;
+        },
         pathClone = function (pathArray) {
             var res = clone(pathArray);
             res.toString = R._path2string;
@@ -1819,13 +1839,13 @@ define(["eve"], function(eve) {
             var _13 = 1 / 3,
                 _23 = 2 / 3;
             return [
-                    _13 * x1 + _23 * ax,
-                    _13 * y1 + _23 * ay,
-                    _13 * x2 + _23 * ax,
-                    _13 * y2 + _23 * ay,
-                    x2,
-                    y2
-                ];
+                _13 * x1 + _23 * ax,
+                _13 * y1 + _23 * ay,
+                _13 * x2 + _23 * ax,
+                _13 * y2 + _23 * ay,
+                x2,
+                y2
+            ];
         },
         a2c = function (x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursive) {
             // for more information of where this math came from visit:
@@ -1976,7 +1996,7 @@ define(["eve"], function(eve) {
                 attrs = {x: 0, y: 0, bx: 0, by: 0, X: 0, Y: 0, qx: null, qy: null},
                 attrs2 = {x: 0, y: 0, bx: 0, by: 0, X: 0, Y: 0, qx: null, qy: null},
                 processPath = function (path, d, pcom) {
-                    var nx, ny, tq = {T:1, Q:1};
+                    var nx, ny, tq = {T: 1, Q: 1};
                     if (!path) {
                         return ["C", d.x, d.y, d.x, d.y, d.x, d.y];
                     }
@@ -1993,8 +2013,7 @@ define(["eve"], function(eve) {
                             if (pcom == "C" || pcom == "S") { // In "S" case we have to take into account, if the previous command is C/S.
                                 nx = d.x * 2 - d.bx;          // And reflect the previous
                                 ny = d.y * 2 - d.by;          // command's control point relative to the current point.
-                            }
-                            else {                            // or some else or nothing
+                            } else {                            // or some else or nothing
                                 nx = d.x;
                                 ny = d.y;
                             }
@@ -2004,8 +2023,7 @@ define(["eve"], function(eve) {
                             if (pcom == "Q" || pcom == "T") { // In "T" case we have to take into account, if the previous command is Q/T.
                                 d.qx = d.x * 2 - d.qx;        // And make a reflection similar
                                 d.qy = d.y * 2 - d.qy;        // to case "S".
-                            }
-                            else {                            // or something else or nothing
+                            } else {                            // or something else or nothing
                                 d.qx = d.x;
                                 d.qy = d.y;
                             }
@@ -2036,8 +2054,8 @@ define(["eve"], function(eve) {
                         pp[i].shift();
                         var pi = pp[i];
                         while (pi.length) {
-                            pcoms1[i]="A"; // if created multiple C:s, their original seg is saved
-                            p2 && (pcoms2[i]="A"); // the same as above
+                            pcoms1[i] = "A"; // if created multiple C:s, their original seg is saved
+                            p2 && (pcoms2[i] = "A"); // the same as above
                             pp.splice(i++, 0, ["C"][concat](pi.splice(0, 6)));
                         }
                         pp.splice(i, 1);
@@ -2064,7 +2082,7 @@ define(["eve"], function(eve) {
                 if (pfirst != "C") // C is not saved yet, because it may be result of conversion
                 {
                     pcoms1[i] = pfirst; // Save current path command
-                    i && ( pcom = pcoms1[i-1]); // Get previous path command pcom
+                    i && (pcom = pcoms1[i - 1]); // Get previous path command pcom
                 }
                 p[i] = processPath(p[i], attrs, pcom); // Previous path command is inputted to processPath
 
@@ -2076,14 +2094,13 @@ define(["eve"], function(eve) {
 
                 if (p2) { // the same procedures is done to p2
                     p2[i] && (pfirst = p2[i][0]);
-                    if (pfirst != "C")
-                    {
+                    if (pfirst != "C") {
                         pcoms2[i] = pfirst;
-                        i && (pcom = pcoms2[i-1]);
+                        i && (pcom = pcoms2[i - 1]);
                     }
                     p2[i] = processPath(p2[i], attrs2, pcom);
 
-                    if (pcoms2[i]!="A" && pfirst=="C") pcoms2[i]="C";
+                    if (pcoms2[i] != "A" && pfirst == "C") pcoms2[i] = "C";
 
                     fixArc(p2, i);
                 }
@@ -2327,20 +2344,24 @@ define(["eve"], function(eve) {
         getEmpty = function (item) {
             var l = item[0];
             switch (l.toLowerCase()) {
-                case "t": return [l, 0, 0];
-                case "m": return [l, 1, 0, 0, 1, 0, 0];
-                case "r": if (item.length == 4) {
-                    return [l, 0, item[2], item[3]];
-                } else {
-                    return [l, 0];
-                }
-                case "s": if (item.length == 5) {
-                    return [l, 1, 1, item[3], item[4]];
-                } else if (item.length == 3) {
-                    return [l, 1, 1];
-                } else {
-                    return [l, 1];
-                }
+                case "t":
+                    return [l, 0, 0];
+                case "m":
+                    return [l, 1, 0, 0, 1, 0, 0];
+                case "r":
+                    if (item.length == 4) {
+                        return [l, 0, item[2], item[3]];
+                    } else {
+                        return [l, 0];
+                    }
+                case "s":
+                    if (item.length == 5) {
+                        return [l, 1, 1, item[3], item[4]];
+                    } else if (item.length == 3) {
+                        return [l, 1, 1];
+                    } else {
+                        return [l, 1];
+                    }
             }
         },
         equaliseTransform = R._equaliseTransform = function (t1, t2) {
@@ -2358,7 +2379,7 @@ define(["eve"], function(eve) {
                 if ((tt1[0] != tt2[0]) ||
                     (tt1[0].toLowerCase() == "r" && (tt1[2] != tt2[2] || tt1[3] != tt2[3])) ||
                     (tt1[0].toLowerCase() == "s" && (tt1[3] != tt2[3] || tt1[4] != tt2[4]))
-                    ) {
+                ) {
                     return;
                 }
                 from[i] = [];
@@ -2446,6 +2467,7 @@ define(["eve"], function(eve) {
     R.matrix = function (a, b, c, d, e, f) {
         return new Matrix(a, b, c, d, e, f);
     };
+
     function Matrix(a, b, c, d, e, f) {
         if (a != null) {
             this.a = +a;
@@ -2463,6 +2485,7 @@ define(["eve"], function(eve) {
             this.f = 0;
         }
     }
+
     (function (matrixproto) {
         /*\
          * Matrix.add
@@ -2617,14 +2640,17 @@ define(["eve"], function(eve) {
         matrixproto.offset = function () {
             return [this.e.toFixed(4), this.f.toFixed(4)];
         };
+
         function norm(a) {
             return a[0] * a[0] + a[1] * a[1];
         }
+
         function normalize(a) {
             var mag = math.sqrt(norm(a));
             a[0] && (a[0] /= mag);
             a[1] && (a[1] /= mag);
         }
+
         /*\
          * Matrix.split
          [ method ]
@@ -2687,9 +2713,9 @@ define(["eve"], function(eve) {
                 s.scalex = +s.scalex.toFixed(4);
                 s.scaley = +s.scaley.toFixed(4);
                 s.rotate = +s.rotate.toFixed(4);
-                return  (s.dx || s.dy ? "t" + [s.dx, s.dy] : E) +
-                        (s.scalex != 1 || s.scaley != 1 ? "s" + [s.scalex, s.scaley, 0, 0] : E) +
-                        (s.rotate ? "r" + [s.rotate, 0, 0] : E);
+                return (s.dx || s.dy ? "t" + [s.dx, s.dy] : E) +
+                    (s.scalex != 1 || s.scaley != 1 ? "s" + [s.scalex, s.scaley, 0, 0] : E) +
+                    (s.rotate ? "r" + [s.rotate, 0, 0] : E);
             } else {
                 return "m" + [this.get(0), this.get(1), this.get(2), this.get(3), this.get(4), this.get(5)];
             }
@@ -2697,152 +2723,152 @@ define(["eve"], function(eve) {
     })(Matrix.prototype);
 
     var preventDefault = function () {
-        this.returnValue = false;
-    },
-    preventTouch = function () {
-        return this.originalEvent.preventDefault();
-    },
-    stopPropagation = function () {
-        this.cancelBubble = true;
-    },
-    stopTouch = function () {
-        return this.originalEvent.stopPropagation();
-    },
-    getEventPosition = function (e) {
-        var scrollY = g.doc.documentElement.scrollTop || g.doc.body.scrollTop,
-            scrollX = g.doc.documentElement.scrollLeft || g.doc.body.scrollLeft;
+            this.returnValue = false;
+        },
+        preventTouch = function () {
+            return this.originalEvent.preventDefault();
+        },
+        stopPropagation = function () {
+            this.cancelBubble = true;
+        },
+        stopTouch = function () {
+            return this.originalEvent.stopPropagation();
+        },
+        getEventPosition = function (e) {
+            var scrollY = g.doc.documentElement.scrollTop || g.doc.body.scrollTop,
+                scrollX = g.doc.documentElement.scrollLeft || g.doc.body.scrollLeft;
 
-        return {
-            x: e.clientX + scrollX,
-            y: e.clientY + scrollY
-        };
-    },
-    addEvent = (function () {
-        if (g.doc.addEventListener) {
-            return function (obj, type, fn, element) {
-                var f = function (e) {
-                    var pos = getEventPosition(e);
-                    return fn.call(element, e, pos.x, pos.y);
-                };
-                obj.addEventListener(type, f, false);
-
-                if (supportsTouch && touchMap[type]) {
-                    var _f = function (e) {
-                        var pos = getEventPosition(e),
-                            olde = e;
-
-                        for (var i = 0, ii = e.targetTouches && e.targetTouches.length; i < ii; i++) {
-                            if (e.targetTouches[i].target == obj) {
-                                e = e.targetTouches[i];
-                                e.originalEvent = olde;
-                                e.preventDefault = preventTouch;
-                                e.stopPropagation = stopTouch;
-                                break;
-                            }
-                        }
-
+            return {
+                x: e.clientX + scrollX,
+                y: e.clientY + scrollY
+            };
+        },
+        addEvent = (function () {
+            if (g.doc.addEventListener) {
+                return function (obj, type, fn, element) {
+                    var f = function (e) {
+                        var pos = getEventPosition(e);
                         return fn.call(element, e, pos.x, pos.y);
                     };
-                    obj.addEventListener(touchMap[type], _f, false);
-                }
+                    obj.addEventListener(type, f, false);
 
-                return function () {
-                    obj.removeEventListener(type, f, false);
+                    if (supportsTouch && touchMap[type]) {
+                        var _f = function (e) {
+                            var pos = getEventPosition(e),
+                                olde = e;
 
-                    if (supportsTouch && touchMap[type])
-                        obj.removeEventListener(touchMap[type], _f, false);
+                            for (var i = 0, ii = e.targetTouches && e.targetTouches.length; i < ii; i++) {
+                                if (e.targetTouches[i].target == obj) {
+                                    e = e.targetTouches[i];
+                                    e.originalEvent = olde;
+                                    e.preventDefault = preventTouch;
+                                    e.stopPropagation = stopTouch;
+                                    break;
+                                }
+                            }
 
-                    return true;
-                };
-            };
-        } else if (g.doc.attachEvent) {
-            return function (obj, type, fn, element) {
-                var f = function (e) {
-                    e = e || g.win.event;
-                    var scrollY = g.doc.documentElement.scrollTop || g.doc.body.scrollTop,
-                        scrollX = g.doc.documentElement.scrollLeft || g.doc.body.scrollLeft,
-                        x = e.clientX + scrollX,
-                        y = e.clientY + scrollY;
-                    e.preventDefault = e.preventDefault || preventDefault;
-                    e.stopPropagation = e.stopPropagation || stopPropagation;
-                    return fn.call(element, e, x, y);
-                };
-                obj.attachEvent("on" + type, f);
-                var detacher = function () {
-                    obj.detachEvent("on" + type, f);
-                    return true;
-                };
-                return detacher;
-            };
-        }
-    })(),
-    drag = [],
-    dragMove = function (e) {
-        var x = e.clientX,
-            y = e.clientY,
-            scrollY = g.doc.documentElement.scrollTop || g.doc.body.scrollTop,
-            scrollX = g.doc.documentElement.scrollLeft || g.doc.body.scrollLeft,
-            dragi,
-            j = drag.length;
-        while (j--) {
-            dragi = drag[j];
-            if (supportsTouch && e.touches) {
-                var i = e.touches.length,
-                    touch;
-                while (i--) {
-                    touch = e.touches[i];
-                    if (touch.identifier == dragi.el._drag.id) {
-                        x = touch.clientX;
-                        y = touch.clientY;
-                        (e.originalEvent ? e.originalEvent : e).preventDefault();
-                        break;
+                            return fn.call(element, e, pos.x, pos.y);
+                        };
+                        obj.addEventListener(touchMap[type], _f, false);
                     }
-                }
-            } else {
-                e.preventDefault();
+
+                    return function () {
+                        obj.removeEventListener(type, f, false);
+
+                        if (supportsTouch && touchMap[type])
+                            obj.removeEventListener(touchMap[type], _f, false);
+
+                        return true;
+                    };
+                };
+            } else if (g.doc.attachEvent) {
+                return function (obj, type, fn, element) {
+                    var f = function (e) {
+                        e = e || g.win.event;
+                        var scrollY = g.doc.documentElement.scrollTop || g.doc.body.scrollTop,
+                            scrollX = g.doc.documentElement.scrollLeft || g.doc.body.scrollLeft,
+                            x = e.clientX + scrollX,
+                            y = e.clientY + scrollY;
+                        e.preventDefault = e.preventDefault || preventDefault;
+                        e.stopPropagation = e.stopPropagation || stopPropagation;
+                        return fn.call(element, e, x, y);
+                    };
+                    obj.attachEvent("on" + type, f);
+                    var detacher = function () {
+                        obj.detachEvent("on" + type, f);
+                        return true;
+                    };
+                    return detacher;
+                };
             }
-            var node = dragi.el.node,
-                o,
-                next = node.nextSibling,
-                parent = node.parentNode,
-                display = node.style.display;
-            g.win.opera && parent.removeChild(node);
-            node.style.display = "none";
-            o = dragi.el.paper.getElementByPoint(x, y);
-            node.style.display = display;
-            g.win.opera && (next ? parent.insertBefore(node, next) : parent.appendChild(node));
-            o && eve("raphael.drag.over." + dragi.el.id, dragi.el, o);
-            x += scrollX;
-            y += scrollY;
-            eve("raphael.drag.move." + dragi.el.id, dragi.move_scope || dragi.el, x - dragi.el._drag.x, y - dragi.el._drag.y, x, y, e);
-        }
-    },
-    dragUp = function (e) {
-        R.unmousemove(dragMove).unmouseup(dragUp);
-        var i = drag.length,
-            dragi;
-        while (i--) {
-            dragi = drag[i];
-            dragi.el._drag = {};
-            eve("raphael.drag.end." + dragi.el.id, dragi.end_scope || dragi.start_scope || dragi.move_scope || dragi.el, e);
-        }
-        drag = [];
-    },
-    /*\
-     * Raphael.el
-     [ property (object) ]
-     **
-     * You can add your own method to elements. This is useful when you want to hack default functionality or
-     * want to wrap some common transformation or attributes in one method. In difference to canvas methods,
-     * you can redefine element method at any time. Expending element methods wouldn’t affect set.
-     > Usage
-     | Raphael.el.red = function () {
-     |     this.attr({fill: "#f00"});
-     | };
-     | // then use it
-     | paper.circle(100, 100, 20).red();
-    \*/
-    elproto = R.el = {};
+        })(),
+        drag = [],
+        dragMove = function (e) {
+            var x = e.clientX,
+                y = e.clientY,
+                scrollY = g.doc.documentElement.scrollTop || g.doc.body.scrollTop,
+                scrollX = g.doc.documentElement.scrollLeft || g.doc.body.scrollLeft,
+                dragi,
+                j = drag.length;
+            while (j--) {
+                dragi = drag[j];
+                if (supportsTouch && e.touches) {
+                    var i = e.touches.length,
+                        touch;
+                    while (i--) {
+                        touch = e.touches[i];
+                        if (touch.identifier == dragi.el._drag.id) {
+                            x = touch.clientX;
+                            y = touch.clientY;
+                            (e.originalEvent ? e.originalEvent : e).preventDefault();
+                            break;
+                        }
+                    }
+                } else {
+                    e.preventDefault();
+                }
+                var node = dragi.el.node,
+                    o,
+                    next = node.nextSibling,
+                    parent = node.parentNode,
+                    display = node.style.display;
+                g.win.opera && parent.removeChild(node);
+                node.style.display = "none";
+                o = dragi.el.paper.getElementByPoint(x, y);
+                node.style.display = display;
+                g.win.opera && (next ? parent.insertBefore(node, next) : parent.appendChild(node));
+                o && eve("raphael.drag.over." + dragi.el.id, dragi.el, o);
+                x += scrollX;
+                y += scrollY;
+                eve("raphael.drag.move." + dragi.el.id, dragi.move_scope || dragi.el, x - dragi.el._drag.x, y - dragi.el._drag.y, x, y, e);
+            }
+        },
+        dragUp = function (e) {
+            R.unmousemove(dragMove).unmouseup(dragUp);
+            var i = drag.length,
+                dragi;
+            while (i--) {
+                dragi = drag[i];
+                dragi.el._drag = {};
+                eve("raphael.drag.end." + dragi.el.id, dragi.end_scope || dragi.start_scope || dragi.move_scope || dragi.el, e);
+            }
+            drag = [];
+        },
+        /*\
+         * Raphael.el
+         [ property (object) ]
+         **
+         * You can add your own method to elements. This is useful when you want to hack default functionality or
+         * want to wrap some common transformation or attributes in one method. In difference to canvas methods,
+         * you can redefine element method at any time. Expending element methods wouldn’t affect set.
+         > Usage
+         | Raphael.el.red = function () {
+         |     this.attr({fill: "#f00"});
+         | };
+         | // then use it
+         | paper.circle(100, 100, 20).red();
+        \*/
+        elproto = R.el = {};
     /*\
      * Element.click
      [ method ]
@@ -3056,14 +3082,18 @@ define(["eve"], function(eve) {
             R[eventName] = elproto[eventName] = function (fn, scope) {
                 if (R.is(fn, "function")) {
                     this.events = this.events || [];
-                    this.events.push({name: eventName, f: fn, unbind: addEvent(this.shape || this.node || g.doc, eventName, fn, scope || this)});
+                    this.events.push({
+                        name: eventName,
+                        f: fn,
+                        unbind: addEvent(this.shape || this.node || g.doc, eventName, fn, scope || this)
+                    });
                 }
                 return this;
             };
             R["un" + eventName] = elproto["un" + eventName] = function (fn) {
                 var events = this.events || [],
                     l = events.length;
-                while (l--){
+                while (l--) {
                     if (events[l].name == eventName && (R.is(fn, "undefined") || events[l].f == fn)) {
                         events[l].unbind();
                         events.splice(l, 1);
@@ -3137,13 +3167,13 @@ define(["eve"], function(eve) {
         }
         return this;
     };
-     /*\
-     * Element.getData
-     [ method ]
-     **
-     * Retrieves the element data
-     = (object) data
-    \*/
+    /*\
+    * Element.getData
+    [ method ]
+    **
+    * Retrieves the element data
+    = (object) data
+   \*/
     elproto.getData = function () {
         return clone(eldata[this.id] || {});
     };
@@ -3235,6 +3265,7 @@ define(["eve"], function(eve) {
             onend && eve.on("raphael.drag.end." + this.id, onend);
             eve("raphael.drag.start." + this.id, start_scope || move_scope || this, this._drag.x, this._drag.y, e);
         }
+
         this._drag = {};
         draggable.push({el: this, start: start});
         this.mousedown(start);
@@ -3486,8 +3517,8 @@ define(["eve"], function(eve) {
         return {
             width: container.offsetWidth,
             height: container.offsetHeight
-                };
         };
+    };
     /*\
      * Paper.setSize
      [ method ]
@@ -3545,8 +3576,9 @@ define(["eve"], function(eve) {
             doc = elem.ownerDocument,
             body = doc.body,
             docElem = doc.documentElement,
-            clientTop = docElem.clientTop || body.clientTop || 0, clientLeft = docElem.clientLeft || body.clientLeft || 0,
-            top  = box.top  + (g.win.pageYOffset || docElem.scrollTop || body.scrollTop ) - clientTop,
+            clientTop = docElem.clientTop || body.clientTop || 0,
+            clientLeft = docElem.clientLeft || body.clientLeft || 0,
+            top = box.top + (g.win.pageYOffset || docElem.scrollTop || body.scrollTop) - clientTop,
             left = box.left + (g.win.pageXOffset || docElem.scrollLeft || body.scrollLeft) - clientLeft;
         return {
             y: top,
@@ -3684,12 +3716,15 @@ define(["eve"], function(eve) {
         });
         return set;
     };
+
     function x_y() {
         return this.x + S + this.y;
     }
+
     function x_y_w_h() {
         return this.x + S + this.y + S + this.width + " \xd7 " + this.height;
     }
+
     /*\
      * Element.isPointInside
      [ method ]
@@ -3795,13 +3830,13 @@ define(["eve"], function(eve) {
         }
         glow = glow || {};
         var s = {
-            width: (glow.width || 10) + (+this.attr("stroke-width") || 1),
-            fill: glow.fill || false,
-            opacity: glow.opacity == null ? .5 : glow.opacity,
-            offsetx: glow.offsetx || 0,
-            offsety: glow.offsety || 0,
-            color: glow.color || "#000"
-        },
+                width: (glow.width || 10) + (+this.attr("stroke-width") || 1),
+                fill: glow.fill || false,
+                opacity: glow.opacity == null ? .5 : glow.opacity,
+                offsetx: glow.offsetx || 0,
+                offsety: glow.offsety || 0,
+                color: glow.color || "#000"
+            },
             c = s.width / 2,
             r = this.paper,
             out = r.set(),
@@ -3820,54 +3855,56 @@ define(["eve"], function(eve) {
         return out.insertBefore(this).translate(s.offsetx, s.offsety);
     };
     var curveslengths = {},
-    getPointAtSegmentLength = function (p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, length) {
-        if (length == null) {
-            return bezlen(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y);
-        } else {
-            return R.findDotsAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, getTatLen(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, length));
-        }
-    },
-    getLengthFactory = function (istotal, subpath) {
-        return function (path, length, onlystart) {
-            path = path2curve(path);
-            var x, y, p, l, sp = "", subpaths = {}, point,
-                len = 0;
-            for (var i = 0, ii = path.length; i < ii; i++) {
-                p = path[i];
-                if (p[0] == "M") {
-                    x = +p[1];
-                    y = +p[2];
-                } else {
-                    l = getPointAtSegmentLength(x, y, p[1], p[2], p[3], p[4], p[5], p[6]);
-                    if (len + l > length) {
-                        if (subpath && !subpaths.start) {
-                            point = getPointAtSegmentLength(x, y, p[1], p[2], p[3], p[4], p[5], p[6], length - len);
-                            sp += ["C" + point.start.x, point.start.y, point.m.x, point.m.y, point.x, point.y];
-                            if (onlystart) {return sp;}
-                            subpaths.start = sp;
-                            sp = ["M" + point.x, point.y + "C" + point.n.x, point.n.y, point.end.x, point.end.y, p[5], p[6]].join();
-                            len += l;
-                            x = +p[5];
-                            y = +p[6];
-                            continue;
-                        }
-                        if (!istotal && !subpath) {
-                            point = getPointAtSegmentLength(x, y, p[1], p[2], p[3], p[4], p[5], p[6], length - len);
-                            return {x: point.x, y: point.y, alpha: point.alpha};
-                        }
-                    }
-                    len += l;
-                    x = +p[5];
-                    y = +p[6];
-                }
-                sp += p.shift() + p;
+        getPointAtSegmentLength = function (p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, length) {
+            if (length == null) {
+                return bezlen(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y);
+            } else {
+                return R.findDotsAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, getTatLen(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, length));
             }
-            subpaths.end = sp;
-            point = istotal ? len : subpath ? subpaths : R.findDotsAtSegment(x, y, p[0], p[1], p[2], p[3], p[4], p[5], 1);
-            point.alpha && (point = {x: point.x, y: point.y, alpha: point.alpha});
-            return point;
+        },
+        getLengthFactory = function (istotal, subpath) {
+            return function (path, length, onlystart) {
+                path = path2curve(path);
+                var x, y, p, l, sp = "", subpaths = {}, point,
+                    len = 0;
+                for (var i = 0, ii = path.length; i < ii; i++) {
+                    p = path[i];
+                    if (p[0] == "M") {
+                        x = +p[1];
+                        y = +p[2];
+                    } else {
+                        l = getPointAtSegmentLength(x, y, p[1], p[2], p[3], p[4], p[5], p[6]);
+                        if (len + l > length) {
+                            if (subpath && !subpaths.start) {
+                                point = getPointAtSegmentLength(x, y, p[1], p[2], p[3], p[4], p[5], p[6], length - len);
+                                sp += ["C" + point.start.x, point.start.y, point.m.x, point.m.y, point.x, point.y];
+                                if (onlystart) {
+                                    return sp;
+                                }
+                                subpaths.start = sp;
+                                sp = ["M" + point.x, point.y + "C" + point.n.x, point.n.y, point.end.x, point.end.y, p[5], p[6]].join();
+                                len += l;
+                                x = +p[5];
+                                y = +p[6];
+                                continue;
+                            }
+                            if (!istotal && !subpath) {
+                                point = getPointAtSegmentLength(x, y, p[1], p[2], p[3], p[4], p[5], p[6], length - len);
+                                return {x: point.x, y: point.y, alpha: point.alpha};
+                            }
+                        }
+                        len += l;
+                        x = +p[5];
+                        y = +p[6];
+                    }
+                    sp += p.shift() + p;
+                }
+                subpaths.end = sp;
+                point = istotal ? len : subpath ? subpaths : R.findDotsAtSegment(x, y, p[0], p[1], p[2], p[3], p[4], p[5], 1);
+                point.alpha && (point = {x: point.x, y: point.y, alpha: point.alpha});
+                return point;
+            };
         };
-    };
     var getTotalLength = getLengthFactory(1),
         getPointAtLength = getLengthFactory(),
         getSubpathsAtLength = getLengthFactory(0, 1);
@@ -4093,14 +4130,14 @@ define(["eve"], function(eve) {
     ef["back-out"] = ef.backOut;
 
     var animationElements = [],
-        requestAnimFrame = window.requestAnimationFrame       ||
-                           window.webkitRequestAnimationFrame ||
-                           window.mozRequestAnimationFrame    ||
-                           window.oRequestAnimationFrame      ||
-                           window.msRequestAnimationFrame     ||
-                           function (callback) {
-                               setTimeout(callback, 16);
-                           },
+        requestAnimFrame = window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.oRequestAnimationFrame ||
+            window.msRequestAnimationFrame ||
+            function (callback) {
+                setTimeout(callback, 16);
+            },
         animation = function () {
             var Now = +new Date,
                 l = 0;
@@ -4201,8 +4238,8 @@ define(["eve"], function(eve) {
                         });
                     })(that.id, that, e.anim);
                 } else {
-                    (function(f, el, a) {
-                        setTimeout(function() {
+                    (function (f, el, a) {
+                        setTimeout(function () {
                             eve("raphael.anim.frame." + el.id, el, a);
                             eve("raphael.anim.finish." + el.id, el, a);
                             R.is(f, "function") && f.call(el);
@@ -4270,6 +4307,7 @@ define(["eve"], function(eve) {
         //     status = element.status(anim);
         // return this.animate(a).status(a, status * anim.ms / a.ms);
     };
+
     function CubicBezierAtTime(t, p1x, p1y, p2x, p2y, duration) {
         var cx = 3 * p1x,
             bx = 3 * (p2x - p1x) - cx,
@@ -4277,16 +4315,19 @@ define(["eve"], function(eve) {
             cy = 3 * p1y,
             by = 3 * (p2y - p1y) - cy,
             ay = 1 - cy - by;
+
         function sampleCurveX(t) {
             return ((ax * t + bx) * t + cx) * t;
         }
+
         function solve(x, epsilon) {
             var t = solveCurveX(x, epsilon);
             return ((ay * t + by) * t + cy) * t;
         }
+
         function solveCurveX(x, epsilon) {
             var t0, t1, t2, x2, d2, i;
-            for(t2 = x, i = 0; i < 8; i++) {
+            for (t2 = x, i = 0; i < 8; i++) {
                 x2 = sampleCurveX(t2) - x;
                 if (abs(x2) < epsilon) {
                     return t2;
@@ -4320,12 +4361,15 @@ define(["eve"], function(eve) {
             }
             return t2;
         }
+
         return solve(t, 1 / (200 * duration));
     }
+
     elproto.onAnimation = function (f) {
         f ? eve.on("raphael.anim.frame." + this.id, f) : eve.unbind("raphael.anim.frame." + this.id);
         return this;
     };
+
     function Animation(anim, ms) {
         var percents = [],
             newAnim = {};
@@ -4342,6 +4386,7 @@ define(["eve"], function(eve) {
         this.top = percents[percents.length - 1];
         this.percents = percents;
     }
+
     /*\
      * Animation.delay
      [ method ]
@@ -4381,6 +4426,7 @@ define(["eve"], function(eve) {
         a.times = math.floor(mmax(times, 0)) || 1;
         return a;
     };
+
     function runAnimation(anim, element, percent, status, totalOrigin, times) {
         percent = toFloat(percent);
         var params,
@@ -4587,6 +4633,7 @@ define(["eve"], function(eve) {
         }
         eve("raphael.anim.start." + element.id, element, anim);
     }
+
     /*\
      * Raphael.animation
      [ method ]
@@ -4622,12 +4669,12 @@ define(["eve"], function(eve) {
         }
         if (!json) {
             // if percent-like syntax is used and end-of-all animation callback used
-            if(callback){
+            if (callback) {
                 // find the last one
                 var lastKey = 0;
-                for(var i in params){
+                for (var i in params) {
                     var percent = toInt(i);
-                    if(params[has](i) && percent > lastKey){
+                    if (params[has](i) && percent > lastKey) {
                         lastKey = percent;
                     }
                 }
@@ -4635,7 +4682,7 @@ define(["eve"], function(eve) {
                 // if already defined callback in the last keyframe, skip
                 !params[lastKey].callback && (params[lastKey].callback = callback);
             }
-          return new Animation(params, ms);
+            return new Animation(params, ms);
         } else {
             easing && (p.easing = easing);
             callback && (p.callback = callback);
@@ -4802,11 +4849,13 @@ define(["eve"], function(eve) {
         }
         return this;
     };
+
     function stopAnimation(paper) {
         for (var i = 0; i < animationElements.length; i++) if (animationElements[i].el.paper == paper) {
             animationElements.splice(i--, 1);
         }
     }
+
     eve.on("raphael.remove", stopAnimation);
     eve.on("raphael.clear", stopAnimation);
     elproto.toString = function () {
@@ -4815,19 +4864,19 @@ define(["eve"], function(eve) {
 
     // Set
     var Set = function (items) {
-        this.items = [];
-        this.length = 0;
-        this.type = "set";
-        if (items) {
-            for (var i = 0, ii = items.length; i < ii; i++) {
-                if (items[i] && (items[i].constructor == elproto.constructor || items[i].constructor == Set)) {
-                    this[this.items.length] = this.items[this.items.length] = items[i];
-                    this.length++;
+            this.items = [];
+            this.length = 0;
+            this.type = "set";
+            if (items) {
+                for (var i = 0, ii = items.length; i < ii; i++) {
+                    if (items[i] && (items[i].constructor == elproto.constructor || items[i].constructor == Set)) {
+                        this[this.items.length] = this.items[this.items.length] = items[i];
+                        this.length++;
+                    }
                 }
             }
-        }
-    },
-    setproto = Set.prototype;
+        },
+        setproto = Set.prototype;
     /*\
      * Set.push
      [ method ]
@@ -5035,12 +5084,12 @@ define(["eve"], function(eve) {
         return "Rapha\xebl\u2018s set";
     };
 
-    setproto.glow = function(glowConfig) {
+    setproto.glow = function (glowConfig) {
         var ret = this.paper.set();
-        this.forEach(function(shape, index){
+        this.forEach(function (shape, index) {
             var g = shape.glow(glowConfig);
-            if(g != null){
-                g.forEach(function(shape2, index2){
+            if (g != null) {
+                g.forEach(function (shape2, index2) {
                     ret.push(shape2);
                 });
             }
@@ -5114,8 +5163,8 @@ define(["eve"], function(eve) {
                     w: path.w,
                     k: {},
                     d: path.d && "M" + path.d.replace(/[mlcxtrv]/g, function (command) {
-                            return {l: "L", c: "C", x: "z", t: "m", r: "l", v: "c"}[command] || "M";
-                        }) + "z"
+                        return {l: "L", c: "C", x: "z", t: "m", r: "l", v: "c"}[command] || "M";
+                    }) + "z"
                 };
                 if (path.k) {
                     for (var k in path.k) if (path[has](k)) {
@@ -5367,7 +5416,8 @@ define(["eve"], function(eve) {
             window.Raphael = undefined;
             try {
                 delete window.Raphael;
-            } catch(e) {}
+            } catch (e) {
+            }
         }
         return R;
     };
@@ -5399,16 +5449,18 @@ define(["eve"], function(eve) {
 
     // Firefox <3.6 fix: http://webreflection.blogspot.com/2009/11/195-chars-to-help-lazy-loading.html
     (function (doc, loaded, f) {
-        if (doc.readyState == null && doc.addEventListener){
+        if (doc.readyState == null && doc.addEventListener) {
             doc.addEventListener(loaded, f = function () {
                 doc.removeEventListener(loaded, f, false);
                 doc.readyState = "complete";
             }, false);
             doc.readyState = "loading";
         }
+
         function isLoaded() {
             (/in/).test(doc.readyState) ? setTimeout(isLoaded, 9) : R.eve("raphael.DOMload");
         }
+
         isLoaded();
     })(document, "DOMContentLoaded");
 

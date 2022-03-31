@@ -35,8 +35,8 @@ urlpatterns = [
     path('password_reset/', RedirectView.as_view(pattern_name='password_reset')),
     path('programs/', include('Programs.urls')),
     path('contact-us/', views.ContactUs.as_view(), name='contact_us'),
+    path('403/', views.status_code_403_forbidden, name='403')
 ]
-
 
 handler403 = 'LesanLive.views.status_code_403_forbidden'
 handler404 = 'LesanLive.views.status_code_404_not_found'

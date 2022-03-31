@@ -6,6 +6,7 @@ interface Layout {
     HORIZONTAL: 'horizontal';
     VERTICAL: 'vertical';
 }
+
 /**
  * Possible grid layout modes
  */

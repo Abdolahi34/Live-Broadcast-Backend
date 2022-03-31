@@ -1,0 +1,99 @@
+{% extends 'Admin/admin_base.html' %}
+
+{% block head %}
+    <script>
+        {% if temp_var == 1 %}
+            alert("محتوا پخش صوتی مدنظر شما قبلا حذف شده است.")
+        {% elif temp_var == 2 %}
+            alert("محتوا پخش صوتی مدنظر شما با موفقیت حذف شد.")
+        {% endif %}
+        function delete_func(delete_id) {
+            if (confirm('آیا می خواهید این محتوا پخش صوتی را حذف کنید؟') == true) {
+                location.replace("{% url 'Admin:voicecontent' %}?del_id=" + delete_id)
+            } else {
+                alert("محتوا پخش صوتی به در خواست شما حذف نشد.")
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block message %}
+    {% if temp_var == 6 %}
+        <blockquote class="quote-warning">
+            <h5 id="note">توجه !</h5>
+            <p>.محتوا پخش صوتی ای وجود ندارد</p>
+        </blockquote>
+        <div class="col-12">
+            <a href="{% url 'Admin:voicecontent_add' %}" class="btn btn-info">افزودن محتوا پخش صوتی</a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block main_content %}
+    <section class="content">
+        <!-- Default box -->
+        {% if temp_var != 6 %}
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">محتوا پخش های صوتی</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-striped projects">
+                        <thead>
+                        <tr>
+                            <th>
+                                لینک پخش زنده صوتی
+                            </th>
+                            <th>
+                                Voice Stat
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for voicecontent in voicecontents %}
+                            <tr>
+                                <td>
+                                    {{ voicecontent.voice_link }}
+                                </td>
+                                <td>
+                                    {{ voicecontent.voice_stat }}
+                                </td>
+                                <td class="project-actions text-right">
+                                    <a class="btn btn-primary btn-sm"
+                                       href="{% url 'Admin:voicecontent_view' voicecontent.id %}">
+                                        <i class="fas fa-folder">
+                                        </i>
+                                        View
+                                    </a>
+                                    <a class="btn btn-info btn-sm"
+                                       href="{% url 'Admin:voicecontent_edit' voicecontent.id %}">
+                                        <i class="fas fa-pencil-alt">
+                                        </i>
+                                        Edit
+                                    </a>
+                                    <button class="btn btn-danger btn-sm" onclick="delete_func({{ voicecontent.id }})">
+                                        <i class="fas fa-trash">
+                                        </i>
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        {% endif %}
+        <!-- /.card -->
+    </section>
+{% endblock %}

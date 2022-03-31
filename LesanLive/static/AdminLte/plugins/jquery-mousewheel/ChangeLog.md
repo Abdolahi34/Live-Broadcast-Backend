@@ -24,7 +24,8 @@
 
 * Fix bower.json file
 * Updated how the deltas are adjusted for older mousewheel based events that have deltas that are factors of 120.
-* Add $.event.special.mousewheel.settings.adjustOldDeltas (defaults to true) to turn off adjusting of old deltas that are factors of 120. You'd turn this off if you want to be as close to native scrolling as possible.
+* Add $.event.special.mousewheel.settings.adjustOldDeltas (defaults to true) to turn off adjusting of old deltas that
+  are factors of 120. You'd turn this off if you want to be as close to native scrolling as possible.
 
 ## 3.1.8
 
@@ -70,7 +71,6 @@
 
 * Fix rounding issue with deltas less than zero
 
-
 ## 3.1.0
 
 * Fix Firefox 17+ issues by using new wheel event
@@ -78,26 +78,21 @@
 * Adds horizontal support for IE 9+ by using new wheel event
 * Support AMD loaders
 
-
 ## 3.0.6
 
 * Fix issue with delta being 0 in Firefox
-
 
 ## 3.0.5
 
 * jQuery 1.7 compatibility
 
-
 ## 3.0.4
 
 * Fix IE issue
 
-
 ## 3.0.3
 
 * Added `deltaX` and `deltaY` for horizontal scrolling support (Thanks to Seamus Leahy)
-
 
 ## 3.0.2
 
@@ -106,11 +101,9 @@
 * Removed browser detection
 * Cleaned up the code
 
-
 ## 3.0.1
 
 * Bad release... creating a new release due to plugins.jquery.com issue :(
-
 
 ## 3.0
 
@@ -118,27 +111,22 @@
 * You can now treat `mousewheel` as a normal event and use `.bind`, `.unbind` and `.trigger`
 * Using jQuery.data API for expandos
 
-
 ## 2.2
 
 * Fixed `pageX`, `pageY`, `clientX` and `clientY` event properties for Mozilla based browsers
-
 
 ## 2.1.1
 
 * Updated to work with jQuery 1.1.3
 * Used one instead of bind to do unload event for clean up
 
-
 ## 2.1
 
 * Fixed an issue with the unload handler
 
-
 ## 2.0
 
 * Major reduction in code size and complexity (internals have change a whole lot)
-
 
 ## 1.0
 

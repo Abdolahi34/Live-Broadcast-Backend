@@ -6,10 +6,8 @@
             alert("برنامه مدنظر شما قبلا حذف شده است.")
         {% elif temp_var == 2 %}
             alert("برنامه مدنظر شما با موفقیت حذف شد.")
-        {% elif temp_var == 3 %}
-            alert("تغییرات مدنظر شما با موفقیت اعمال شد.")
         {% endif %}
-        function delete_program(delete_id) {
+        function delete_func(delete_id) {
             if (confirm('آیا می خواهید این برنامه را حذف کنید؟') == true) {
                 location.replace("{% url 'Admin:program' %}?del_id=" + delete_id)
             } else {
@@ -26,8 +24,7 @@
             <p>.برنامه ای وجود ندارد</p>
         </blockquote>
         <div class="col-12">
-            {#                TODO#}
-            <a href="{% url 'Admin:program' %}" class="btn btn-info">افزودن برنامه</a>
+            <a href="{% url 'Admin:program_add' %}" class="btn btn-info">افزودن برنامه</a>
         </div>
     {% endif %}
 {% endblock %}
@@ -118,7 +115,7 @@
                                         </i>
                                         Edit
                                     </a>
-                                    <button class="btn btn-danger btn-sm" onclick="delete_program({{ program.id }})">
+                                    <button class="btn btn-danger btn-sm" onclick="delete_func({{ program.id }})">
                                         <i class="fas fa-trash">
                                         </i>
                                         Delete

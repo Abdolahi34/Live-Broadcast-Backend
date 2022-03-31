@@ -1,11 +1,12 @@
 //! moment.js locale configuration
 
 ;(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined'
-       && typeof require === 'function' ? factory(require('../moment')) :
-   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
-   factory(global.moment)
-}(this, (function (moment) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined'
+    && typeof require === 'function' ? factory(require('../moment')) :
+        typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+            factory(global.moment)
+}(this, (function (moment) {
+    'use strict';
 
 
     var symbolMap = {
@@ -59,7 +60,7 @@
             future: 'လာမည့် %s မှာ',
             past: 'လွန်ခဲ့သော %s က',
             s: 'စက္ကန်.အနည်းငယ်',
-            ss : '%d စက္ကန့်',
+            ss: '%d စက္ကန့်',
             m: 'တစ်မိနစ်',
             mm: '%d မိနစ်',
             h: 'တစ်နာရီ',

@@ -6,4 +6,4 @@
  * @see {@link http://yiotis.net/filterizr}
  * @license MIT
  */
-export { default } from './Filterizr';
+export {default} from './Filterizr';

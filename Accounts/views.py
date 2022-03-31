@@ -12,6 +12,7 @@ from Accounts import forms
 from captcha.widgets import ReCaptchaV2Checkbox
 from captcha.fields import ReCaptchaField
 
+
 @method_decorator(decorators.login_required(login_url='Accounts:login'), name='dispatch')
 class ProfileView(View):
     def get(self, request):
@@ -29,6 +30,7 @@ class ProfileView(View):
             if_valid = True
         args = {'form': form, 'if_valid': if_valid, 'username': get_user(request)}
         return render(request, 'Accounts/profile.html', args)
+
 
 class SignupView(View):
     def get(self, request):

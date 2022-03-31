@@ -4,6 +4,7 @@ interface FilterizrState {
     SORTING: 'SORTING';
     SHUFFLING: 'SHUFFLING';
 }
+
 /**
  * Possible animation states for Filterizr
  */

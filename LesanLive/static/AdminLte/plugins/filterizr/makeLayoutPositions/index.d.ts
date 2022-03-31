@@ -1,1 +1,1 @@
-export { default } from './makeLayoutPositions';
+export {default} from './makeLayoutPositions';

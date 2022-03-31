@@ -103,7 +103,7 @@ class VideoContent(models.Model):
         verbose_name = 'محتوا پخش تصویری'
         verbose_name_plural = 'محتوا پخش های تصویری'
 
-    video_link = models.URLField(blank=True, null=True, verbose_name='لینک پخش زنده صوتی')
+    video_link = models.URLField(blank=True, null=True, verbose_name='لینک پخش زنده تصویری')
     video_stat = models.ForeignKey(VideoStat, on_delete=models.CASCADE, verbose_name='Video Stat')
 
     def __str__(self):

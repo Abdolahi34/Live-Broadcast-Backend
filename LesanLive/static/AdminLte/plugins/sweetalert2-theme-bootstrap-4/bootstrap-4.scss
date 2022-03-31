@@ -124,15 +124,15 @@ $bootstrap-custom-range-thumb-active-bg: lighten($bootstrap-primary, 35%) !defau
 $bootstrap-custom-range-thumb-disabled-bg: $bootstrap-gray-500 !default;
 
 // Toast
-$bootstrap-toast-max-width:                   350px !default;
-$bootstrap-toast-padding-x:                   .75rem !default;
-$bootstrap-toast-padding-y:                   .25rem !default;
-$bootstrap-toast-font-size:                   .875rem !default;
-$bootstrap-toast-background-color:            rgba($swal2-white, .85) !default;
-$bootstrap-toast-border-width:                1px !default;
-$bootstrap-toast-border-color:                rgba(0, 0, 0, .1) !default;
-$bootstrap-toast-border-radius:               .25rem !default;
-$bootstrap-toast-box-shadow:                  0 .25rem .75rem rgba($swal2-black, .1) !default;
+$bootstrap-toast-max-width: 350px !default;
+$bootstrap-toast-padding-x: .75rem !default;
+$bootstrap-toast-padding-y: .25rem !default;
+$bootstrap-toast-font-size: .875rem !default;
+$bootstrap-toast-background-color: rgba($swal2-white, .85) !default;
+$bootstrap-toast-border-width: 1px !default;
+$bootstrap-toast-border-color: rgba(0, 0, 0, .1) !default;
+$bootstrap-toast-border-radius: .25rem !default;
+$bootstrap-toast-box-shadow: 0 .25rem .75rem rgba($swal2-black, .1) !default;
 
 // override SASS variables here
 

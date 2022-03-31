@@ -10,13 +10,13 @@ from captcha.fields import ReCaptchaField
 class LoginForm(AuthenticationForm):
     username = UsernameField(
         label='نام کاربری :',
-        )
+    )
     password = forms.CharField(
         label='رمز عبور :',
-        )
-    re_captcha = ReCaptchaField(
-        widget=ReCaptchaV2Checkbox,
     )
+    # re_captcha = ReCaptchaField(
+    #     widget=ReCaptchaV2Checkbox,
+    # )
 
 
 class SignupForm(UserCreationForm):

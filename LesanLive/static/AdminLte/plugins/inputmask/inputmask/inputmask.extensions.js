@@ -6,15 +6,15 @@
 * Version: 4.0.8
 */
 
-(function(factory) {
+(function (factory) {
     if (typeof define === "function" && define.amd) {
-        define([ "./inputmask" ], factory);
+        define(["./inputmask"], factory);
     } else if (typeof exports === "object") {
         module.exports = factory(require("./inputmask"));
     } else {
         factory(window.Inputmask);
     }
-})(function(Inputmask) {
+})(function (Inputmask) {
     Inputmask.extendDefinitions({
         A: {
             validator: "[A-Za-z\u0410-\u044f\u0401\u0451\xc0-\xff\xb5]",
@@ -41,7 +41,7 @@
             mask: "i[i[i]].i[i[i]].i[i[i]].i[i[i]]",
             definitions: {
                 i: {
-                    validator: function(chrs, maskset, pos, strict, opts) {
+                    validator: function (chrs, maskset, pos, strict, opts) {
                         if (pos - 1 > -1 && maskset.buffer[pos - 1] !== ".") {
                             chrs = maskset.buffer[pos - 1] + chrs;
                             if (pos - 2 > -1 && maskset.buffer[pos - 2] !== ".") {
@@ -52,7 +52,7 @@
                     }
                 }
             },
-            onUnMask: function(maskedValue, unmaskedValue, opts) {
+            onUnMask: function (maskedValue, unmaskedValue, opts) {
                 return maskedValue;
             },
             inputmode: "numeric"
@@ -61,7 +61,7 @@
             mask: "*{1,64}[.*{1,64}][.*{1,64}][.*{1,63}]@-{1,63}.-{1,63}[.-{1,63}][.-{1,63}]",
             greedy: false,
             casing: "lower",
-            onBeforePaste: function(pastedValue, opts) {
+            onBeforePaste: function (pastedValue, opts) {
                 pastedValue = pastedValue.toLowerCase();
                 return pastedValue.replace("mailto:", "");
             },
@@ -73,7 +73,7 @@
                     validator: "[0-9A-Za-z-]"
                 }
             },
-            onUnMask: function(maskedValue, unmaskedValue, opts) {
+            onUnMask: function (maskedValue, unmaskedValue, opts) {
                 return maskedValue;
             },
             inputmode: "email"

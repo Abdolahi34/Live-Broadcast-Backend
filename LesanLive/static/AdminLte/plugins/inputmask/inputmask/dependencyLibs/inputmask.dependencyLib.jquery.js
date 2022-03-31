@@ -6,14 +6,14 @@
 * Version: 4.0.8
 */
 
-(function(factory) {
+(function (factory) {
     if (typeof define === "function" && define.amd) {
-        define([ "jquery" ], factory);
+        define(["jquery"], factory);
     } else if (typeof exports === "object") {
         module.exports = factory(require("jquery"));
     } else {
         window.dependencyLib = factory(jQuery);
     }
-})(function($) {
+})(function ($) {
     return $;
 });

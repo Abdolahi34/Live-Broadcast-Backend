@@ -1,4 +1,4 @@
-define(["./raphael.core"], function(R) {
+define(["./raphael.core"], function (R) {
     if (R && !R.vml) {
         return;
     }
@@ -26,7 +26,7 @@ define(["./raphael.core"], function(R) {
         pathTypes = {path: 1, rect: 1, image: 1},
         ovalTypes = {circle: 1, ellipse: 1},
         path2vml = function (path) {
-            var total =  /[ahqstv]/ig,
+            var total = /[ahqstv]/ig,
                 command = R._pathToAbsolute;
             Str(path).match(total) && (command = R._path2curve);
             total = /[clmz]/g;
@@ -109,344 +109,351 @@ define(["./raphael.core"], function(R) {
             s.visibility = "visible";
         };
     R.toString = function () {
-        return  "Your browser doesn\u2019t support SVG. Falling down to VML.\nYou are running Rapha\xebl " + this.version;
+        return "Your browser doesn\u2019t support SVG. Falling down to VML.\nYou are running Rapha\xebl " + this.version;
     };
     var addArrow = function (o, value, isEnd) {
-        var values = Str(value).toLowerCase().split("-"),
-            se = isEnd ? "end" : "start",
-            i = values.length,
-            type = "classic",
-            w = "medium",
-            h = "medium";
-        while (i--) {
-            switch (values[i]) {
-                case "block":
-                case "classic":
-                case "oval":
-                case "diamond":
-                case "open":
-                case "none":
-                    type = values[i];
-                    break;
-                case "wide":
-                case "narrow": h = values[i]; break;
-                case "long":
-                case "short": w = values[i]; break;
-            }
-        }
-        var stroke = o.node.getElementsByTagName("stroke")[0];
-        stroke[se + "arrow"] = type;
-        stroke[se + "arrowlength"] = w;
-        stroke[se + "arrowwidth"] = h;
-    },
-    setFillAndStroke = function (o, params) {
-        // o.paper.canvas.style.display = "none";
-        o.attrs = o.attrs || {};
-        var node = o.node,
-            a = o.attrs,
-            s = node.style,
-            xy,
-            newpath = pathTypes[o.type] && (params.x != a.x || params.y != a.y || params.width != a.width || params.height != a.height || params.cx != a.cx || params.cy != a.cy || params.rx != a.rx || params.ry != a.ry || params.r != a.r),
-            isOval = ovalTypes[o.type] && (a.cx != params.cx || a.cy != params.cy || a.r != params.r || a.rx != params.rx || a.ry != params.ry),
-            res = o;
-
-
-        for (var par in params) if (params[has](par)) {
-            a[par] = params[par];
-        }
-        if (newpath) {
-            a.path = R._getPath[o.type](o);
-            o._.dirty = 1;
-        }
-        params.href && (node.href = params.href);
-        params.title && (node.title = params.title);
-        params.target && (node.target = params.target);
-        params.cursor && (s.cursor = params.cursor);
-        "blur" in params && o.blur(params.blur);
-        if (params.path && o.type == "path" || newpath) {
-            node.path = path2vml(~Str(a.path).toLowerCase().indexOf("r") ? R._pathToAbsolute(a.path) : a.path);
-            o._.dirty = 1;
-            if (o.type == "image") {
-                o._.fillpos = [a.x, a.y];
-                o._.fillsize = [a.width, a.height];
-                setCoords(o, 1, 1, 0, 0, 0);
-            }
-        }
-        "transform" in params && o.transform(params.transform);
-        if (isOval) {
-            var cx = +a.cx,
-                cy = +a.cy,
-                rx = +a.rx || +a.r || 0,
-                ry = +a.ry || +a.r || 0;
-            node.path = R.format("ar{0},{1},{2},{3},{4},{1},{4},{1}x", round((cx - rx) * zoom), round((cy - ry) * zoom), round((cx + rx) * zoom), round((cy + ry) * zoom), round(cx * zoom));
-            o._.dirty = 1;
-        }
-        if ("clip-rect" in params) {
-            var rect = Str(params["clip-rect"]).split(separator);
-            if (rect.length == 4) {
-                rect[2] = +rect[2] + (+rect[0]);
-                rect[3] = +rect[3] + (+rect[1]);
-                var div = node.clipRect || R._g.doc.createElement("div"),
-                    dstyle = div.style;
-                dstyle.clip = R.format("rect({1}px {2}px {3}px {0}px)", rect);
-                if (!node.clipRect) {
-                    dstyle.position = "absolute";
-                    dstyle.top = 0;
-                    dstyle.left = 0;
-                    dstyle.width = o.paper.width + "px";
-                    dstyle.height = o.paper.height + "px";
-                    node.parentNode.insertBefore(div, node);
-                    div.appendChild(node);
-                    node.clipRect = div;
+            var values = Str(value).toLowerCase().split("-"),
+                se = isEnd ? "end" : "start",
+                i = values.length,
+                type = "classic",
+                w = "medium",
+                h = "medium";
+            while (i--) {
+                switch (values[i]) {
+                    case "block":
+                    case "classic":
+                    case "oval":
+                    case "diamond":
+                    case "open":
+                    case "none":
+                        type = values[i];
+                        break;
+                    case "wide":
+                    case "narrow":
+                        h = values[i];
+                        break;
+                    case "long":
+                    case "short":
+                        w = values[i];
+                        break;
                 }
             }
-            if (!params["clip-rect"]) {
-                node.clipRect && (node.clipRect.style.clip = "auto");
-            }
-        }
-        if (o.textpath) {
-            var textpathStyle = o.textpath.style;
-            params.font && (textpathStyle.font = params.font);
-            params["font-family"] && (textpathStyle.fontFamily = '"' + params["font-family"].split(",")[0].replace(/^['"]+|['"]+$/g, E) + '"');
-            params["font-size"] && (textpathStyle.fontSize = params["font-size"]);
-            params["font-weight"] && (textpathStyle.fontWeight = params["font-weight"]);
-            params["font-style"] && (textpathStyle.fontStyle = params["font-style"]);
-        }
-        if ("arrow-start" in params) {
-            addArrow(res, params["arrow-start"]);
-        }
-        if ("arrow-end" in params) {
-            addArrow(res, params["arrow-end"], 1);
-        }
-        if (params.opacity != null ||
-            params.fill != null ||
-            params.src != null ||
-            params.stroke != null ||
-            params["stroke-width"] != null ||
-            params["stroke-opacity"] != null ||
-            params["fill-opacity"] != null ||
-            params["stroke-dasharray"] != null ||
-            params["stroke-miterlimit"] != null ||
-            params["stroke-linejoin"] != null ||
-            params["stroke-linecap"] != null) {
-            var fill = node.getElementsByTagName(fillString),
-                newfill = false;
-            fill = fill && fill[0];
-            !fill && (newfill = fill = createNode(fillString));
-            if (o.type == "image" && params.src) {
-                fill.src = params.src;
-            }
-            params.fill && (fill.on = true);
-            if (fill.on == null || params.fill == "none" || params.fill === null) {
-                fill.on = false;
-            }
-            if (fill.on && params.fill) {
-                var isURL = Str(params.fill).match(R._ISURL);
-                if (isURL) {
-                    fill.parentNode == node && node.removeChild(fill);
-                    fill.rotate = true;
-                    fill.src = isURL[1];
-                    fill.type = "tile";
-                    var bbox = o.getBBox(1);
-                    fill.position = bbox.x + S + bbox.y;
-                    o._.fillpos = [bbox.x, bbox.y];
+            var stroke = o.node.getElementsByTagName("stroke")[0];
+            stroke[se + "arrow"] = type;
+            stroke[se + "arrowlength"] = w;
+            stroke[se + "arrowwidth"] = h;
+        },
+        setFillAndStroke = function (o, params) {
+            // o.paper.canvas.style.display = "none";
+            o.attrs = o.attrs || {};
+            var node = o.node,
+                a = o.attrs,
+                s = node.style,
+                xy,
+                newpath = pathTypes[o.type] && (params.x != a.x || params.y != a.y || params.width != a.width || params.height != a.height || params.cx != a.cx || params.cy != a.cy || params.rx != a.rx || params.ry != a.ry || params.r != a.r),
+                isOval = ovalTypes[o.type] && (a.cx != params.cx || a.cy != params.cy || a.r != params.r || a.rx != params.rx || a.ry != params.ry),
+                res = o;
 
-                    R._preload(isURL[1], function () {
-                        o._.fillsize = [this.offsetWidth, this.offsetHeight];
-                    });
-                } else {
-                    fill.color = R.getRGB(params.fill).hex;
-                    fill.src = E;
-                    fill.type = "solid";
-                    if (R.getRGB(params.fill).error && (res.type in {circle: 1, ellipse: 1} || Str(params.fill).charAt() != "r") && addGradientFill(res, params.fill, fill)) {
-                        a.fill = "none";
-                        a.gradient = params.fill;
-                        fill.rotate = false;
+
+            for (var par in params) if (params[has](par)) {
+                a[par] = params[par];
+            }
+            if (newpath) {
+                a.path = R._getPath[o.type](o);
+                o._.dirty = 1;
+            }
+            params.href && (node.href = params.href);
+            params.title && (node.title = params.title);
+            params.target && (node.target = params.target);
+            params.cursor && (s.cursor = params.cursor);
+            "blur" in params && o.blur(params.blur);
+            if (params.path && o.type == "path" || newpath) {
+                node.path = path2vml(~Str(a.path).toLowerCase().indexOf("r") ? R._pathToAbsolute(a.path) : a.path);
+                o._.dirty = 1;
+                if (o.type == "image") {
+                    o._.fillpos = [a.x, a.y];
+                    o._.fillsize = [a.width, a.height];
+                    setCoords(o, 1, 1, 0, 0, 0);
+                }
+            }
+            "transform" in params && o.transform(params.transform);
+            if (isOval) {
+                var cx = +a.cx,
+                    cy = +a.cy,
+                    rx = +a.rx || +a.r || 0,
+                    ry = +a.ry || +a.r || 0;
+                node.path = R.format("ar{0},{1},{2},{3},{4},{1},{4},{1}x", round((cx - rx) * zoom), round((cy - ry) * zoom), round((cx + rx) * zoom), round((cy + ry) * zoom), round(cx * zoom));
+                o._.dirty = 1;
+            }
+            if ("clip-rect" in params) {
+                var rect = Str(params["clip-rect"]).split(separator);
+                if (rect.length == 4) {
+                    rect[2] = +rect[2] + (+rect[0]);
+                    rect[3] = +rect[3] + (+rect[1]);
+                    var div = node.clipRect || R._g.doc.createElement("div"),
+                        dstyle = div.style;
+                    dstyle.clip = R.format("rect({1}px {2}px {3}px {0}px)", rect);
+                    if (!node.clipRect) {
+                        dstyle.position = "absolute";
+                        dstyle.top = 0;
+                        dstyle.left = 0;
+                        dstyle.width = o.paper.width + "px";
+                        dstyle.height = o.paper.height + "px";
+                        node.parentNode.insertBefore(div, node);
+                        div.appendChild(node);
+                        node.clipRect = div;
                     }
                 }
-            }
-            if ("fill-opacity" in params || "opacity" in params) {
-                var opacity = ((+a["fill-opacity"] + 1 || 2) - 1) * ((+a.opacity + 1 || 2) - 1) * ((+R.getRGB(params.fill).o + 1 || 2) - 1);
-                opacity = mmin(mmax(opacity, 0), 1);
-                fill.opacity = opacity;
-                if (fill.src) {
-                    fill.color = "none";
+                if (!params["clip-rect"]) {
+                    node.clipRect && (node.clipRect.style.clip = "auto");
                 }
             }
-            node.appendChild(fill);
-            var stroke = (node.getElementsByTagName("stroke") && node.getElementsByTagName("stroke")[0]),
-            newstroke = false;
-            !stroke && (newstroke = stroke = createNode("stroke"));
-            if ((params.stroke && params.stroke != "none") ||
-                params["stroke-width"] ||
+            if (o.textpath) {
+                var textpathStyle = o.textpath.style;
+                params.font && (textpathStyle.font = params.font);
+                params["font-family"] && (textpathStyle.fontFamily = '"' + params["font-family"].split(",")[0].replace(/^['"]+|['"]+$/g, E) + '"');
+                params["font-size"] && (textpathStyle.fontSize = params["font-size"]);
+                params["font-weight"] && (textpathStyle.fontWeight = params["font-weight"]);
+                params["font-style"] && (textpathStyle.fontStyle = params["font-style"]);
+            }
+            if ("arrow-start" in params) {
+                addArrow(res, params["arrow-start"]);
+            }
+            if ("arrow-end" in params) {
+                addArrow(res, params["arrow-end"], 1);
+            }
+            if (params.opacity != null ||
+                params.fill != null ||
+                params.src != null ||
+                params.stroke != null ||
+                params["stroke-width"] != null ||
                 params["stroke-opacity"] != null ||
-                params["stroke-dasharray"] ||
-                params["stroke-miterlimit"] ||
-                params["stroke-linejoin"] ||
-                params["stroke-linecap"]) {
-                stroke.on = true;
-            }
-            (params.stroke == "none" || params.stroke === null || stroke.on == null || params.stroke == 0 || params["stroke-width"] == 0) && (stroke.on = false);
-            var strokeColor = R.getRGB(params.stroke);
-            stroke.on && params.stroke && (stroke.color = strokeColor.hex);
-            opacity = ((+a["stroke-opacity"] + 1 || 2) - 1) * ((+a.opacity + 1 || 2) - 1) * ((+strokeColor.o + 1 || 2) - 1);
-            var width = (toFloat(params["stroke-width"]) || 1) * .75;
-            opacity = mmin(mmax(opacity, 0), 1);
-            params["stroke-width"] == null && (width = a["stroke-width"]);
-            params["stroke-width"] && (stroke.weight = width);
-            width && width < 1 && (opacity *= width) && (stroke.weight = 1);
-            stroke.opacity = opacity;
+                params["fill-opacity"] != null ||
+                params["stroke-dasharray"] != null ||
+                params["stroke-miterlimit"] != null ||
+                params["stroke-linejoin"] != null ||
+                params["stroke-linecap"] != null) {
+                var fill = node.getElementsByTagName(fillString),
+                    newfill = false;
+                fill = fill && fill[0];
+                !fill && (newfill = fill = createNode(fillString));
+                if (o.type == "image" && params.src) {
+                    fill.src = params.src;
+                }
+                params.fill && (fill.on = true);
+                if (fill.on == null || params.fill == "none" || params.fill === null) {
+                    fill.on = false;
+                }
+                if (fill.on && params.fill) {
+                    var isURL = Str(params.fill).match(R._ISURL);
+                    if (isURL) {
+                        fill.parentNode == node && node.removeChild(fill);
+                        fill.rotate = true;
+                        fill.src = isURL[1];
+                        fill.type = "tile";
+                        var bbox = o.getBBox(1);
+                        fill.position = bbox.x + S + bbox.y;
+                        o._.fillpos = [bbox.x, bbox.y];
 
-            params["stroke-linejoin"] && (stroke.joinstyle = params["stroke-linejoin"] || "miter");
-            stroke.miterlimit = params["stroke-miterlimit"] || 8;
-            params["stroke-linecap"] && (stroke.endcap = params["stroke-linecap"] == "butt" ? "flat" : params["stroke-linecap"] == "square" ? "square" : "round");
-            if ("stroke-dasharray" in params) {
-                var dasharray = {
-                    "-": "shortdash",
-                    ".": "shortdot",
-                    "-.": "shortdashdot",
-                    "-..": "shortdashdotdot",
-                    ". ": "dot",
-                    "- ": "dash",
-                    "--": "longdash",
-                    "- .": "dashdot",
-                    "--.": "longdashdot",
-                    "--..": "longdashdotdot"
-                };
-                stroke.dashstyle = dasharray[has](params["stroke-dasharray"]) ? dasharray[params["stroke-dasharray"]] : E;
-            }
-            newstroke && node.appendChild(stroke);
-        }
-        if (res.type == "text") {
-            res.paper.canvas.style.display = E;
-            var span = res.paper.span,
-                m = 100,
-                fontSize = a.font && a.font.match(/\d+(?:\.\d*)?(?=px)/);
-            s = span.style;
-            a.font && (s.font = a.font);
-            a["font-family"] && (s.fontFamily = a["font-family"]);
-            a["font-weight"] && (s.fontWeight = a["font-weight"]);
-            a["font-style"] && (s.fontStyle = a["font-style"]);
-            fontSize = toFloat(a["font-size"] || fontSize && fontSize[0]) || 10;
-            s.fontSize = fontSize * m + "px";
-            res.textpath.string && (span.innerHTML = Str(res.textpath.string).replace(/</g, "&#60;").replace(/&/g, "&#38;").replace(/\n/g, "<br>"));
-            var brect = span.getBoundingClientRect();
-            res.W = a.w = (brect.right - brect.left) / m;
-            res.H = a.h = (brect.bottom - brect.top) / m;
-            // res.paper.canvas.style.display = "none";
-            res.X = a.x;
-            res.Y = a.y + res.H / 2;
+                        R._preload(isURL[1], function () {
+                            o._.fillsize = [this.offsetWidth, this.offsetHeight];
+                        });
+                    } else {
+                        fill.color = R.getRGB(params.fill).hex;
+                        fill.src = E;
+                        fill.type = "solid";
+                        if (R.getRGB(params.fill).error && (res.type in {
+                            circle: 1,
+                            ellipse: 1
+                        } || Str(params.fill).charAt() != "r") && addGradientFill(res, params.fill, fill)) {
+                            a.fill = "none";
+                            a.gradient = params.fill;
+                            fill.rotate = false;
+                        }
+                    }
+                }
+                if ("fill-opacity" in params || "opacity" in params) {
+                    var opacity = ((+a["fill-opacity"] + 1 || 2) - 1) * ((+a.opacity + 1 || 2) - 1) * ((+R.getRGB(params.fill).o + 1 || 2) - 1);
+                    opacity = mmin(mmax(opacity, 0), 1);
+                    fill.opacity = opacity;
+                    if (fill.src) {
+                        fill.color = "none";
+                    }
+                }
+                node.appendChild(fill);
+                var stroke = (node.getElementsByTagName("stroke") && node.getElementsByTagName("stroke")[0]),
+                    newstroke = false;
+                !stroke && (newstroke = stroke = createNode("stroke"));
+                if ((params.stroke && params.stroke != "none") ||
+                    params["stroke-width"] ||
+                    params["stroke-opacity"] != null ||
+                    params["stroke-dasharray"] ||
+                    params["stroke-miterlimit"] ||
+                    params["stroke-linejoin"] ||
+                    params["stroke-linecap"]) {
+                    stroke.on = true;
+                }
+                (params.stroke == "none" || params.stroke === null || stroke.on == null || params.stroke == 0 || params["stroke-width"] == 0) && (stroke.on = false);
+                var strokeColor = R.getRGB(params.stroke);
+                stroke.on && params.stroke && (stroke.color = strokeColor.hex);
+                opacity = ((+a["stroke-opacity"] + 1 || 2) - 1) * ((+a.opacity + 1 || 2) - 1) * ((+strokeColor.o + 1 || 2) - 1);
+                var width = (toFloat(params["stroke-width"]) || 1) * .75;
+                opacity = mmin(mmax(opacity, 0), 1);
+                params["stroke-width"] == null && (width = a["stroke-width"]);
+                params["stroke-width"] && (stroke.weight = width);
+                width && width < 1 && (opacity *= width) && (stroke.weight = 1);
+                stroke.opacity = opacity;
 
-            ("x" in params || "y" in params) && (res.path.v = R.format("m{0},{1}l{2},{1}", round(a.x * zoom), round(a.y * zoom), round(a.x * zoom) + 1));
-            var dirtyattrs = ["x", "y", "text", "font", "font-family", "font-weight", "font-style", "font-size"];
-            for (var d = 0, dd = dirtyattrs.length; d < dd; d++) if (dirtyattrs[d] in params) {
-                res._.dirty = 1;
-                break;
+                params["stroke-linejoin"] && (stroke.joinstyle = params["stroke-linejoin"] || "miter");
+                stroke.miterlimit = params["stroke-miterlimit"] || 8;
+                params["stroke-linecap"] && (stroke.endcap = params["stroke-linecap"] == "butt" ? "flat" : params["stroke-linecap"] == "square" ? "square" : "round");
+                if ("stroke-dasharray" in params) {
+                    var dasharray = {
+                        "-": "shortdash",
+                        ".": "shortdot",
+                        "-.": "shortdashdot",
+                        "-..": "shortdashdotdot",
+                        ". ": "dot",
+                        "- ": "dash",
+                        "--": "longdash",
+                        "- .": "dashdot",
+                        "--.": "longdashdot",
+                        "--..": "longdashdotdot"
+                    };
+                    stroke.dashstyle = dasharray[has](params["stroke-dasharray"]) ? dasharray[params["stroke-dasharray"]] : E;
+                }
+                newstroke && node.appendChild(stroke);
             }
+            if (res.type == "text") {
+                res.paper.canvas.style.display = E;
+                var span = res.paper.span,
+                    m = 100,
+                    fontSize = a.font && a.font.match(/\d+(?:\.\d*)?(?=px)/);
+                s = span.style;
+                a.font && (s.font = a.font);
+                a["font-family"] && (s.fontFamily = a["font-family"]);
+                a["font-weight"] && (s.fontWeight = a["font-weight"]);
+                a["font-style"] && (s.fontStyle = a["font-style"]);
+                fontSize = toFloat(a["font-size"] || fontSize && fontSize[0]) || 10;
+                s.fontSize = fontSize * m + "px";
+                res.textpath.string && (span.innerHTML = Str(res.textpath.string).replace(/</g, "&#60;").replace(/&/g, "&#38;").replace(/\n/g, "<br>"));
+                var brect = span.getBoundingClientRect();
+                res.W = a.w = (brect.right - brect.left) / m;
+                res.H = a.h = (brect.bottom - brect.top) / m;
+                // res.paper.canvas.style.display = "none";
+                res.X = a.x;
+                res.Y = a.y + res.H / 2;
 
-            // text-anchor emulation
-            switch (a["text-anchor"]) {
-                case "start":
-                    res.textpath.style["v-text-align"] = "left";
-                    res.bbx = res.W / 2;
-                break;
-                case "end":
-                    res.textpath.style["v-text-align"] = "right";
-                    res.bbx = -res.W / 2;
-                break;
-                default:
-                    res.textpath.style["v-text-align"] = "center";
-                    res.bbx = 0;
-                break;
+                ("x" in params || "y" in params) && (res.path.v = R.format("m{0},{1}l{2},{1}", round(a.x * zoom), round(a.y * zoom), round(a.x * zoom) + 1));
+                var dirtyattrs = ["x", "y", "text", "font", "font-family", "font-weight", "font-style", "font-size"];
+                for (var d = 0, dd = dirtyattrs.length; d < dd; d++) if (dirtyattrs[d] in params) {
+                    res._.dirty = 1;
+                    break;
+                }
+
+                // text-anchor emulation
+                switch (a["text-anchor"]) {
+                    case "start":
+                        res.textpath.style["v-text-align"] = "left";
+                        res.bbx = res.W / 2;
+                        break;
+                    case "end":
+                        res.textpath.style["v-text-align"] = "right";
+                        res.bbx = -res.W / 2;
+                        break;
+                    default:
+                        res.textpath.style["v-text-align"] = "center";
+                        res.bbx = 0;
+                        break;
+                }
+                res.textpath.style["v-text-kern"] = true;
             }
-            res.textpath.style["v-text-kern"] = true;
-        }
-        // res.paper.canvas.style.display = E;
-    },
-    addGradientFill = function (o, gradient, fill) {
-        o.attrs = o.attrs || {};
-        var attrs = o.attrs,
-            pow = Math.pow,
-            opacity,
-            oindex,
-            type = "linear",
-            fxfy = ".5 .5";
-        o.attrs.gradient = gradient;
-        gradient = Str(gradient).replace(R._radial_gradient, function (all, fx, fy) {
-            type = "radial";
-            if (fx && fy) {
-                fx = toFloat(fx);
-                fy = toFloat(fy);
-                pow(fx - .5, 2) + pow(fy - .5, 2) > .25 && (fy = math.sqrt(.25 - pow(fx - .5, 2)) * ((fy > .5) * 2 - 1) + .5);
-                fxfy = fx + S + fy;
+            // res.paper.canvas.style.display = E;
+        },
+        addGradientFill = function (o, gradient, fill) {
+            o.attrs = o.attrs || {};
+            var attrs = o.attrs,
+                pow = Math.pow,
+                opacity,
+                oindex,
+                type = "linear",
+                fxfy = ".5 .5";
+            o.attrs.gradient = gradient;
+            gradient = Str(gradient).replace(R._radial_gradient, function (all, fx, fy) {
+                type = "radial";
+                if (fx && fy) {
+                    fx = toFloat(fx);
+                    fy = toFloat(fy);
+                    pow(fx - .5, 2) + pow(fy - .5, 2) > .25 && (fy = math.sqrt(.25 - pow(fx - .5, 2)) * ((fy > .5) * 2 - 1) + .5);
+                    fxfy = fx + S + fy;
+                }
+                return E;
+            });
+            gradient = gradient.split(/\s*\-\s*/);
+            if (type == "linear") {
+                var angle = gradient.shift();
+                angle = -toFloat(angle);
+                if (isNaN(angle)) {
+                    return null;
+                }
             }
-            return E;
-        });
-        gradient = gradient.split(/\s*\-\s*/);
-        if (type == "linear") {
-            var angle = gradient.shift();
-            angle = -toFloat(angle);
-            if (isNaN(angle)) {
+            var dots = R._parseDots(gradient);
+            if (!dots) {
                 return null;
             }
-        }
-        var dots = R._parseDots(gradient);
-        if (!dots) {
-            return null;
-        }
-        o = o.shape || o.node;
-        if (dots.length) {
-            o.removeChild(fill);
-            fill.on = true;
-            fill.method = "none";
-            fill.color = dots[0].color;
-            fill.color2 = dots[dots.length - 1].color;
-            var clrs = [];
-            for (var i = 0, ii = dots.length; i < ii; i++) {
-                dots[i].offset && clrs.push(dots[i].offset + S + dots[i].color);
+            o = o.shape || o.node;
+            if (dots.length) {
+                o.removeChild(fill);
+                fill.on = true;
+                fill.method = "none";
+                fill.color = dots[0].color;
+                fill.color2 = dots[dots.length - 1].color;
+                var clrs = [];
+                for (var i = 0, ii = dots.length; i < ii; i++) {
+                    dots[i].offset && clrs.push(dots[i].offset + S + dots[i].color);
+                }
+                fill.colors = clrs.length ? clrs.join() : "0% " + fill.color;
+                if (type == "radial") {
+                    fill.type = "gradientTitle";
+                    fill.focus = "100%";
+                    fill.focussize = "0 0";
+                    fill.focusposition = fxfy;
+                    fill.angle = 0;
+                } else {
+                    // fill.rotate= true;
+                    fill.type = "gradient";
+                    fill.angle = (270 - angle) % 360;
+                }
+                o.appendChild(fill);
             }
-            fill.colors = clrs.length ? clrs.join() : "0% " + fill.color;
-            if (type == "radial") {
-                fill.type = "gradientTitle";
-                fill.focus = "100%";
-                fill.focussize = "0 0";
-                fill.focusposition = fxfy;
-                fill.angle = 0;
-            } else {
-                // fill.rotate= true;
-                fill.type = "gradient";
-                fill.angle = (270 - angle) % 360;
-            }
-            o.appendChild(fill);
-        }
-        return 1;
-    },
-    Element = function (node, vml) {
-        this[0] = this.node = node;
-        node.raphael = true;
-        this.id = R._oid++;
-        node.raphaelid = this.id;
-        this.X = 0;
-        this.Y = 0;
-        this.attrs = {};
-        this.paper = vml;
-        this.matrix = R.matrix();
-        this._ = {
-            transform: [],
-            sx: 1,
-            sy: 1,
-            dx: 0,
-            dy: 0,
-            deg: 0,
-            dirty: 1,
-            dirtyT: 1
+            return 1;
+        },
+        Element = function (node, vml) {
+            this[0] = this.node = node;
+            node.raphael = true;
+            this.id = R._oid++;
+            node.raphaelid = this.id;
+            this.X = 0;
+            this.Y = 0;
+            this.attrs = {};
+            this.paper = vml;
+            this.matrix = R.matrix();
+            this._ = {
+                transform: [],
+                sx: 1,
+                sy: 1,
+                dx: 0,
+                dy: 0,
+                deg: 0,
+                dirty: 1,
+                dirtyT: 1
+            };
+            !vml.bottom && (vml.bottom = this);
+            this.prev = vml.top;
+            vml.top && (vml.top.next = this);
+            vml.top = this;
+            this.next = null;
         };
-        !vml.bottom && (vml.bottom = this);
-        this.prev = vml.top;
-        vml.top && (vml.top.next = this);
-        vml.top = this;
-        this.next = null;
-    };
     var elproto = R.el;
 
     Element.prototype = elproto;
@@ -571,23 +578,22 @@ define(["./raphael.core"], function(R) {
     };
     // Needed to fix the vml setViewBox issues
     elproto.auxGetBBox = R.el.getBBox;
-    elproto.getBBox = function(){
-      var b = this.auxGetBBox();
-      if (this.paper && this.paper._viewBoxShift)
-      {
-        var c = {};
-        var z = 1/this.paper._viewBoxShift.scale;
-        c.x = b.x - this.paper._viewBoxShift.dx;
-        c.x *= z;
-        c.y = b.y - this.paper._viewBoxShift.dy;
-        c.y *= z;
-        c.width  = b.width  * z;
-        c.height = b.height * z;
-        c.x2 = c.x + c.width;
-        c.y2 = c.y + c.height;
-        return c;
-      }
-      return b;
+    elproto.getBBox = function () {
+        var b = this.auxGetBBox();
+        if (this.paper && this.paper._viewBoxShift) {
+            var c = {};
+            var z = 1 / this.paper._viewBoxShift.scale;
+            c.x = b.x - this.paper._viewBoxShift.dx;
+            c.x *= z;
+            c.y = b.y - this.paper._viewBoxShift.dy;
+            c.y *= z;
+            c.width = b.width * z;
+            c.height = b.height * z;
+            c.x2 = c.x + c.width;
+            c.y2 = c.y + c.height;
+            return c;
+        }
+        return b;
     };
     elproto._getBBox = function () {
         if (this.removed) {
@@ -905,25 +911,25 @@ define(["./raphael.core"], function(R) {
     };
     var createNode;
     R._engine.initWin = function (win) {
-            var doc = win.document;
-            if (doc.styleSheets.length < 31) {
-                doc.createStyleSheet().addRule(".rvml", "behavior:url(#default#VML)");
-            } else {
-                // no more room, add to the existing one
-                // http://msdn.microsoft.com/en-us/library/ms531194%28VS.85%29.aspx
-                doc.styleSheets[0].addRule(".rvml", "behavior:url(#default#VML)");
-            }
-            try {
-                !doc.namespaces.rvml && doc.namespaces.add("rvml", "urn:schemas-microsoft-com:vml");
-                createNode = function (tagName) {
-                    return doc.createElement('<rvml:' + tagName + ' class="rvml">');
-                };
-            } catch (e) {
-                createNode = function (tagName) {
-                    return doc.createElement('<' + tagName + ' xmlns="urn:schemas-microsoft.com:vml" class="rvml">');
-                };
-            }
-        };
+        var doc = win.document;
+        if (doc.styleSheets.length < 31) {
+            doc.createStyleSheet().addRule(".rvml", "behavior:url(#default#VML)");
+        } else {
+            // no more room, add to the existing one
+            // http://msdn.microsoft.com/en-us/library/ms531194%28VS.85%29.aspx
+            doc.styleSheets[0].addRule(".rvml", "behavior:url(#default#VML)");
+        }
+        try {
+            !doc.namespaces.rvml && doc.namespaces.add("rvml", "urn:schemas-microsoft-com:vml");
+            createNode = function (tagName) {
+                return doc.createElement('<rvml:' + tagName + ' class="rvml">');
+            };
+        } catch (e) {
+            createNode = function (tagName) {
+                return doc.createElement('<' + tagName + ' xmlns="urn:schemas-microsoft.com:vml" class="rvml">');
+            };
+        }
+    };
     R._engine.initWin(R._g.win);
     R._engine.create = function () {
         var con = R._getContainer.apply(0, arguments),
@@ -965,7 +971,8 @@ define(["./raphael.core"], function(R) {
                 container.appendChild(c);
             }
         }
-        res.renderfix = function () {};
+        res.renderfix = function () {
+        };
         return res;
     };
     R.prototype.clear = function () {

@@ -1,4 +1,5 @@
-import { Filter } from './types';
+import {Filter} from './types';
+
 /**
  * ActiveFilter represents the currently active filter over
  * the grid.
@@ -7,9 +8,14 @@ import { Filter } from './types';
  */
 export default class ActiveFilter {
     private filter;
+
     constructor(filter: Filter);
+
     get(): Filter;
+
     set(targetFilter: Filter): void;
+
     toggle(targetFilter: string): void;
+
     private toggleFilter;
 }

@@ -24,11 +24,13 @@ With CSS:
 With SASS:
 
 `your-app.js`:
+
 ```js
 import Swal from 'sweetalert2/src/sweetalert2.js'
 ```
 
 `your-app.scss`:
+
 ```scss
 @import '~@sweetalert2/theme-bootstrap-4/bootstrap-4.scss';
 ```

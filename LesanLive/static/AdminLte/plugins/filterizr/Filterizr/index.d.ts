@@ -1,1 +1,1 @@
-export { default } from './Filterizr';
+export {default} from './Filterizr';

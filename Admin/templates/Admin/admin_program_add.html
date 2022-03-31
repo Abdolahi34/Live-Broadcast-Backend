@@ -1,0 +1,89 @@
+{% extends 'Admin/admin_base.html' %}
+
+{% load widget_tweaks %}
+
+{% block head %}
+    <script>
+        {% if temp_var == 5 %}
+            alert('اطلاعات، اشتباه وارد شده است.')
+        {% elif temp_var == 3 %}
+            alert("برنامه با موفقیت اضافه شد.")
+        {% endif %}
+    </script>
+{% endblock %}
+
+{% block message %}
+    {% if form.errors %}
+        <blockquote class="quote-danger">
+            <h5 id="note">هشدار!</h5>
+            <p>{{ form.errors }}</p>
+        </blockquote>
+    {% endif %}
+{% endblock %}
+
+{% block main_content %}
+    <div class="col-md-6">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">اضافه کردن برنامه</h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="inputName">عنوان</label>
+                        {% render_field form.title class+="form-control" %}
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName">عنوان در url</label>
+                        {% render_field form.slug class+="form-control" %}
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName">تاریخ</label>
+                        {% render_field form.datetype class+="form-control" %}
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName">زمان شروع</label>
+                        {% render_field form.start_time class+="form-control" %}
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName">زمان پایان</label>
+                        {% render_field form.end_time class+="form-control" %}
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName">لینک کلیک روی لوگو</label>
+                        {% render_field form.logo_onclick_link class+="form-control" %}
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName">عکس</label>
+                        {% render_field form.logo class+="form-control" %}
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName">محتویات برنامه</label>
+                        {% render_field form.stream class+="form-control" %}
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName">فعال / غیر فعال</label>
+                        {% render_field form.is_active class+="form-control" %}
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName">ردیف</label>
+                        {% render_field form.num_order class+="form-control" %}
+                    </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+    <div class="col-12">
+        <a href="{% url 'Admin:program' %}" class="btn btn-secondary">انصراف</a>
+        <input type="submit" value="ذخیره تغییرات" class="btn btn-success float-right">
+    </div>
+    </form>
+{% endblock %}

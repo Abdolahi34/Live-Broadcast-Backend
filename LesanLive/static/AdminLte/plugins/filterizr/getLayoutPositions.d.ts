@@ -1,5 +1,6 @@
-import { Position } from './FilterItem';
+import {Position} from './FilterItem';
 import FilterContainer from './FilterContainer';
+
 /**
  * Calculates and returns an array of objects representing
  * the next positions the FilterItems are supposed to assume.

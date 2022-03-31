@@ -5,7 +5,9 @@
 <a href="https://www.nuget.org/packages/icheck-bootstrap" target="_blank"><img src="https://img.shields.io/badge/nuget-v3.0.1-blue.svg" alt="nuget version"></a>
 [![](https://data.jsdelivr.com/v1/package/npm/icheck-bootstrap/badge)](https://www.jsdelivr.com/package/npm/icheck-bootstrap)
 
-Did you had a problem customizing html checkboxes and radio buttons? icheck-bootstrap is pure css solution for displaying twitter bootstrap style checkboxes and radio buttons. Try [Demo](https://bantikyan.github.io/icheck-bootstrap/).
+Did you had a problem customizing html checkboxes and radio buttons? icheck-bootstrap is pure css solution for
+displaying twitter bootstrap style checkboxes and radio buttons.
+Try [Demo](https://bantikyan.github.io/icheck-bootstrap/).
 
 You may also like to try [icheck-material](https://github.com/bantikyan/icheck-material).
 
@@ -109,8 +111,8 @@ To have components without label, you still have to have label control with empt
 
 Try [Demo](https://bantikyan.github.io/icheck-bootstrap/)
 
-<b>Twitter Bootstrap:</b> As you can see in previous examples, icheck-primary class used for styling.
-You can use following classes for Twitter Bootstrap color scheme:
+<b>Twitter Bootstrap:</b> As you can see in previous examples, icheck-primary class used for styling. You can use
+following classes for Twitter Bootstrap color scheme:
 
 <code>.icheck-default</code><br/>
 <code>.icheck-primary</code><br/>
@@ -144,4 +146,5 @@ You can use following classes for Twitter Bootstrap color scheme:
 
 ## License
 
-icheck-bootstrap released under the [MIT license](https://github.com/bantikyan/icheck-bootstrap/blob/master/LICENSE). Feel free to use it in personal and commercial projects.
+icheck-bootstrap released under the [MIT license](https://github.com/bantikyan/icheck-bootstrap/blob/master/LICENSE).
+Feel free to use it in personal and commercial projects.
