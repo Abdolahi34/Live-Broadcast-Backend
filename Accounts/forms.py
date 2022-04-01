@@ -14,9 +14,9 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(
         label='رمز عبور :',
     )
-    # re_captcha = ReCaptchaField(
-    #     widget=ReCaptchaV2Checkbox,
-    # )
+    re_captcha = ReCaptchaField(
+        widget=ReCaptchaV2Checkbox,
+    )
 
 
 class SignupForm(UserCreationForm):
