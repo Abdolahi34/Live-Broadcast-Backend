@@ -1,20 +1,16 @@
 //! moment.js locale configuration
-//! locale : Bambara [bm]
-//! author : Estelle Comment : https://github.com/estellecomment
 
 ;(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined'
-       && typeof require === 'function' ? factory(require('../moment')) :
-   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
-   factory(global.moment)
-}(this, (function (moment) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined'
+    && typeof require === 'function' ? factory(require('../moment')) :
+        typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+            factory(global.moment)
+}(this, (function (moment) {
+    'use strict';
 
-    //! moment.js locale configuration
 
     var bm = moment.defineLocale('bm', {
-        months: 'Zanwuyekalo_Fewuruyekalo_Marisikalo_Awirilikalo_Mɛkalo_Zuwɛnkalo_Zuluyekalo_Utikalo_Sɛtanburukalo_ɔkutɔburukalo_Nowanburukalo_Desanburukalo'.split(
-            '_'
-        ),
+        months: 'Zanwuyekalo_Fewuruyekalo_Marisikalo_Awirilikalo_Mɛkalo_Zuwɛnkalo_Zuluyekalo_Utikalo_Sɛtanburukalo_ɔkutɔburukalo_Nowanburukalo_Desanburukalo'.split('_'),
         monthsShort: 'Zan_Few_Mar_Awi_Mɛ_Zuw_Zul_Uti_Sɛt_ɔku_Now_Des'.split('_'),
         weekdays: 'Kari_Ntɛnɛn_Tarata_Araba_Alamisa_Juma_Sibiri'.split('_'),
         weekdaysShort: 'Kar_Ntɛ_Tar_Ara_Ala_Jum_Sib'.split('_'),
@@ -25,7 +21,7 @@
             L: 'DD/MM/YYYY',
             LL: 'MMMM [tile] D [san] YYYY',
             LLL: 'MMMM [tile] D [san] YYYY [lɛrɛ] HH:mm',
-            LLLL: 'dddd MMMM [tile] D [san] YYYY [lɛrɛ] HH:mm',
+            LLLL: 'dddd MMMM [tile] D [san] YYYY [lɛrɛ] HH:mm'
         },
         calendar: {
             sameDay: '[Bi lɛrɛ] LT',
@@ -33,7 +29,7 @@
             nextWeek: 'dddd [don lɛrɛ] LT',
             lastDay: '[Kunu lɛrɛ] LT',
             lastWeek: 'dddd [tɛmɛnen lɛrɛ] LT',
-            sameElse: 'L',
+            sameElse: 'L'
         },
         relativeTime: {
             future: '%s kɔnɔ',
@@ -49,12 +45,12 @@
             M: 'kalo kelen',
             MM: 'kalo %d',
             y: 'san kelen',
-            yy: 'san %d',
+            yy: 'san %d'
         },
         week: {
             dow: 1, // Monday is the first day of the week.
-            doy: 4, // The week that contains Jan 4th is the first week of the year.
-        },
+            doy: 4  // The week that contains Jan 4th is the first week of the year.
+        }
     });
 
     return bm;

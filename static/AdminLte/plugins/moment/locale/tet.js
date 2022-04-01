@@ -1,22 +1,16 @@
 //! moment.js locale configuration
-//! locale : Tetun Dili (East Timor) [tet]
-//! author : Joshua Brooks : https://github.com/joshbrooks
-//! author : Onorio De J. Afonso : https://github.com/marobo
-//! author : Sonia Simoes : https://github.com/soniasimoes
 
 ;(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined'
-       && typeof require === 'function' ? factory(require('../moment')) :
-   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
-   factory(global.moment)
-}(this, (function (moment) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined'
+    && typeof require === 'function' ? factory(require('../moment')) :
+        typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+            factory(global.moment)
+}(this, (function (moment) {
+    'use strict';
 
-    //! moment.js locale configuration
 
     var tet = moment.defineLocale('tet', {
-        months: 'Janeiru_Fevereiru_Marsu_Abril_Maiu_Juñu_Jullu_Agustu_Setembru_Outubru_Novembru_Dezembru'.split(
-            '_'
-        ),
+        months: 'Janeiru_Fevereiru_Marsu_Abril_Maiu_Juñu_Jullu_Agustu_Setembru_Outubru_Novembru_Dezembru'.split('_'),
         monthsShort: 'Jan_Fev_Mar_Abr_Mai_Jun_Jul_Ago_Set_Out_Nov_Dez'.split('_'),
         weekdays: 'Domingu_Segunda_Tersa_Kuarta_Kinta_Sesta_Sabadu'.split('_'),
         weekdaysShort: 'Dom_Seg_Ters_Kua_Kint_Sest_Sab'.split('_'),
@@ -27,7 +21,7 @@
             L: 'DD/MM/YYYY',
             LL: 'D MMMM YYYY',
             LLL: 'D MMMM YYYY HH:mm',
-            LLLL: 'dddd, D MMMM YYYY HH:mm',
+            LLLL: 'dddd, D MMMM YYYY HH:mm'
         },
         calendar: {
             sameDay: '[Ohin iha] LT',
@@ -35,13 +29,13 @@
             nextWeek: 'dddd [iha] LT',
             lastDay: '[Horiseik iha] LT',
             lastWeek: 'dddd [semana kotuk] [iha] LT',
-            sameElse: 'L',
+            sameElse: 'L'
         },
         relativeTime: {
             future: 'iha %s',
             past: '%s liuba',
-            s: 'segundu balun',
-            ss: 'segundu %d',
+            s: 'minutu balun',
+            ss: 'minutu %d',
             m: 'minutu ida',
             mm: 'minutu %d',
             h: 'oras ida',
@@ -51,27 +45,21 @@
             M: 'fulan ida',
             MM: 'fulan %d',
             y: 'tinan ida',
-            yy: 'tinan %d',
+            yy: 'tinan %d'
         },
         dayOfMonthOrdinalParse: /\d{1,2}(st|nd|rd|th)/,
         ordinal: function (number) {
             var b = number % 10,
-                output =
-                    ~~((number % 100) / 10) === 1
-                        ? 'th'
-                        : b === 1
-                        ? 'st'
-                        : b === 2
-                        ? 'nd'
-                        : b === 3
-                        ? 'rd'
-                        : 'th';
+                output = (~~(number % 100 / 10) === 1) ? 'th' :
+                    (b === 1) ? 'st' :
+                        (b === 2) ? 'nd' :
+                            (b === 3) ? 'rd' : 'th';
             return number + output;
         },
         week: {
             dow: 1, // Monday is the first day of the week.
-            doy: 4, // The week that contains Jan 4th is the first week of the year.
-        },
+            doy: 4  // The week that contains Jan 4th is the first week of the year.
+        }
     });
 
     return tet;

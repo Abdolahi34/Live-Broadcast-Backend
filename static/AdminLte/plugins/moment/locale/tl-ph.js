@@ -1,24 +1,18 @@
 //! moment.js locale configuration
-//! locale : Tagalog (Philippines) [tl-ph]
-//! author : Dan Hagman : https://github.com/hagmandan
 
 ;(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined'
-       && typeof require === 'function' ? factory(require('../moment')) :
-   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
-   factory(global.moment)
-}(this, (function (moment) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined'
+    && typeof require === 'function' ? factory(require('../moment')) :
+        typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+            factory(global.moment)
+}(this, (function (moment) {
+    'use strict';
 
-    //! moment.js locale configuration
 
     var tlPh = moment.defineLocale('tl-ph', {
-        months: 'Enero_Pebrero_Marso_Abril_Mayo_Hunyo_Hulyo_Agosto_Setyembre_Oktubre_Nobyembre_Disyembre'.split(
-            '_'
-        ),
+        months: 'Enero_Pebrero_Marso_Abril_Mayo_Hunyo_Hulyo_Agosto_Setyembre_Oktubre_Nobyembre_Disyembre'.split('_'),
         monthsShort: 'Ene_Peb_Mar_Abr_May_Hun_Hul_Ago_Set_Okt_Nob_Dis'.split('_'),
-        weekdays: 'Linggo_Lunes_Martes_Miyerkules_Huwebes_Biyernes_Sabado'.split(
-            '_'
-        ),
+        weekdays: 'Linggo_Lunes_Martes_Miyerkules_Huwebes_Biyernes_Sabado'.split('_'),
         weekdaysShort: 'Lin_Lun_Mar_Miy_Huw_Biy_Sab'.split('_'),
         weekdaysMin: 'Li_Lu_Ma_Mi_Hu_Bi_Sab'.split('_'),
         longDateFormat: {
@@ -27,7 +21,7 @@
             L: 'MM/D/YYYY',
             LL: 'MMMM D, YYYY',
             LLL: 'MMMM D, YYYY HH:mm',
-            LLLL: 'dddd, MMMM DD, YYYY HH:mm',
+            LLLL: 'dddd, MMMM DD, YYYY HH:mm'
         },
         calendar: {
             sameDay: 'LT [ngayong araw]',
@@ -35,7 +29,7 @@
             nextWeek: 'LT [sa susunod na] dddd',
             lastDay: 'LT [kahapon]',
             lastWeek: 'LT [noong nakaraang] dddd',
-            sameElse: 'L',
+            sameElse: 'L'
         },
         relativeTime: {
             future: 'sa loob ng %s',
@@ -51,7 +45,7 @@
             M: 'isang buwan',
             MM: '%d buwan',
             y: 'isang taon',
-            yy: '%d taon',
+            yy: '%d taon'
         },
         dayOfMonthOrdinalParse: /\d{1,2}/,
         ordinal: function (number) {
@@ -59,8 +53,8 @@
         },
         week: {
             dow: 1, // Monday is the first day of the week.
-            doy: 4, // The week that contains Jan 4th is the first week of the year.
-        },
+            doy: 4  // The week that contains Jan 4th is the first week of the year.
+        }
     });
 
     return tlPh;

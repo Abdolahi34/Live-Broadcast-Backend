@@ -1,15 +1,13 @@
 //! moment.js locale configuration
-//! locale : Croatian [hr]
-//! author : Bojan Marković : https://github.com/bmarkovic
 
 ;(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined'
-       && typeof require === 'function' ? factory(require('../moment')) :
-   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
-   factory(global.moment)
-}(this, (function (moment) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined'
+    && typeof require === 'function' ? factory(require('../moment')) :
+        typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+            factory(global.moment)
+}(this, (function (moment) {
+    'use strict';
 
-    //! moment.js locale configuration
 
     function translate(number, withoutSuffix, key) {
         var result = number + ' ';
@@ -75,20 +73,12 @@
 
     var hr = moment.defineLocale('hr', {
         months: {
-            format: 'siječnja_veljače_ožujka_travnja_svibnja_lipnja_srpnja_kolovoza_rujna_listopada_studenoga_prosinca'.split(
-                '_'
-            ),
-            standalone: 'siječanj_veljača_ožujak_travanj_svibanj_lipanj_srpanj_kolovoz_rujan_listopad_studeni_prosinac'.split(
-                '_'
-            ),
+            format: 'siječnja_veljače_ožujka_travnja_svibnja_lipnja_srpnja_kolovoza_rujna_listopada_studenoga_prosinca'.split('_'),
+            standalone: 'siječanj_veljača_ožujak_travanj_svibanj_lipanj_srpanj_kolovoz_rujan_listopad_studeni_prosinac'.split('_')
         },
-        monthsShort: 'sij._velj._ožu._tra._svi._lip._srp._kol._ruj._lis._stu._pro.'.split(
-            '_'
-        ),
+        monthsShort: 'sij._velj._ožu._tra._svi._lip._srp._kol._ruj._lis._stu._pro.'.split('_'),
         monthsParseExact: true,
-        weekdays: 'nedjelja_ponedjeljak_utorak_srijeda_četvrtak_petak_subota'.split(
-            '_'
-        ),
+        weekdays: 'nedjelja_ponedjeljak_utorak_srijeda_četvrtak_petak_subota'.split('_'),
         weekdaysShort: 'ned._pon._uto._sri._čet._pet._sub.'.split('_'),
         weekdaysMin: 'ne_po_ut_sr_če_pe_su'.split('_'),
         weekdaysParseExact: true,
@@ -96,9 +86,9 @@
             LT: 'H:mm',
             LTS: 'H:mm:ss',
             L: 'DD.MM.YYYY',
-            LL: 'Do MMMM YYYY',
-            LLL: 'Do MMMM YYYY H:mm',
-            LLLL: 'dddd, Do MMMM YYYY H:mm',
+            LL: 'D. MMMM YYYY',
+            LLL: 'D. MMMM YYYY H:mm',
+            LLLL: 'dddd, D. MMMM YYYY H:mm'
         },
         calendar: {
             sameDay: '[danas u] LT',
@@ -122,9 +112,8 @@
             lastWeek: function () {
                 switch (this.day()) {
                     case 0:
-                        return '[prošlu] [nedjelju] [u] LT';
                     case 3:
-                        return '[prošlu] [srijedu] [u] LT';
+                        return '[prošlu] dddd [u] LT';
                     case 6:
                         return '[prošle] [subote] [u] LT';
                     case 1:
@@ -134,7 +123,7 @@
                         return '[prošli] dddd [u] LT';
                 }
             },
-            sameElse: 'L',
+            sameElse: 'L'
         },
         relativeTime: {
             future: 'za %s',
@@ -150,14 +139,14 @@
             M: 'mjesec',
             MM: translate,
             y: 'godinu',
-            yy: translate,
+            yy: translate
         },
         dayOfMonthOrdinalParse: /\d{1,2}\./,
         ordinal: '%d.',
         week: {
             dow: 1, // Monday is the first day of the week.
-            doy: 7, // The week that contains Jan 7th is the first week of the year.
-        },
+            doy: 7  // The week that contains Jan 7th is the first week of the year.
+        }
     });
 
     return hr;

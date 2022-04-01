@@ -1,23 +1,17 @@
 //! moment.js locale configuration
-//! locale : French (Switzerland) [fr-ch]
-//! author : Gaspard Bucher : https://github.com/gaspard
 
 ;(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined'
-       && typeof require === 'function' ? factory(require('../moment')) :
-   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
-   factory(global.moment)
-}(this, (function (moment) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined'
+    && typeof require === 'function' ? factory(require('../moment')) :
+        typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+            factory(global.moment)
+}(this, (function (moment) {
+    'use strict';
 
-    //! moment.js locale configuration
 
     var frCh = moment.defineLocale('fr-ch', {
-        months: 'janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre'.split(
-            '_'
-        ),
-        monthsShort: 'janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.'.split(
-            '_'
-        ),
+        months: 'janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre'.split('_'),
+        monthsShort: 'janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.'.split('_'),
         monthsParseExact: true,
         weekdays: 'dimanche_lundi_mardi_mercredi_jeudi_vendredi_samedi'.split('_'),
         weekdaysShort: 'dim._lun._mar._mer._jeu._ven._sam.'.split('_'),
@@ -29,7 +23,7 @@
             L: 'DD.MM.YYYY',
             LL: 'D MMMM YYYY',
             LLL: 'D MMMM YYYY HH:mm',
-            LLLL: 'dddd D MMMM YYYY HH:mm',
+            LLLL: 'dddd D MMMM YYYY HH:mm'
         },
         calendar: {
             sameDay: '[Aujourd’hui à] LT',
@@ -37,7 +31,7 @@
             nextWeek: 'dddd [à] LT',
             lastDay: '[Hier à] LT',
             lastWeek: 'dddd [dernier à] LT',
-            sameElse: 'L',
+            sameElse: 'L'
         },
         relativeTime: {
             future: 'dans %s',
@@ -53,7 +47,7 @@
             M: 'un mois',
             MM: '%d mois',
             y: 'un an',
-            yy: '%d ans',
+            yy: '%d ans'
         },
         dayOfMonthOrdinalParse: /\d{1,2}(er|e)/,
         ordinal: function (number, period) {
@@ -75,8 +69,8 @@
         },
         week: {
             dow: 1, // Monday is the first day of the week.
-            doy: 4, // The week that contains Jan 4th is the first week of the year.
-        },
+            doy: 4  // The week that contains Jan 4th is the first week of the year.
+        }
     });
 
     return frCh;

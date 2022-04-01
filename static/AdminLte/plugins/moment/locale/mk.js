@@ -1,25 +1,18 @@
 //! moment.js locale configuration
-//! locale : Macedonian [mk]
-//! author : Borislav Mickov : https://github.com/B0k0
-//! author : Sashko Todorov : https://github.com/bkyceh
 
 ;(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined'
-       && typeof require === 'function' ? factory(require('../moment')) :
-   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
-   factory(global.moment)
-}(this, (function (moment) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined'
+    && typeof require === 'function' ? factory(require('../moment')) :
+        typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+            factory(global.moment)
+}(this, (function (moment) {
+    'use strict';
 
-    //! moment.js locale configuration
 
     var mk = moment.defineLocale('mk', {
-        months: 'јануари_февруари_март_април_мај_јуни_јули_август_септември_октомври_ноември_декември'.split(
-            '_'
-        ),
+        months: 'јануари_февруари_март_април_мај_јуни_јули_август_септември_октомври_ноември_декември'.split('_'),
         monthsShort: 'јан_фев_мар_апр_мај_јун_јул_авг_сеп_окт_ное_дек'.split('_'),
-        weekdays: 'недела_понеделник_вторник_среда_четврток_петок_сабота'.split(
-            '_'
-        ),
+        weekdays: 'недела_понеделник_вторник_среда_четврток_петок_сабота'.split('_'),
         weekdaysShort: 'нед_пон_вто_сре_чет_пет_саб'.split('_'),
         weekdaysMin: 'нe_пo_вт_ср_че_пе_сa'.split('_'),
         longDateFormat: {
@@ -28,7 +21,7 @@
             L: 'D.MM.YYYY',
             LL: 'D MMMM YYYY',
             LLL: 'D MMMM YYYY H:mm',
-            LLLL: 'dddd, D MMMM YYYY H:mm',
+            LLLL: 'dddd, D MMMM YYYY H:mm'
         },
         calendar: {
             sameDay: '[Денес во] LT',
@@ -48,23 +41,23 @@
                         return '[Изминатиот] dddd [во] LT';
                 }
             },
-            sameElse: 'L',
+            sameElse: 'L'
         },
         relativeTime: {
-            future: 'за %s',
+            future: 'после %s',
             past: 'пред %s',
             s: 'неколку секунди',
             ss: '%d секунди',
-            m: 'една минута',
+            m: 'минута',
             mm: '%d минути',
-            h: 'еден час',
+            h: 'час',
             hh: '%d часа',
-            d: 'еден ден',
+            d: 'ден',
             dd: '%d дена',
-            M: 'еден месец',
+            M: 'месец',
             MM: '%d месеци',
-            y: 'една година',
-            yy: '%d години',
+            y: 'година',
+            yy: '%d години'
         },
         dayOfMonthOrdinalParse: /\d{1,2}-(ев|ен|ти|ви|ри|ми)/,
         ordinal: function (number) {
@@ -88,8 +81,8 @@
         },
         week: {
             dow: 1, // Monday is the first day of the week.
-            doy: 7, // The week that contains Jan 7th is the first week of the year.
-        },
+            doy: 7  // The week that contains Jan 7th is the first week of the year.
+        }
     });
 
     return mk;

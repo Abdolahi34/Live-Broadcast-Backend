@@ -1,15 +1,13 @@
 //! moment.js locale configuration
-//! locale : Mongolian [mn]
-//! author : Javkhlantugs Nyamdorj : https://github.com/javkhaanj7
 
 ;(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined'
-       && typeof require === 'function' ? factory(require('../moment')) :
-   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
-   factory(global.moment)
-}(this, (function (moment) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined'
+    && typeof require === 'function' ? factory(require('../moment')) :
+        typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+            factory(global.moment)
+}(this, (function (moment) {
+    'use strict';
 
-    //! moment.js locale configuration
 
     function translate(number, withoutSuffix, key, isFuture) {
         switch (key) {
@@ -38,12 +36,8 @@
     }
 
     var mn = moment.defineLocale('mn', {
-        months: 'Нэгдүгээр сар_Хоёрдугаар сар_Гуравдугаар сар_Дөрөвдүгээр сар_Тавдугаар сар_Зургадугаар сар_Долдугаар сар_Наймдугаар сар_Есдүгээр сар_Аравдугаар сар_Арван нэгдүгээр сар_Арван хоёрдугаар сар'.split(
-            '_'
-        ),
-        monthsShort: '1 сар_2 сар_3 сар_4 сар_5 сар_6 сар_7 сар_8 сар_9 сар_10 сар_11 сар_12 сар'.split(
-            '_'
-        ),
+        months: 'Нэгдүгээр сар_Хоёрдугаар сар_Гуравдугаар сар_Дөрөвдүгээр сар_Тавдугаар сар_Зургадугаар сар_Долдугаар сар_Наймдугаар сар_Есдүгээр сар_Аравдугаар сар_Арван нэгдүгээр сар_Арван хоёрдугаар сар'.split('_'),
+        monthsShort: '1 сар_2 сар_3 сар_4 сар_5 сар_6 сар_7 сар_8 сар_9 сар_10 сар_11 сар_12 сар'.split('_'),
         monthsParseExact: true,
         weekdays: 'Ням_Даваа_Мягмар_Лхагва_Пүрэв_Баасан_Бямба'.split('_'),
         weekdaysShort: 'Ням_Дав_Мяг_Лха_Пүр_Баа_Бям'.split('_'),
@@ -55,7 +49,7 @@
             L: 'YYYY-MM-DD',
             LL: 'YYYY оны MMMMын D',
             LLL: 'YYYY оны MMMMын D HH:mm',
-            LLLL: 'dddd, YYYY оны MMMMын D HH:mm',
+            LLLL: 'dddd, YYYY оны MMMMын D HH:mm'
         },
         meridiemParse: /ҮӨ|ҮХ/i,
         isPM: function (input) {
@@ -74,7 +68,7 @@
             nextWeek: '[Ирэх] dddd LT',
             lastDay: '[Өчигдөр] LT',
             lastWeek: '[Өнгөрсөн] dddd LT',
-            sameElse: 'L',
+            sameElse: 'L'
         },
         relativeTime: {
             future: '%s дараа',
@@ -90,7 +84,7 @@
             M: translate,
             MM: translate,
             y: translate,
-            yy: translate,
+            yy: translate
         },
         dayOfMonthOrdinalParse: /\d{1,2} өдөр/,
         ordinal: function (number, period) {
@@ -102,7 +96,7 @@
                 default:
                     return number;
             }
-        },
+        }
     });
 
     return mn;

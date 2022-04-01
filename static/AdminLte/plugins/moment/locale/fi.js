@@ -1,39 +1,27 @@
 //! moment.js locale configuration
-//! locale : Finnish [fi]
-//! author : Tarmo Aidantausta : https://github.com/bleadof
 
 ;(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined'
-       && typeof require === 'function' ? factory(require('../moment')) :
-   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
-   factory(global.moment)
-}(this, (function (moment) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined'
+    && typeof require === 'function' ? factory(require('../moment')) :
+        typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+            factory(global.moment)
+}(this, (function (moment) {
+    'use strict';
 
-    //! moment.js locale configuration
 
-    var numbersPast = 'nolla yksi kaksi kolme neljä viisi kuusi seitsemän kahdeksan yhdeksän'.split(
-            ' '
-        ),
+    var numbersPast = 'nolla yksi kaksi kolme neljä viisi kuusi seitsemän kahdeksan yhdeksän'.split(' '),
         numbersFuture = [
-            'nolla',
-            'yhden',
-            'kahden',
-            'kolmen',
-            'neljän',
-            'viiden',
-            'kuuden',
-            numbersPast[7],
-            numbersPast[8],
-            numbersPast[9],
+            'nolla', 'yhden', 'kahden', 'kolmen', 'neljän', 'viiden', 'kuuden',
+            numbersPast[7], numbersPast[8], numbersPast[9]
         ];
+
     function translate(number, withoutSuffix, key, isFuture) {
         var result = '';
         switch (key) {
             case 's':
                 return isFuture ? 'muutaman sekunnin' : 'muutama sekunti';
             case 'ss':
-                result = isFuture ? 'sekunnin' : 'sekuntia';
-                break;
+                return isFuture ? 'sekunnin' : 'sekuntia';
             case 'm':
                 return isFuture ? 'minuutin' : 'minuutti';
             case 'mm':
@@ -63,24 +51,15 @@
         result = verbalNumber(number, isFuture) + ' ' + result;
         return result;
     }
+
     function verbalNumber(number, isFuture) {
-        return number < 10
-            ? isFuture
-                ? numbersFuture[number]
-                : numbersPast[number]
-            : number;
+        return number < 10 ? (isFuture ? numbersFuture[number] : numbersPast[number]) : number;
     }
 
     var fi = moment.defineLocale('fi', {
-        months: 'tammikuu_helmikuu_maaliskuu_huhtikuu_toukokuu_kesäkuu_heinäkuu_elokuu_syyskuu_lokakuu_marraskuu_joulukuu'.split(
-            '_'
-        ),
-        monthsShort: 'tammi_helmi_maalis_huhti_touko_kesä_heinä_elo_syys_loka_marras_joulu'.split(
-            '_'
-        ),
-        weekdays: 'sunnuntai_maanantai_tiistai_keskiviikko_torstai_perjantai_lauantai'.split(
-            '_'
-        ),
+        months: 'tammikuu_helmikuu_maaliskuu_huhtikuu_toukokuu_kesäkuu_heinäkuu_elokuu_syyskuu_lokakuu_marraskuu_joulukuu'.split('_'),
+        monthsShort: 'tammi_helmi_maalis_huhti_touko_kesä_heinä_elo_syys_loka_marras_joulu'.split('_'),
+        weekdays: 'sunnuntai_maanantai_tiistai_keskiviikko_torstai_perjantai_lauantai'.split('_'),
         weekdaysShort: 'su_ma_ti_ke_to_pe_la'.split('_'),
         weekdaysMin: 'su_ma_ti_ke_to_pe_la'.split('_'),
         longDateFormat: {
@@ -93,7 +72,7 @@
             l: 'D.M.YYYY',
             ll: 'Do MMM YYYY',
             lll: 'Do MMM YYYY, [klo] HH.mm',
-            llll: 'ddd, Do MMM YYYY, [klo] HH.mm',
+            llll: 'ddd, Do MMM YYYY, [klo] HH.mm'
         },
         calendar: {
             sameDay: '[tänään] [klo] LT',
@@ -101,7 +80,7 @@
             nextWeek: 'dddd [klo] LT',
             lastDay: '[eilen] [klo] LT',
             lastWeek: '[viime] dddd[na] [klo] LT',
-            sameElse: 'L',
+            sameElse: 'L'
         },
         relativeTime: {
             future: '%s päästä',
@@ -117,14 +96,14 @@
             M: translate,
             MM: translate,
             y: translate,
-            yy: translate,
+            yy: translate
         },
         dayOfMonthOrdinalParse: /\d{1,2}\./,
         ordinal: '%d.',
         week: {
             dow: 1, // Monday is the first day of the week.
-            doy: 4, // The week that contains Jan 4th is the first week of the year.
-        },
+            doy: 4  // The week that contains Jan 4th is the first week of the year.
+        }
     });
 
     return fi;

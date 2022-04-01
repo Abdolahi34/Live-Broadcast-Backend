@@ -1,39 +1,36 @@
 //! moment.js locale configuration
-//! locale : Maldivian [dv]
-//! author : Jawish Hameed : https://github.com/jawish
 
 ;(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined'
-       && typeof require === 'function' ? factory(require('../moment')) :
-   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
-   factory(global.moment)
-}(this, (function (moment) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined'
+    && typeof require === 'function' ? factory(require('../moment')) :
+        typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+            factory(global.moment)
+}(this, (function (moment) {
+    'use strict';
 
-    //! moment.js locale configuration
 
     var months = [
-            'ޖެނުއަރީ',
-            'ފެބްރުއަރީ',
-            'މާރިޗު',
-            'އޭޕްރީލު',
-            'މޭ',
-            'ޖޫން',
-            'ޖުލައި',
-            'އޯގަސްޓު',
-            'ސެޕްޓެމްބަރު',
-            'އޮކްޓޯބަރު',
-            'ނޮވެމްބަރު',
-            'ޑިސެމްބަރު',
-        ],
-        weekdays = [
-            'އާދިއްތަ',
-            'ހޯމަ',
-            'އަންގާރަ',
-            'ބުދަ',
-            'ބުރާސްފަތި',
-            'ހުކުރު',
-            'ހޮނިހިރު',
-        ];
+        'ޖެނުއަރީ',
+        'ފެބްރުއަރީ',
+        'މާރިޗު',
+        'އޭޕްރީލު',
+        'މޭ',
+        'ޖޫން',
+        'ޖުލައި',
+        'އޯގަސްޓު',
+        'ސެޕްޓެމްބަރު',
+        'އޮކްޓޯބަރު',
+        'ނޮވެމްބަރު',
+        'ޑިސެމްބަރު'
+    ], weekdays = [
+        'އާދިއްތަ',
+        'ހޯމަ',
+        'އަންގާރަ',
+        'ބުދަ',
+        'ބުރާސްފަތި',
+        'ހުކުރު',
+        'ހޮނިހިރު'
+    ];
 
     var dv = moment.defineLocale('dv', {
         months: months,
@@ -42,12 +39,13 @@
         weekdaysShort: weekdays,
         weekdaysMin: 'އާދި_ހޯމަ_އަން_ބުދަ_ބުރާ_ހުކު_ހޮނި'.split('_'),
         longDateFormat: {
+
             LT: 'HH:mm',
             LTS: 'HH:mm:ss',
             L: 'D/M/YYYY',
             LL: 'D MMMM YYYY',
             LLL: 'D MMMM YYYY HH:mm',
-            LLLL: 'dddd D MMMM YYYY HH:mm',
+            LLLL: 'dddd D MMMM YYYY HH:mm'
         },
         meridiemParse: /މކ|މފ/,
         isPM: function (input) {
@@ -66,7 +64,7 @@
             nextWeek: 'dddd LT',
             lastDay: '[އިއްޔެ] LT',
             lastWeek: '[ފާއިތުވި] dddd LT',
-            sameElse: 'L',
+            sameElse: 'L'
         },
         relativeTime: {
             future: 'ތެރޭގައި %s',
@@ -82,7 +80,7 @@
             M: 'މަހެއް',
             MM: 'މަސް %d',
             y: 'އަހަރެއް',
-            yy: 'އަހަރު %d',
+            yy: 'އަހަރު %d'
         },
         preparse: function (string) {
             return string.replace(/،/g, ',');
@@ -91,9 +89,9 @@
             return string.replace(/,/g, '،');
         },
         week: {
-            dow: 7, // Sunday is the first day of the week.
-            doy: 12, // The week that contains Jan 12th is the first week of the year.
-        },
+            dow: 7,  // Sunday is the first day of the week.
+            doy: 12  // The week that contains Jan 12th is the first week of the year.
+        }
     });
 
     return dv;

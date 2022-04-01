@@ -1,33 +1,27 @@
 //! moment.js locale configuration
-//! locale : Ukrainian [uk]
-//! author : zemlanin : https://github.com/zemlanin
-//! Author : Menelion Elensúle : https://github.com/Oire
 
 ;(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined'
-       && typeof require === 'function' ? factory(require('../moment')) :
-   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
-   factory(global.moment)
-}(this, (function (moment) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined'
+    && typeof require === 'function' ? factory(require('../moment')) :
+        typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+            factory(global.moment)
+}(this, (function (moment) {
+    'use strict';
 
-    //! moment.js locale configuration
 
     function plural(word, num) {
         var forms = word.split('_');
-        return num % 10 === 1 && num % 100 !== 11
-            ? forms[0]
-            : num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 10 || num % 100 >= 20)
-            ? forms[1]
-            : forms[2];
+        return num % 10 === 1 && num % 100 !== 11 ? forms[0] : (num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 10 || num % 100 >= 20) ? forms[1] : forms[2]);
     }
+
     function relativeTimeWithPlural(number, withoutSuffix, key) {
         var format = {
-            ss: withoutSuffix ? 'секунда_секунди_секунд' : 'секунду_секунди_секунд',
-            mm: withoutSuffix ? 'хвилина_хвилини_хвилин' : 'хвилину_хвилини_хвилин',
-            hh: withoutSuffix ? 'година_години_годин' : 'годину_години_годин',
-            dd: 'день_дні_днів',
-            MM: 'місяць_місяці_місяців',
-            yy: 'рік_роки_років',
+            'ss': withoutSuffix ? 'секунда_секунди_секунд' : 'секунду_секунди_секунд',
+            'mm': withoutSuffix ? 'хвилина_хвилини_хвилин' : 'хвилину_хвилини_хвилин',
+            'hh': withoutSuffix ? 'година_години_годин' : 'годину_години_годин',
+            'dd': 'день_дні_днів',
+            'MM': 'місяць_місяці_місяців',
+            'yy': 'рік_роки_років'
         };
         if (key === 'm') {
             return withoutSuffix ? 'хвилина' : 'хвилину';
@@ -37,36 +31,29 @@
             return number + ' ' + plural(format[key], +number);
         }
     }
+
     function weekdaysCaseReplace(m, format) {
         var weekdays = {
-                nominative: 'неділя_понеділок_вівторок_середа_четвер_п’ятниця_субота'.split(
-                    '_'
-                ),
-                accusative: 'неділю_понеділок_вівторок_середу_четвер_п’ятницю_суботу'.split(
-                    '_'
-                ),
-                genitive: 'неділі_понеділка_вівторка_середи_четверга_п’ятниці_суботи'.split(
-                    '_'
-                ),
-            },
-            nounCase;
+            'nominative': 'неділя_понеділок_вівторок_середа_четвер_п’ятниця_субота'.split('_'),
+            'accusative': 'неділю_понеділок_вівторок_середу_четвер_п’ятницю_суботу'.split('_'),
+            'genitive': 'неділі_понеділка_вівторка_середи_четверга_п’ятниці_суботи'.split('_')
+        };
 
         if (m === true) {
-            return weekdays['nominative']
-                .slice(1, 7)
-                .concat(weekdays['nominative'].slice(0, 1));
+            return weekdays['nominative'].slice(1, 7).concat(weekdays['nominative'].slice(0, 1));
         }
         if (!m) {
             return weekdays['nominative'];
         }
 
-        nounCase = /(\[[ВвУу]\]) ?dddd/.test(format)
-            ? 'accusative'
-            : /\[?(?:минулої|наступної)? ?\] ?dddd/.test(format)
-            ? 'genitive'
-            : 'nominative';
+        var nounCase = (/(\[[ВвУу]\]) ?dddd/).test(format) ?
+            'accusative' :
+            ((/\[?(?:минулої|наступної)? ?\] ?dddd/).test(format) ?
+                'genitive' :
+                'nominative');
         return weekdays[nounCase][m.day()];
     }
+
     function processHoursFunction(str) {
         return function () {
             return str + 'о' + (this.hours() === 11 ? 'б' : '') + '] LT';
@@ -75,16 +62,10 @@
 
     var uk = moment.defineLocale('uk', {
         months: {
-            format: 'січня_лютого_березня_квітня_травня_червня_липня_серпня_вересня_жовтня_листопада_грудня'.split(
-                '_'
-            ),
-            standalone: 'січень_лютий_березень_квітень_травень_червень_липень_серпень_вересень_жовтень_листопад_грудень'.split(
-                '_'
-            ),
+            'format': 'січня_лютого_березня_квітня_травня_червня_липня_серпня_вересня_жовтня_листопада_грудня'.split('_'),
+            'standalone': 'січень_лютий_березень_квітень_травень_червень_липень_серпень_вересень_жовтень_листопад_грудень'.split('_')
         },
-        monthsShort: 'січ_лют_бер_квіт_трав_черв_лип_серп_вер_жовт_лист_груд'.split(
-            '_'
-        ),
+        monthsShort: 'січ_лют_бер_квіт_трав_черв_лип_серп_вер_жовт_лист_груд'.split('_'),
         weekdays: weekdaysCaseReplace,
         weekdaysShort: 'нд_пн_вт_ср_чт_пт_сб'.split('_'),
         weekdaysMin: 'нд_пн_вт_ср_чт_пт_сб'.split('_'),
@@ -94,7 +75,7 @@
             L: 'DD.MM.YYYY',
             LL: 'D MMMM YYYY р.',
             LLL: 'D MMMM YYYY р., HH:mm',
-            LLLL: 'dddd, D MMMM YYYY р., HH:mm',
+            LLLL: 'dddd, D MMMM YYYY р., HH:mm'
         },
         calendar: {
             sameDay: processHoursFunction('[Сьогодні '),
@@ -114,7 +95,7 @@
                         return processHoursFunction('[Минулого] dddd [').call(this);
                 }
             },
-            sameElse: 'L',
+            sameElse: 'L'
         },
         relativeTime: {
             future: 'за %s',
@@ -130,7 +111,7 @@
             M: 'місяць',
             MM: relativeTimeWithPlural,
             y: 'рік',
-            yy: relativeTimeWithPlural,
+            yy: relativeTimeWithPlural
         },
         // M. E.: those two are virtually unused but a user might want to implement them for his/her website for some reason
         meridiemParse: /ночі|ранку|дня|вечора/,
@@ -165,8 +146,8 @@
         },
         week: {
             dow: 1, // Monday is the first day of the week.
-            doy: 7, // The week that contains Jan 7th is the first week of the year.
-        },
+            doy: 7  // The week that contains Jan 7th is the first week of the year.
+        }
     });
 
     return uk;

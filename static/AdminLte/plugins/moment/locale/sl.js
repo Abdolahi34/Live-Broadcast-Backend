@@ -1,23 +1,19 @@
 //! moment.js locale configuration
-//! locale : Slovenian [sl]
-//! author : Robert Sedovšek : https://github.com/sedovsek
 
 ;(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined'
-       && typeof require === 'function' ? factory(require('../moment')) :
-   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
-   factory(global.moment)
-}(this, (function (moment) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined'
+    && typeof require === 'function' ? factory(require('../moment')) :
+        typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+            factory(global.moment)
+}(this, (function (moment) {
+    'use strict';
 
-    //! moment.js locale configuration
 
     function processRelativeTime(number, withoutSuffix, key, isFuture) {
         var result = number + ' ';
         switch (key) {
             case 's':
-                return withoutSuffix || isFuture
-                    ? 'nekaj sekund'
-                    : 'nekaj sekundami';
+                return withoutSuffix || isFuture ? 'nekaj sekund' : 'nekaj sekundami';
             case 'ss':
                 if (number === 1) {
                     result += withoutSuffix ? 'sekundo' : 'sekundi';
@@ -96,12 +92,8 @@
     }
 
     var sl = moment.defineLocale('sl', {
-        months: 'januar_februar_marec_april_maj_junij_julij_avgust_september_oktober_november_december'.split(
-            '_'
-        ),
-        monthsShort: 'jan._feb._mar._apr._maj._jun._jul._avg._sep._okt._nov._dec.'.split(
-            '_'
-        ),
+        months: 'januar_februar_marec_april_maj_junij_julij_avgust_september_oktober_november_december'.split('_'),
+        monthsShort: 'jan._feb._mar._apr._maj._jun._jul._avg._sep._okt._nov._dec.'.split('_'),
         monthsParseExact: true,
         weekdays: 'nedelja_ponedeljek_torek_sreda_četrtek_petek_sobota'.split('_'),
         weekdaysShort: 'ned._pon._tor._sre._čet._pet._sob.'.split('_'),
@@ -110,10 +102,10 @@
         longDateFormat: {
             LT: 'H:mm',
             LTS: 'H:mm:ss',
-            L: 'DD. MM. YYYY',
+            L: 'DD.MM.YYYY',
             LL: 'D. MMMM YYYY',
             LLL: 'D. MMMM YYYY H:mm',
-            LLLL: 'dddd, D. MMMM YYYY H:mm',
+            LLLL: 'dddd, D. MMMM YYYY H:mm'
         },
         calendar: {
             sameDay: '[danes ob] LT',
@@ -150,7 +142,7 @@
                         return '[prejšnji] dddd [ob] LT';
                 }
             },
-            sameElse: 'L',
+            sameElse: 'L'
         },
         relativeTime: {
             future: 'čez %s',
@@ -166,14 +158,14 @@
             M: processRelativeTime,
             MM: processRelativeTime,
             y: processRelativeTime,
-            yy: processRelativeTime,
+            yy: processRelativeTime
         },
         dayOfMonthOrdinalParse: /\d{1,2}\./,
         ordinal: '%d.',
         week: {
             dow: 1, // Monday is the first day of the week.
-            doy: 7, // The week that contains Jan 7th is the first week of the year.
-        },
+            doy: 7  // The week that contains Jan 7th is the first week of the year.
+        }
     });
 
     return sl;

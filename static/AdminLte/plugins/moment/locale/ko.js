@@ -1,22 +1,17 @@
 //! moment.js locale configuration
-//! locale : Korean [ko]
-//! author : Kyungwook, Park : https://github.com/kyungw00k
-//! author : Jeeeyul Lee <jeeeyul@gmail.com>
 
 ;(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined'
-       && typeof require === 'function' ? factory(require('../moment')) :
-   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
-   factory(global.moment)
-}(this, (function (moment) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined'
+    && typeof require === 'function' ? factory(require('../moment')) :
+        typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+            factory(global.moment)
+}(this, (function (moment) {
+    'use strict';
 
-    //! moment.js locale configuration
 
     var ko = moment.defineLocale('ko', {
         months: '1월_2월_3월_4월_5월_6월_7월_8월_9월_10월_11월_12월'.split('_'),
-        monthsShort: '1월_2월_3월_4월_5월_6월_7월_8월_9월_10월_11월_12월'.split(
-            '_'
-        ),
+        monthsShort: '1월_2월_3월_4월_5월_6월_7월_8월_9월_10월_11월_12월'.split('_'),
         weekdays: '일요일_월요일_화요일_수요일_목요일_금요일_토요일'.split('_'),
         weekdaysShort: '일_월_화_수_목_금_토'.split('_'),
         weekdaysMin: '일_월_화_수_목_금_토'.split('_'),
@@ -30,7 +25,7 @@
             l: 'YYYY.MM.DD.',
             ll: 'YYYY년 MMMM D일',
             lll: 'YYYY년 MMMM D일 A h:mm',
-            llll: 'YYYY년 MMMM D일 dddd A h:mm',
+            llll: 'YYYY년 MMMM D일 dddd A h:mm'
         },
         calendar: {
             sameDay: '오늘 LT',
@@ -38,7 +33,7 @@
             nextWeek: 'dddd LT',
             lastDay: '어제 LT',
             lastWeek: '지난주 dddd LT',
-            sameElse: 'L',
+            sameElse: 'L'
         },
         relativeTime: {
             future: '%s 후',
@@ -54,7 +49,7 @@
             M: '한 달',
             MM: '%d달',
             y: '일 년',
-            yy: '%d년',
+            yy: '%d년'
         },
         dayOfMonthOrdinalParse: /\d{1,2}(일|월|주)/,
         ordinal: function (number, period) {
@@ -78,7 +73,7 @@
         },
         meridiem: function (hour, minute, isUpper) {
             return hour < 12 ? '오전' : '오후';
-        },
+        }
     });
 
     return ko;

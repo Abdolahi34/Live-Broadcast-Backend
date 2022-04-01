@@ -1,32 +1,37 @@
 //! moment.js locale configuration
-//! locale : Urdu [ur]
-//! author : Sawood Alam : https://github.com/ibnesayeed
-//! author : Zack : https://github.com/ZackVision
 
 ;(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined'
-       && typeof require === 'function' ? factory(require('../moment')) :
-   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
-   factory(global.moment)
-}(this, (function (moment) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined'
+    && typeof require === 'function' ? factory(require('../moment')) :
+        typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+            factory(global.moment)
+}(this, (function (moment) {
+    'use strict';
 
-    //! moment.js locale configuration
 
     var months = [
-            'جنوری',
-            'فروری',
-            'مارچ',
-            'اپریل',
-            'مئی',
-            'جون',
-            'جولائی',
-            'اگست',
-            'ستمبر',
-            'اکتوبر',
-            'نومبر',
-            'دسمبر',
-        ],
-        days = ['اتوار', 'پیر', 'منگل', 'بدھ', 'جمعرات', 'جمعہ', 'ہفتہ'];
+        'جنوری',
+        'فروری',
+        'مارچ',
+        'اپریل',
+        'مئی',
+        'جون',
+        'جولائی',
+        'اگست',
+        'ستمبر',
+        'اکتوبر',
+        'نومبر',
+        'دسمبر'
+    ];
+    var days = [
+        'اتوار',
+        'پیر',
+        'منگل',
+        'بدھ',
+        'جمعرات',
+        'جمعہ',
+        'ہفتہ'
+    ];
 
     var ur = moment.defineLocale('ur', {
         months: months,
@@ -40,7 +45,7 @@
             L: 'DD/MM/YYYY',
             LL: 'D MMMM YYYY',
             LLL: 'D MMMM YYYY HH:mm',
-            LLLL: 'dddd، D MMMM YYYY HH:mm',
+            LLLL: 'dddd، D MMMM YYYY HH:mm'
         },
         meridiemParse: /صبح|شام/,
         isPM: function (input) {
@@ -58,7 +63,7 @@
             nextWeek: 'dddd [بوقت] LT',
             lastDay: '[گذشتہ روز بوقت] LT',
             lastWeek: '[گذشتہ] dddd [بوقت] LT',
-            sameElse: 'L',
+            sameElse: 'L'
         },
         relativeTime: {
             future: '%s بعد',
@@ -74,7 +79,7 @@
             M: 'ایک ماہ',
             MM: '%d ماہ',
             y: 'ایک سال',
-            yy: '%d سال',
+            yy: '%d سال'
         },
         preparse: function (string) {
             return string.replace(/،/g, ',');
@@ -84,8 +89,8 @@
         },
         week: {
             dow: 1, // Monday is the first day of the week.
-            doy: 4, // The week that contains Jan 4th is the first week of the year.
-        },
+            doy: 4  // The week that contains Jan 4th is the first week of the year.
+        }
     });
 
     return ur;

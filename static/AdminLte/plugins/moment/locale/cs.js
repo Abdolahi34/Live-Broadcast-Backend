@@ -1,92 +1,83 @@
 //! moment.js locale configuration
-//! locale : Czech [cs]
-//! author : petrbela : https://github.com/petrbela
 
 ;(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined'
-       && typeof require === 'function' ? factory(require('../moment')) :
-   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
-   factory(global.moment)
-}(this, (function (moment) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined'
+    && typeof require === 'function' ? factory(require('../moment')) :
+        typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+            factory(global.moment)
+}(this, (function (moment) {
+    'use strict';
 
-    //! moment.js locale configuration
 
-    var months = 'leden_únor_březen_duben_květen_červen_červenec_srpen_září_říjen_listopad_prosinec'.split(
-            '_'
-        ),
-        monthsShort = 'led_úno_bře_dub_kvě_čvn_čvc_srp_zář_říj_lis_pro'.split('_'),
-        monthsParse = [
-            /^led/i,
-            /^úno/i,
-            /^bře/i,
-            /^dub/i,
-            /^kvě/i,
-            /^(čvn|červen$|června)/i,
-            /^(čvc|červenec|července)/i,
-            /^srp/i,
-            /^zář/i,
-            /^říj/i,
-            /^lis/i,
-            /^pro/i,
-        ],
-        // NOTE: 'červen' is substring of 'červenec'; therefore 'červenec' must precede 'červen' in the regex to be fully matched.
-        // Otherwise parser matches '1. červenec' as '1. červen' + 'ec'.
-        monthsRegex = /^(leden|únor|březen|duben|květen|červenec|července|červen|června|srpen|září|říjen|listopad|prosinec|led|úno|bře|dub|kvě|čvn|čvc|srp|zář|říj|lis|pro)/i;
+    var months = 'leden_únor_březen_duben_květen_červen_červenec_srpen_září_říjen_listopad_prosinec'.split('_'),
+        monthsShort = 'led_úno_bře_dub_kvě_čvn_čvc_srp_zář_říj_lis_pro'.split('_');
+
+    var monthsParse = [/^led/i, /^úno/i, /^bře/i, /^dub/i, /^kvě/i, /^(čvn|červen$|června)/i, /^(čvc|červenec|července)/i, /^srp/i, /^zář/i, /^říj/i, /^lis/i, /^pro/i];
+    // NOTE: 'červen' is substring of 'červenec'; therefore 'červenec' must precede 'červen' in the regex to be fully matched.
+    // Otherwise parser matches '1. červenec' as '1. červen' + 'ec'.
+    var monthsRegex = /^(leden|únor|březen|duben|květen|červenec|července|červen|června|srpen|září|říjen|listopad|prosinec|led|úno|bře|dub|kvě|čvn|čvc|srp|zář|říj|lis|pro)/i;
 
     function plural(n) {
-        return n > 1 && n < 5 && ~~(n / 10) !== 1;
+        return (n > 1) && (n < 5) && (~~(n / 10) !== 1);
     }
+
     function translate(number, withoutSuffix, key, isFuture) {
         var result = number + ' ';
         switch (key) {
-            case 's': // a few seconds / in a few seconds / a few seconds ago
-                return withoutSuffix || isFuture ? 'pár sekund' : 'pár sekundami';
+            case 's':  // a few seconds / in a few seconds / a few seconds ago
+                return (withoutSuffix || isFuture) ? 'pár sekund' : 'pár sekundami';
             case 'ss': // 9 seconds / in 9 seconds / 9 seconds ago
                 if (withoutSuffix || isFuture) {
                     return result + (plural(number) ? 'sekundy' : 'sekund');
                 } else {
                     return result + 'sekundami';
                 }
-            case 'm': // a minute / in a minute / a minute ago
-                return withoutSuffix ? 'minuta' : isFuture ? 'minutu' : 'minutou';
+                break;
+            case 'm':  // a minute / in a minute / a minute ago
+                return withoutSuffix ? 'minuta' : (isFuture ? 'minutu' : 'minutou');
             case 'mm': // 9 minutes / in 9 minutes / 9 minutes ago
                 if (withoutSuffix || isFuture) {
                     return result + (plural(number) ? 'minuty' : 'minut');
                 } else {
                     return result + 'minutami';
                 }
-            case 'h': // an hour / in an hour / an hour ago
-                return withoutSuffix ? 'hodina' : isFuture ? 'hodinu' : 'hodinou';
+                break;
+            case 'h':  // an hour / in an hour / an hour ago
+                return withoutSuffix ? 'hodina' : (isFuture ? 'hodinu' : 'hodinou');
             case 'hh': // 9 hours / in 9 hours / 9 hours ago
                 if (withoutSuffix || isFuture) {
                     return result + (plural(number) ? 'hodiny' : 'hodin');
                 } else {
                     return result + 'hodinami';
                 }
-            case 'd': // a day / in a day / a day ago
-                return withoutSuffix || isFuture ? 'den' : 'dnem';
+                break;
+            case 'd':  // a day / in a day / a day ago
+                return (withoutSuffix || isFuture) ? 'den' : 'dnem';
             case 'dd': // 9 days / in 9 days / 9 days ago
                 if (withoutSuffix || isFuture) {
                     return result + (plural(number) ? 'dny' : 'dní');
                 } else {
                     return result + 'dny';
                 }
-            case 'M': // a month / in a month / a month ago
-                return withoutSuffix || isFuture ? 'měsíc' : 'měsícem';
+                break;
+            case 'M':  // a month / in a month / a month ago
+                return (withoutSuffix || isFuture) ? 'měsíc' : 'měsícem';
             case 'MM': // 9 months / in 9 months / 9 months ago
                 if (withoutSuffix || isFuture) {
                     return result + (plural(number) ? 'měsíce' : 'měsíců');
                 } else {
                     return result + 'měsíci';
                 }
-            case 'y': // a year / in a year / a year ago
-                return withoutSuffix || isFuture ? 'rok' : 'rokem';
+                break;
+            case 'y':  // a year / in a year / a year ago
+                return (withoutSuffix || isFuture) ? 'rok' : 'rokem';
             case 'yy': // 9 years / in 9 years / 9 years ago
                 if (withoutSuffix || isFuture) {
                     return result + (plural(number) ? 'roky' : 'let');
                 } else {
                     return result + 'lety';
                 }
+                break;
         }
     }
 
@@ -112,7 +103,7 @@
             LL: 'D. MMMM YYYY',
             LLL: 'D. MMMM YYYY H:mm',
             LLLL: 'dddd D. MMMM YYYY H:mm',
-            l: 'D. M. YYYY',
+            l: 'D. M. YYYY'
         },
         calendar: {
             sameDay: '[dnes v] LT',
@@ -151,7 +142,7 @@
                         return '[minulou sobotu v] LT';
                 }
             },
-            sameElse: 'L',
+            sameElse: 'L'
         },
         relativeTime: {
             future: 'za %s',
@@ -167,14 +158,14 @@
             M: translate,
             MM: translate,
             y: translate,
-            yy: translate,
+            yy: translate
         },
         dayOfMonthOrdinalParse: /\d{1,2}\./,
         ordinal: '%d.',
         week: {
             dow: 1, // Monday is the first day of the week.
-            doy: 4, // The week that contains Jan 4th is the first week of the year.
-        },
+            doy: 4  // The week that contains Jan 4th is the first week of the year.
+        }
     });
 
     return cs;

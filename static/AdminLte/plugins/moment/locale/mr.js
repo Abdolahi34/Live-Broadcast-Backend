@@ -1,28 +1,25 @@
 //! moment.js locale configuration
-//! locale : Marathi [mr]
-//! author : Harshad Kale : https://github.com/kalehv
-//! author : Vivek Athalye : https://github.com/vnathalye
 
 ;(function (global, factory) {
-   typeof exports === 'object' && typeof module !== 'undefined'
-       && typeof require === 'function' ? factory(require('../moment')) :
-   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
-   factory(global.moment)
-}(this, (function (moment) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined'
+    && typeof require === 'function' ? factory(require('../moment')) :
+        typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+            factory(global.moment)
+}(this, (function (moment) {
+    'use strict';
 
-    //! moment.js locale configuration
 
     var symbolMap = {
-            1: '१',
-            2: '२',
-            3: '३',
-            4: '४',
-            5: '५',
-            6: '६',
-            7: '७',
-            8: '८',
-            9: '९',
-            0: '०',
+            '1': '१',
+            '2': '२',
+            '3': '३',
+            '4': '४',
+            '5': '५',
+            '6': '६',
+            '7': '७',
+            '8': '८',
+            '9': '९',
+            '0': '०'
         },
         numberMap = {
             '१': '1',
@@ -34,7 +31,7 @@
             '७': '7',
             '८': '8',
             '९': '9',
-            '०': '0',
+            '०': '0'
         };
 
     function relativeTimeMr(number, withoutSuffix, string, isFuture) {
@@ -122,12 +119,8 @@
     }
 
     var mr = moment.defineLocale('mr', {
-        months: 'जानेवारी_फेब्रुवारी_मार्च_एप्रिल_मे_जून_जुलै_ऑगस्ट_सप्टेंबर_ऑक्टोबर_नोव्हेंबर_डिसेंबर'.split(
-            '_'
-        ),
-        monthsShort: 'जाने._फेब्रु._मार्च._एप्रि._मे._जून._जुलै._ऑग._सप्टें._ऑक्टो._नोव्हें._डिसें.'.split(
-            '_'
-        ),
+        months: 'जानेवारी_फेब्रुवारी_मार्च_एप्रिल_मे_जून_जुलै_ऑगस्ट_सप्टेंबर_ऑक्टोबर_नोव्हेंबर_डिसेंबर'.split('_'),
+        monthsShort: 'जाने._फेब्रु._मार्च._एप्रि._मे._जून._जुलै._ऑग._सप्टें._ऑक्टो._नोव्हें._डिसें.'.split('_'),
         monthsParseExact: true,
         weekdays: 'रविवार_सोमवार_मंगळवार_बुधवार_गुरूवार_शुक्रवार_शनिवार'.split('_'),
         weekdaysShort: 'रवि_सोम_मंगळ_बुध_गुरू_शुक्र_शनि'.split('_'),
@@ -138,7 +131,7 @@
             L: 'DD/MM/YYYY',
             LL: 'D MMMM YYYY',
             LLL: 'D MMMM YYYY, A h:mm वाजता',
-            LLLL: 'dddd, D MMMM YYYY, A h:mm वाजता',
+            LLLL: 'dddd, D MMMM YYYY, A h:mm वाजता'
         },
         calendar: {
             sameDay: '[आज] LT',
@@ -146,7 +139,7 @@
             nextWeek: 'dddd, LT',
             lastDay: '[काल] LT',
             lastWeek: '[मागील] dddd, LT',
-            sameElse: 'L',
+            sameElse: 'L'
         },
         relativeTime: {
             future: '%sमध्ये',
@@ -162,7 +155,7 @@
             M: relativeTimeMr,
             MM: relativeTimeMr,
             y: relativeTimeMr,
-            yy: relativeTimeMr,
+            yy: relativeTimeMr
         },
         preparse: function (string) {
             return string.replace(/[१२३४५६७८९०]/g, function (match) {
@@ -174,25 +167,25 @@
                 return symbolMap[match];
             });
         },
-        meridiemParse: /पहाटे|सकाळी|दुपारी|सायंकाळी|रात्री/,
+        meridiemParse: /रात्री|सकाळी|दुपारी|सायंकाळी/,
         meridiemHour: function (hour, meridiem) {
             if (hour === 12) {
                 hour = 0;
             }
-            if (meridiem === 'पहाटे' || meridiem === 'सकाळी') {
+            if (meridiem === 'रात्री') {
+                return hour < 4 ? hour : hour + 12;
+            } else if (meridiem === 'सकाळी') {
                 return hour;
-            } else if (
-                meridiem === 'दुपारी' ||
-                meridiem === 'सायंकाळी' ||
-                meridiem === 'रात्री'
-            ) {
-                return hour >= 12 ? hour : hour + 12;
+            } else if (meridiem === 'दुपारी') {
+                return hour >= 10 ? hour : hour + 12;
+            } else if (meridiem === 'सायंकाळी') {
+                return hour + 12;
             }
         },
         meridiem: function (hour, minute, isLower) {
-            if (hour >= 0 && hour < 6) {
-                return 'पहाटे';
-            } else if (hour < 12) {
+            if (hour < 4) {
+                return 'रात्री';
+            } else if (hour < 10) {
                 return 'सकाळी';
             } else if (hour < 17) {
                 return 'दुपारी';
@@ -204,8 +197,8 @@
         },
         week: {
             dow: 0, // Sunday is the first day of the week.
-            doy: 6, // The week that contains Jan 6th is the first week of the year.
-        },
+            doy: 6  // The week that contains Jan 6th is the first week of the year.
+        }
     });
 
     return mr;
