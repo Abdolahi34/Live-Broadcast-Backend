@@ -40,18 +40,14 @@
 
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <input type="hidden" value="{{ datetype.id }}" name="id">
+                    <input type="hidden" value="{{ voicestat.id }}" name="id">
                     <div class="form-group">
-                        <label for="inputName">نوع</label>
-                        {% render_field form.day_type class+="form-control" %}
+                        <label for="inputName">Stat Link</label><p>{{ voicestat.voice_stat_link }} فعلی :</p>
+                        {% render_field form.voice_stat_link class+="form-control" value=voicestat.voice_stat_link %}
                     </div>
                     <div class="form-group">
-                        <label for="inputName">هفتگی</label>
-                        {% render_field form.day class+="form-control" value=datetype.day %}
-                    </div>
-                    <div class="form-group">
-                        <label for="inputName">مناسبتی</label>
-                        {% render_field form.specified_date class+="form-control" value=datetype.specified_date %}
+                        <label for="inputName">Stat Type</label><p>{{ voicestat.voice_stat_type }} فعلی :</p>
+                        {% render_field form.voice_stat_type class+="form-control" value=voicestat.voice_stat_type %}
                     </div>
             </div>
             <!-- /.card-body -->
