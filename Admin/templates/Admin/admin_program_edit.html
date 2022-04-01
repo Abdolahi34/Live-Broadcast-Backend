@@ -54,7 +54,7 @@
                         {% render_field form.slug class+="form-control" value=program.slug %}
                     </div>
                     <div class="form-group">
-                        <label for="inputStatus">تاریخ</label>
+                        <label for="inputStatus">تاریخ</label><p>{{ program.datetype }} فعلی :</p>
                         {{ form.datetype|append_attr:"class:form-control" }}
                     </div>
                     <div class="form-group">
@@ -70,8 +70,8 @@
                         {% render_field form.logo_onclick_link type="url" class+="form-control" value=program.logo_onclick_link %}
                     </div>
                     <div class="form-group">
-                        <label for="inputName">محتویات برنامه</label>
-                        {{ form.stream|append_attr:"class:form-control" }}
+                        <label for="inputName">محتویات برنامه</label><p>{{ streamtype.stream_type }} فعلی :</p>
+                        {{ form.streams|append_attr:"class:form-control" }}
                     </div>
                     <div class="form-group">
                         <label for="inputName">سازنده</label>

@@ -1,8 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import View, TemplateView
 from django.contrib.auth import get_user
-from django.contrib.auth.decorators import login_required, permission_required
-from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
 
 from Programs import models
@@ -10,15 +8,17 @@ from Programs import models
 from Admin import forms
 
 
-# @staff_member_required(redirect_field_name='403', login_url='Accounts:login')
+@staff_member_required
 class Admin(TemplateView):
     template_name = 'Admin/admin_main.html'
+
     def get_context_data(self, *args, **kwargs):
         context = super(Admin, self).get_context_data(**kwargs)
         context['username'] = get_user(self.request)
         return context
 
 
+@staff_member_required
 class AdminProgram(View):
     def get(self, request):
         programs = models.Program.objects.all().order_by('date_created')
@@ -38,6 +38,8 @@ class AdminProgram(View):
         args = {'programs': programs, 'username': get_user(request), 'temp_var': temp_var}
         return render(request, 'Admin/admin_program.html', args)
 
+
+@staff_member_required
 class AdminProgramAdd(View):
     def get(self, request):
         form = forms.AdminProgramForm()
@@ -48,12 +50,17 @@ class AdminProgramAdd(View):
         form = forms.AdminProgramForm(request.POST, request.FILES)
         temp_var = 5
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+            obj.created_by = self.request.user
+            obj.last_modified_by = self.request.user
+            obj.save()
             temp_var = 3
         args = {'temp_var': temp_var, 'username': get_user(request),
                 'form': form}
         return render(request, 'Admin/admin_program_add.html', args)
 
+
+@staff_member_required
 class AdminProgramView(View):
     def get(self, request, num):
         try:
@@ -67,6 +74,7 @@ class AdminProgramView(View):
             return render(request, 'Admin/admin_program_view.html', args)
 
 
+@staff_member_required
 class AdminProgramEdit(View):
     # @method_decorator(login_required)
     # def dispatch(self, *args, **kwargs):
@@ -107,6 +115,7 @@ class AdminProgramEdit(View):
         return render(request, 'Admin/admin_program_edit.html', args)
 
 
+@staff_member_required
 class AdminDateType(View):
     def get(self, request):
         datetypes = models.DateType.objects.all().order_by('id')
@@ -126,6 +135,8 @@ class AdminDateType(View):
         args = {'datetypes': datetypes, 'username': get_user(request), 'temp_var': temp_var}
         return render(request, 'Admin/admin_datetype.html', args)
 
+
+@staff_member_required
 class AdminDateTypeAdd(View):
     def get(self, request):
         form = forms.AdminDateTypeForm()
@@ -142,6 +153,8 @@ class AdminDateTypeAdd(View):
                 'form': form}
         return render(request, 'Admin/admin_datetype_add.html', args)
 
+
+@staff_member_required
 class AdminDateTypeView(View):
     def get(self, request, num):
         try:
@@ -155,6 +168,7 @@ class AdminDateTypeView(View):
             return render(request, 'Admin/admin_datetype_view.html', args)
 
 
+@staff_member_required
 class AdminDateTypeEdit(View):
     def get(self, request, num):
         try:
@@ -183,6 +197,7 @@ class AdminDateTypeEdit(View):
         return render(request, 'Admin/admin_datetype_edit.html', args)
 
 
+@staff_member_required
 class AdminStreamType(View):
     def get(self, request):
         streamtypes = models.StreamType.objects.all().order_by('id')
@@ -202,6 +217,8 @@ class AdminStreamType(View):
         args = {'streamtypes': streamtypes, 'username': get_user(request), 'temp_var': temp_var}
         return render(request, 'Admin/admin_streamtype.html', args)
 
+
+@staff_member_required
 class AdminStreamTypeAdd(View):
     def get(self, request):
         form = forms.AdminStreamTypeForm()
@@ -218,6 +235,8 @@ class AdminStreamTypeAdd(View):
                 'form': form}
         return render(request, 'Admin/admin_streamtype_add.html', args)
 
+
+@staff_member_required
 class AdminStreamTypeView(View):
     def get(self, request, num):
         try:
@@ -231,6 +250,7 @@ class AdminStreamTypeView(View):
             return render(request, 'Admin/admin_streamtype_view.html', args)
 
 
+@staff_member_required
 class AdminStreamTypeEdit(View):
     def get(self, request, num):
         try:
@@ -259,6 +279,7 @@ class AdminStreamTypeEdit(View):
         return render(request, 'Admin/admin_streamtype_edit.html', args)
 
 
+@staff_member_required
 class AdminVideoContent(View):
     def get(self, request):
         videocontents = models.VideoContent.objects.all().order_by('id')
@@ -278,6 +299,8 @@ class AdminVideoContent(View):
         args = {'videocontents': videocontents, 'username': get_user(request), 'temp_var': temp_var}
         return render(request, 'Admin/admin_videocontent.html', args)
 
+
+@staff_member_required
 class AdminVideoContentAdd(View):
     def get(self, request):
         form = forms.AdminVideoContentForm()
@@ -294,6 +317,8 @@ class AdminVideoContentAdd(View):
                 'form': form}
         return render(request, 'Admin/admin_videocontent_add.html', args)
 
+
+@staff_member_required
 class AdminVideoContentView(View):
     def get(self, request, num):
         try:
@@ -307,6 +332,7 @@ class AdminVideoContentView(View):
             return render(request, 'Admin/admin_videocontent_view.html', args)
 
 
+@staff_member_required
 class AdminVideoContentEdit(View):
     def get(self, request, num):
         try:
@@ -335,6 +361,7 @@ class AdminVideoContentEdit(View):
         return render(request, 'Admin/admin_videocontent_edit.html', args)
 
 
+@staff_member_required
 class AdminVideoStat(View):
     def get(self, request):
         videostats = models.VideoStat.objects.all().order_by('id')
@@ -354,6 +381,8 @@ class AdminVideoStat(View):
         args = {'videostats': videostats, 'username': get_user(request), 'temp_var': temp_var}
         return render(request, 'Admin/admin_videostat.html', args)
 
+
+@staff_member_required
 class AdminVideoStatAdd(View):
     def get(self, request):
         form = forms.AdminVideoStatForm()
@@ -370,6 +399,8 @@ class AdminVideoStatAdd(View):
                 'form': form}
         return render(request, 'Admin/admin_videostat_add.html', args)
 
+
+@staff_member_required
 class AdminVideoStatView(View):
     def get(self, request, num):
         try:
@@ -383,6 +414,7 @@ class AdminVideoStatView(View):
             return render(request, 'Admin/admin_videostat_view.html', args)
 
 
+@staff_member_required
 class AdminVideoStatEdit(View):
     def get(self, request, num):
         try:
@@ -411,6 +443,7 @@ class AdminVideoStatEdit(View):
         return render(request, 'Admin/admin_videostat_edit.html', args)
 
 
+@staff_member_required
 class AdminVoiceContent(View):
     def get(self, request):
         voicecontents = models.VoiceContent.objects.all().order_by('id')
@@ -430,6 +463,8 @@ class AdminVoiceContent(View):
         args = {'voicecontents': voicecontents, 'username': get_user(request), 'temp_var': temp_var}
         return render(request, 'Admin/admin_voicecontent.html', args)
 
+
+@staff_member_required
 class AdminVoiceContentAdd(View):
     def get(self, request):
         form = forms.AdminVoiceContentForm()
@@ -446,6 +481,8 @@ class AdminVoiceContentAdd(View):
                 'form': form}
         return render(request, 'Admin/admin_voicecontent_add.html', args)
 
+
+@staff_member_required
 class AdminVoiceContentView(View):
     def get(self, request, num):
         try:
@@ -459,6 +496,7 @@ class AdminVoiceContentView(View):
             return render(request, 'Admin/admin_voicecontent_view.html', args)
 
 
+@staff_member_required
 class AdminVoiceContentEdit(View):
     def get(self, request, num):
         try:
@@ -487,6 +525,7 @@ class AdminVoiceContentEdit(View):
         return render(request, 'Admin/admin_voicecontent_edit.html', args)
 
 
+@staff_member_required
 class AdminVoiceStat(View):
     def get(self, request):
         voicestats = models.VoiceStat.objects.all().order_by('id')
@@ -506,11 +545,13 @@ class AdminVoiceStat(View):
         args = {'voicestats': voicestats, 'username': get_user(request), 'temp_var': temp_var}
         return render(request, 'Admin/admin_voicestat.html', args)
 
+
+@staff_member_required
 class AdminVoiceStatAdd(View):
     def get(self, request):
-            form = forms.AdminVoiceStatForm()
-            args = {'username': get_user(request), 'form': form}
-            return render(request, 'Admin/admin_voicestat_add.html', args)
+        form = forms.AdminVoiceStatForm()
+        args = {'username': get_user(request), 'form': form}
+        return render(request, 'Admin/admin_voicestat_add.html', args)
 
     def post(self, request, *args, **kwargs):
         form = forms.AdminVoiceStatForm(request.POST)
@@ -522,6 +563,8 @@ class AdminVoiceStatAdd(View):
                 'form': form}
         return render(request, 'Admin/admin_voicestat_add.html', args)
 
+
+@staff_member_required
 class AdminVoiceStatView(View):
     def get(self, request, num):
         try:
@@ -535,6 +578,7 @@ class AdminVoiceStatView(View):
             return render(request, 'Admin/admin_voicestat_view.html', args)
 
 
+@staff_member_required
 class AdminVoiceStatEdit(View):
     def get(self, request, num):
         try:

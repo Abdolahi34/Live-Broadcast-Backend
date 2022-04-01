@@ -10,52 +10,109 @@ class DateTypeSerializer(serializers.ModelSerializer):
 
 
 class VoiceStatSerializer(serializers.ModelSerializer):
+    url = serializers.SerializerMethodField()
+    type = serializers.SerializerMethodField()
+
     class Meta:
         model = models.VoiceStat
-        fields = ['voice_stat_link', 'voice_stat_type']
+        fields = ['url', 'type']
+
+    def get_url(self, obj):
+        return obj.voice_stat_link
+
+    def get_type(self, obj):
+        return obj.voice_stat_type
 
 
 class VoiceContentSerializer(serializers.ModelSerializer):
-    voice_stat = VoiceStatSerializer()
+    url = serializers.SerializerMethodField()
+    stats = VoiceStatSerializer(source='voice_stat')
 
     class Meta:
         model = models.VoiceContent
-        fields = ['voice_link', 'voice_stat']
+        fields = ['url', 'stats']
+
+    def get_url(self, obj):
+        return obj.voice_link
 
 
 class VideoStatSerializer(serializers.ModelSerializer):
+    url = serializers.SerializerMethodField()
+    type = serializers.SerializerMethodField()
+
     class Meta:
         model = models.VideoStat
-        fields = ['video_stat_link', 'video_stat_type']
+        fields = ['url', 'type']
+
+    def get_url(self, obj):
+        return obj.video_stat_link
+
+    def get_type(self, obj):
+        return obj.video_stat_type
 
 
 class VideoContentSerializer(serializers.ModelSerializer):
-    video_stat = VideoStatSerializer()
+    url = serializers.SerializerMethodField()
+    stats = VideoStatSerializer(source='video_stat')
 
     class Meta:
         model = models.VideoContent
-        fields = ['video_link', 'video_stat']
+        fields = ['url', 'stats']
+
+    def get_url(self, obj):
+        return obj.video_link
 
 
 class StreamTypeSerializer(serializers.ModelSerializer):
-    voice_content = VoiceContentSerializer()
-    video_content = VideoContentSerializer()
+    audio = VoiceContentSerializer(source='voice_content')
+    video = VideoContentSerializer(source='video_content')
 
     class Meta:
         model = models.StreamType
-        fields = ['stream_type', 'voice_content', 'video_content']
+        fields = ['audio', 'video']
 
 
 class ProgramSerializer(serializers.ModelSerializer):
-    datetype = DateTypeSerializer()
+    key = serializers.SerializerMethodField()
+    days = serializers.SerializerMethodField()
+    hours = serializers.SerializerMethodField()
     logo = serializers.SerializerMethodField()
-    stream = StreamTypeSerializer()
+    link = serializers.SerializerMethodField()
+    streams = StreamTypeSerializer()
 
     class Meta:
         model = models.Program
-        fields = ['title', 'slug', 'datetype', 'start_time', 'end_time', 'logo_onclick_link', 'logo', 'stream']
+        fields = ['title', 'key', 'days', 'hours', 'link', 'logo', 'streams']
 
     def get_logo(self, queryset):
         request = self.context.get('request')
         logo = queryset.logo.url
         return request.build_absolute_uri(logo)
+
+    def get_days(self, obj):
+        day = obj.datetype.day
+        if day == 'shanbe':
+            return 'شنبه ها'
+        elif day == 'shanbe_1':
+            return 'یکشنبه ها'
+        elif day == 'shanbe_2':
+            return 'دوشنبه ها'
+        elif day == 'shanbe_3':
+            return 'سه شنبه ها'
+        elif day == 'shanbe_4':
+            return 'چهارشنبه ها'
+        elif day == 'shanbe_5':
+            return 'پنج شنبه ها'
+        elif day == 'jome':
+            return 'جمعه ها'
+        else:
+            return obj.datetype.specified_date
+
+    def get_hours(self, obj):
+        return f"{obj.start_time} - {obj.end_time}"
+
+    def get_key(self, obj):
+        return obj.slug
+
+    def get_link(self, obj):
+        return obj.logo_onclick_link

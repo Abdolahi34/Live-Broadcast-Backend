@@ -15,7 +15,7 @@ class ProgramAdmin(admin.ModelAdmin):
         'datetype',
         'start_time',
         'end_time',
-        'stream',
+        'streams',
         'date_created',
         'created_by',
         'date_modified',

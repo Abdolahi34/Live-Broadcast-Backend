@@ -95,7 +95,7 @@
                                     {{ program.end_time }}
                                 </td>
                                 <td>
-                                    {{ program.stream }}
+                                    {{ program.streams }}
                                 </td>
                                 <td class="project-state">
                                     {% if program.is_active %}
@@ -128,6 +128,11 @@
                 </div>
                 <!-- /.card-body -->
             </div>
+            <a class="btn btn-success btn-sm" href="{% url 'Admin:program_add' %}">
+                <i class="fas fa-plus">
+                </i>
+                افزودن
+            </a>
         {% endif %}
         <!-- /.card -->
     </section>

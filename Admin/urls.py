@@ -4,7 +4,7 @@ from Admin import views
 
 app_name = 'Admin'
 urlpatterns = [
-    path('', views.Admin.as_view(), name='admin'),
+    path('', views.Admin, name='admin'),
     path('programs/program/', views.AdminProgram.as_view(), name='program'),
     path('programs/program/add/', views.AdminProgramAdd.as_view(), name='program_add'),
     path('programs/program/<int:num>', views.AdminProgramView.as_view(), name='program_view'),
