@@ -70,7 +70,7 @@
                         {% render_field form.logo_onclick_link type="url" class+="form-control" value=program.logo_onclick_link %}
                     </div>
                     <div class="form-group">
-                        <label for="inputName">محتویات برنامه</label><p>{{ streamtype.stream_type }} فعلی :</p>
+                        <label for="inputName">محتویات برنامه</label><p>{{ program.streams }} فعلی :</p>
                         {{ form.streams|append_attr:"class:form-control" }}
                     </div>
                     <div class="form-group">

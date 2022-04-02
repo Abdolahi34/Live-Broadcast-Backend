@@ -40,18 +40,18 @@
 
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <input type="hidden" value="{{ streams.id }}" name="id">
+                    <input type="hidden" value="{{ streamtype.id }}" name="id">
                     <div class="form-group">
-                        <label for="inputName">نوع پخش زنده</label><p>{{ streams.stream_type }} فعلی :</p>
-                        {% render_field form.stream_type class+="form-control" value=streams.stream_type %}
+                        <label for="inputName">نوع پخش زنده</label><p>{{ streamtype.stream_type }} فعلی :</p>
+                        {% render_field form.stream_type class+="form-control" value=streamtype.stream_type %}
                     </div>
                     <div class="form-group">
-                        <label for="inputName">صوتی</label><p>{{ streams.voice_content }} فعلی :</p>
-                        {% render_field form.voice_content class+="form-control" value=streams.voice_content %}
+                        <label for="inputName">صوتی</label><p>{{ streamtype.voice_content }} فعلی :</p>
+                        {% render_field form.voice_content class+="form-control" value=streamtype.voice_content %}
                     </div>
                     <div class="form-group">
-                        <label for="inputName">صوتی</label><p>{{ streams.video_content }} فعلی :</p>
-                        {% render_field form.video_content class+="form-control" value=streams.video_content %}
+                        <label for="inputName">صوتی</label><p>{{ streamtype.video_content }} فعلی :</p>
+                        {% render_field form.video_content class+="form-control" value=streamtype.video_content %}
                     </div>
             </div>
             <!-- /.card-body -->

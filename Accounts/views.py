@@ -9,21 +9,18 @@ from django.utils.decorators import method_decorator
 
 from Accounts import forms
 
-from captcha.widgets import ReCaptchaV2Checkbox
-from captcha.fields import ReCaptchaField
 
 
 @method_decorator(decorators.login_required(login_url='Accounts:login'), name='dispatch')
 class ProfileView(View):
     def get(self, request):
-        form = UserChangeForm(instance=request.user)
-        form.re_captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
+        form = forms.ProfileForm(instance=request.user)
         if_valid = False
         args = {'form': form, 'username': get_user(request), 'if_valid': if_valid}
         return render(request, 'Accounts/profile.html', args)
 
     def post(self, request):
-        form = UserChangeForm(request.POST, instance=request.user)
+        form = forms.ProfileForm(request.POST, instance=request.user)
         if_valid = False
         if form.is_valid():
             form.save()

@@ -1,10 +1,17 @@
 from django.contrib.auth import password_validation
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UsernameField, UserCreationForm, PasswordChangeForm
+from django.contrib.auth.forms import AuthenticationForm, UsernameField, UserCreationForm, PasswordChangeForm, \
+    UserChangeForm
 from django.utils.translation import gettext_lazy as _
 
 from captcha.widgets import ReCaptchaV2Checkbox
 from captcha.fields import ReCaptchaField
+
+
+class ProfileForm(UserChangeForm):
+    re_captcha = ReCaptchaField(
+        widget=ReCaptchaV2Checkbox,
+    )
 
 
 class LoginForm(AuthenticationForm):
