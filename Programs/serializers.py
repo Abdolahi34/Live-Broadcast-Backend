@@ -19,7 +19,7 @@ class ProgramSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Program
         fields = ['title', 'key', 'description', 'title1', 'title2', 'days', 'hours', 'link', 'logo',
-                  'isLive', 'streams', 'image']
+                  'isLive', 'streams']
 
     key = serializers.SerializerMethodField()
     title1 = serializers.SerializerMethodField()
@@ -30,7 +30,6 @@ class ProgramSerializer(serializers.ModelSerializer):
     logo = serializers.SerializerMethodField()
     isLive = serializers.SerializerMethodField()
     streams = serializers.SerializerMethodField()
-    image = serializers.SerializerMethodField()
 
     def get_key(self, obj):
         return obj.slug
@@ -41,31 +40,11 @@ class ProgramSerializer(serializers.ModelSerializer):
     def get_title2(self, obj):
         return obj.description_in_player
 
-    # TODO
     def get_days(self, obj):
         return obj.date_display
-        # if obj.date_time.datetime_type == 'daily':
-        #     return 'هر روز'
-        # elif obj.date_time.datetime_type == 'weekly':
-        #     if obj.date_time.week_day == 'shanbe':
-        #         return 'شنبه ها'
-        #     elif obj.date_time.week_day == 'shanbe_1':
-        #         return 'یکشنبه ها'
-        #     elif obj.date_time.week_day == 'shanbe_2':
-        #         return 'دوشنبه ها'
-        #     elif obj.date_time.week_day == 'shanbe_3':
-        #         return 'سه شنبه ها'
-        #     elif obj.date_time.week_day == 'shanbe_4':
-        #         return 'چهارشنبه ها'
-        #     elif obj.date_time.week_day == 'shanbe_5':
-        #         return 'پنج شنبه ها'
-        #     elif obj.date_time.week_day == 'jome':
-        #         return 'جمعه ها'
-        # else:
-        #     return obj.date_time.specified_date
 
     def get_hours(self, obj):
-        return f"ساعت {obj.date_time.start_time} تا {obj.date_time.end_time}"
+        return f"ساعت {obj.start_time} تا {obj.end_time}"
 
     def get_link(self, obj):
         return obj.logo_onclick_link
@@ -75,26 +54,121 @@ class ProgramSerializer(serializers.ModelSerializer):
         logo = queryset.logo.url
         return request.build_absolute_uri(logo)
 
-    # TODO اگر الان زمانی بود که بین زمان شروع و پایان برنامه قرار داشت و پخش وصل بود علامت  قرمز پخش زنده فعال می شود
     def get_isLive(self, obj):
-        if obj.date_time.datetime_type == 'daily':
+        if obj.isLive:
+            base_datetime = datetime.datetime
+            now_weekday = datetime.datetime.now().isoweekday()
 
-            return 'هر روز'
-        elif obj.date_time.datetime_type == 'weekly':
-            pass
-        else:
-            return obj.date_time.specified_date
-
-        program_start_time = 0
-        program_end_time = 0
-        if program_start_time <= datetime.datetime.now().timestamp() <= program_end_time:
-            if obj.is_voice_active or obj.is_video_active:
-                return 'true'
+            if obj.datetime_type == 'regular':
+                '''
+                روز اول هفته در تقویم میلادی دوشنبه در نظر گرفته شده.
+                در تقویم میلادی منظور از کد 0 یکشنبه می باشد.
+                در تقویم شمسی منظور از کد 0 شنبه می باشد.
+                '''
+                if obj.regularly == 'daily':
+                    start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                                        base_datetime.now().day, obj.start_time.hour,
+                                                        obj.start_time.minute, obj.start_time.second, 0)
+                    end_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                                      base_datetime.now().day, obj.start_time.hour,
+                                                      obj.start_time.minute, obj.start_time.second, 0)
+                    if end_time_datetime < base_datetime.now() < start_time_datetime:
+                        obj.isLive = False
+                else:
+                    if obj.day_0:
+                        if now_weekday == 6:
+                            start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                                                base_datetime.now().day, obj.start_time.hour,
+                                                                obj.start_time.minute, obj.start_time.second, 0)
+                            end_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                                              base_datetime.now().day, obj.start_time.hour,
+                                                              obj.start_time.minute, obj.start_time.second, 0)
+                            if end_time_datetime < base_datetime.now() < start_time_datetime:
+                                obj.isLive = False
+                    elif obj.day_1:
+                        if now_weekday == 0:
+                            start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                                                base_datetime.now().day, obj.start_time.hour,
+                                                                obj.start_time.minute, obj.start_time.second, 0)
+                            end_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                                              base_datetime.now().day, obj.start_time.hour,
+                                                              obj.start_time.minute, obj.start_time.second, 0)
+                            if end_time_datetime < base_datetime.now() < start_time_datetime:
+                                obj.isLive = False
+                    elif obj.day_2:
+                        if now_weekday == 1:
+                            start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                                                base_datetime.now().day, obj.start_time.hour,
+                                                                obj.start_time.minute, obj.start_time.second, 0)
+                            end_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                                              base_datetime.now().day, obj.start_time.hour,
+                                                              obj.start_time.minute, obj.start_time.second, 0)
+                            if end_time_datetime < base_datetime.now() < start_time_datetime:
+                                obj.isLive = False
+                    elif obj.day_3:
+                        if now_weekday == 2:
+                            start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                                                base_datetime.now().day, obj.start_time.hour,
+                                                                obj.start_time.minute, obj.start_time.second, 0)
+                            end_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                                              base_datetime.now().day, obj.start_time.hour,
+                                                              obj.start_time.minute, obj.start_time.second, 0)
+                            if end_time_datetime < base_datetime.now() < start_time_datetime:
+                                obj.isLive = False
+                    elif obj.day_4:
+                        if now_weekday == 3:
+                            start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                                                base_datetime.now().day, obj.start_time.hour,
+                                                                obj.start_time.minute, obj.start_time.second, 0)
+                            end_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                                              base_datetime.now().day, obj.start_time.hour,
+                                                              obj.start_time.minute, obj.start_time.second, 0)
+                            if end_time_datetime < base_datetime.now() < start_time_datetime:
+                                obj.isLive = False
+                    elif obj.day_5:
+                        if now_weekday == 4:
+                            start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                                                base_datetime.now().day, obj.start_time.hour,
+                                                                obj.start_time.minute, obj.start_time.second, 0)
+                            end_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                                              base_datetime.now().day, obj.start_time.hour,
+                                                              obj.start_time.minute, obj.start_time.second, 0)
+                            if end_time_datetime < base_datetime.now() < start_time_datetime:
+                                obj.isLive = False
+                    else:
+                        if now_weekday == 5:
+                            start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                                                base_datetime.now().day, obj.start_time.hour,
+                                                                obj.start_time.minute, obj.start_time.second, 0)
+                            end_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                                              base_datetime.now().day, obj.start_time.hour,
+                                                              obj.start_time.minute, obj.start_time.second, 0)
+                            if end_time_datetime < base_datetime.now() < start_time_datetime:
+                                obj.isLive = False
             else:
-                return 'false'
-        return 'false'
+                is_today = False
+                for specified_date in obj.specified_date:
+                    if base_datetime.now().date() == specified_date:
+                        is_today = True
+                        break
+                if not is_today:
+                    obj.isLive = False
+        else:
+            obj.isLive = False
+
+        return obj.isLive
 
     def get_streams(self, obj):
+        request = self.context.get('request')
+        player_background = obj.player_background.url
+        player_background_2 = request.build_absolute_uri(player_background)
+
+        if obj.voice_stats_type == None:
+            obj.voice_stats_type = ''
+        if obj.video_stats_type == None:
+            obj.video_stats_type = ''
+
+
         return {
             'audio': {
                 'url': obj.voice_link,
@@ -109,10 +183,6 @@ class ProgramSerializer(serializers.ModelSerializer):
                     'url': obj.video_stats_link,
                     'type': obj.video_stats_type
                 }
-            }
+            },
+            'image': {'url': player_background_2}
         }
-
-    def get_image(self, queryset):
-        request = self.context.get('request')
-        player_background = queryset.player_background.url
-        return {'url': request.build_absolute_uri(player_background)}

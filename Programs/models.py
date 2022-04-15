@@ -86,117 +86,76 @@ class Program(models.Model):
                                         verbose_name='آخرین تغییر دهنده', related_name='last_modified_by')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
     date_modified = models.DateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
-    is_voice_active = models.BooleanField(default=False, editable=False)
-    is_video_active = models.BooleanField(default=False, editable=False)
+    isLive = models.BooleanField(default=False, editable=False)
 
     def __str__(self):
         return self.title
 
     def clean(self):
+        errors = {}
         if self.logo.width != 150 or self.logo.height != 150:
-            raise ValidationError(
-                {'logo': 'اندازه لوگو باید 150x150 باشد.'}
-            )
+            errors['logo'] = 'اندازه لوگو باید 150x150 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
         if self.player_background.width != 1000 or self.player_background.height != 562:
-            raise ValidationError(
-                {'player_background': 'اندازه تصویر پس زمینه پخش زنده باید 562x1000 باشد.'}
-            )
+            errors['player_background'] = 'اندازه تصویر پس زمینه پخش زنده باید 562x1000 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
 
         if self.datetime_type == 'regular':
-            if self.specified_date is None:
-                if self.regularly is 'weekly':
-                    if self.day_0 is False and self.day_1 is False and self.day_2 is False and self.day_3 is False and self.day_4 is False and self.day_5 is False and self.day_6 is False:
-                        raise ValidationError(
-                            {'regularly': 'با توجه به اینکه برنامه هفتگی است، حداقل یک روز هفته را انتخاب نمایید.'}
-                        )
+            if self.specified_date is not None:
+                errors['specified_date'] = 'تاریخ در برنامه های منظم نباید وارد شود.'
+            if self.regularly is None:
+                errors['regularly'] = 'لطفا هفتگی یا روزانه بودن برنامه را مشخص نمایید.'
+            elif self.regularly == 'weekly':
+                if self.day_0 is False and self.day_1 is False and self.day_2 is False and self.day_3 is False and self.day_4 is False and self.day_5 is False and self.day_6 is False:
+                    errors['regularly'] = 'با توجه به اینکه برنامه هفتگی است، حداقل یک روز هفته را انتخاب نمایید.'
             else:
-                raise ValidationError(
-                    {'specified_date': 'تاریخ در برنامه های منظم نباید وارد شود.'}
-                )
+                if self.day_0 is True or self.day_1 is True or self.day_2 is True or self.day_3 is True or self.day_4 is True or self.day_5 is True or self.day_6 is True:
+                    errors['regularly'] = 'با توجه به اینکه برنامه روزانه است، هیچ روزی را نباید انتخاب نمایید.'
         else:
             if self.regularly is not None:
-                raise ValidationError(
-                    {'regularly': 'با توجه به اینکه برنامه مناسبتی است، نباید روزانه یا هفتگی بودن را مشخص نمایید.'}
-                )
+                errors['regularly'] = 'با توجه به اینکه برنامه مناسبتی است، نباید روزانه یا هفتگی بودن را مشخص نمایید.'
             if self.day_0:
-                raise ValidationError(
-                    {'day_0': 'با توجه به اینکه برنامه مناسبتی است، هیچ روزی را نباید انتخاب نمایید.'}
-                )
+                errors['day_0'] = 'با توجه به اینکه برنامه مناسبتی است، هیچ روزی را نباید انتخاب نمایید.'
             if self.day_1:
-                raise ValidationError(
-                    {'day_1': 'با توجه به اینکه برنامه مناسبتی است، هیچ روزی را نباید انتخاب نمایید.'}
-                )
+                errors['day_1'] = 'با توجه به اینکه برنامه مناسبتی است، هیچ روزی را نباید انتخاب نمایید.'
             if self.day_2:
-                raise ValidationError(
-                    {'day_2': 'با توجه به اینکه برنامه مناسبتی است، هیچ روزی را نباید انتخاب نمایید.'}
-                )
+                errors['day_2'] = 'با توجه به اینکه برنامه مناسبتی است، هیچ روزی را نباید انتخاب نمایید.'
             if self.day_3:
-                raise ValidationError(
-                    {'day_3': 'با توجه به اینکه برنامه مناسبتی است، هیچ روزی را نباید انتخاب نمایید.'}
-                )
+                errors['day_3'] = 'با توجه به اینکه برنامه مناسبتی است، هیچ روزی را نباید انتخاب نمایید.'
             if self.day_4:
-                raise ValidationError(
-                    {'day_4': 'با توجه به اینکه برنامه مناسبتی است، هیچ روزی را نباید انتخاب نمایید.'}
-                )
+                errors['day_4'] = 'با توجه به اینکه برنامه مناسبتی است، هیچ روزی را نباید انتخاب نمایید.'
             if self.day_5:
-                raise ValidationError(
-                    {'day_5': 'با توجه به اینکه برنامه مناسبتی است، هیچ روزی را نباید انتخاب نمایید.'}
-                )
+                errors['day_5'] = 'با توجه به اینکه برنامه مناسبتی است، هیچ روزی را نباید انتخاب نمایید.'
             if self.day_6:
-                raise ValidationError(
-                    {'day_6': 'با توجه به اینکه برنامه مناسبتی است، هیچ روزی را نباید انتخاب نمایید.'}
-                )
+                errors['day_6'] = 'با توجه به اینکه برنامه مناسبتی است، هیچ روزی را نباید انتخاب نمایید.'
+            if self.specified_date is None:
+                errors['specified_date'] = 'با توجه به اینکه برنامه مناسبتی است، باید حداقل یک تاریخ وارد نمایید.'
         if self.stream_type == 'audio':
             if self.video_link is not None:
-                raise ValidationError(
-                    {'video_link': 'این مقدار نمی تواند خالی باشد.'}
-                )
+                errors['video_link'] = 'این مقدار نمی تواند خالی باشد.'
             if self.video_stats_link is not None:
-                raise ValidationError(
-                    {'video_stats_link': 'این مقدار نمی تواند خالی باشد.'}
-                )
+                errors['video_stats_link'] = 'این مقدار نمی تواند خالی باشد.'
             if self.video_stats_type is not None:
-                raise ValidationError(
-                    {'video_stats_type': 'این مقدار نمی تواند خالی باشد.'}
-                )
+                errors['video_stats_type'] = 'این مقدار نمی تواند خالی باشد.'
         elif self.stream_type == 'video':
             if self.voice_link is not None:
-                raise ValidationError(
-                    {'voice_link': 'این مقدار نمی تواند خالی باشد.'}
-                )
+                errors['voice_link'] = 'این مقدار نمی تواند خالی باشد.'
             if self.voice_stats_link is not None:
-                raise ValidationError(
-                    {'voice_stats_link': 'این مقدار نمی تواند خالی باشد.'}
-                )
+                errors['voice_stats_link'] = 'این مقدار نمی تواند خالی باشد.'
             if self.voice_stats_type is not None:
-                raise ValidationError(
-                    {'voice_stats_type': 'این مقدار نمی تواند خالی باشد.'}
-                )
+                errors['voice_stats_type'] = 'این مقدار نمی تواند خالی باشد.'
         else:
             if self.voice_link is None:
-                raise ValidationError(
-                    {'voice_link': 'این مقدار نمی تواند خالی باشد.'}
-                )
+                errors['voice_link'] = 'این مقدار نمی تواند خالی باشد.'
             if self.voice_stats_link is None:
-                raise ValidationError(
-                    {'voice_stats_link': 'این مقدار نمی تواند خالی باشد.'}
-                )
+                errors['voice_stats_link'] = 'این مقدار نمی تواند خالی باشد.'
             if self.voice_stats_type is None:
-                raise ValidationError(
-                    {'voice_stats_type': 'این مقدار نمی تواند خالی باشد.'}
-                )
+                errors['voice_stats_type'] = 'این مقدار نمی تواند خالی باشد.'
             if self.video_link is None:
-                raise ValidationError(
-                    {'video_link': 'این مقدار نمی تواند خالی باشد.'}
-                )
+                errors['video_link'] = 'این مقدار نمی تواند خالی باشد.'
             if self.video_stats_link is None:
-                raise ValidationError(
-                    {'video_stats_link': 'این مقدار نمی تواند خالی باشد.'}
-                )
+                errors['video_stats_link'] = 'این مقدار نمی تواند خالی باشد.'
             if self.video_stats_type is None:
-                raise ValidationError(
-                    {'video_stats_type': 'این مقدار نمی تواند خالی باشد.'}
-                )
+                errors['video_stats_type'] = 'این مقدار نمی تواند خالی باشد.'
+        raise ValidationError(errors)
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -210,7 +169,7 @@ class Menu(models.Model):
 
     title = models.CharField(max_length=20, verbose_name='عنوان')
     page_url = models.URLField(verbose_name='آدرس صفحه')
-    num_order = models.PositiveSmallIntegerField(verbose_name='ترتیب')
+    num_order = models.PositiveSmallIntegerField(unique=True, verbose_name='ترتیب')
 
     def __str__(self):
         return self.title

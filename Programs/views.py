@@ -20,7 +20,6 @@ class ProgramApi(views.APIView):
     def get(self, request):
         try:
             queryset = models.Program.objects.all()
-            programs = []
 
             # Specify started and unstarted programs
             for program in queryset:
@@ -29,43 +28,42 @@ class ProgramApi(views.APIView):
                         voice_stats_text = requests.get('https://live.mostadrak.org/v2/servers/_defaultServer_/vhosts/_defaultVHost_/applications/masjed/monitoring/current').text
                         voice_stream_status = voice_stats_text[voice_stats_text.find('<string>RTMP') + 34]
                         if voice_stream_status != '0':
-                            program.is_voice_active = True
+                            queryset.filter(id=program.id).update(isLive=True)
                         else:
-                            program.is_voice_active = False
-                            program.voice_link = ''
-                            program.voice_stats_link = ''
-                            program.title_in_player = 'برنامه شروع نشده است'
+                            queryset.filter(id=program.id).update(isLive=False)
+                            queryset.filter(id=program.id).update(voice_link='')
+                            queryset.filter(id=program.id).update(voice_stats_link='')
+                            queryset.filter(id=program.id).update(title_in_player='برنامه شروع نشده است')
                     else:
                         video_stats_text = requests.get('https://live.mostadrak.org/v2/servers/_defaultServer_/vhosts/_defaultVHost_/applications/masjed/monitoring/current').text
                         video_stream_status = video_stats_text[video_stats_text.find('<string>RTMP') + 34]
                         if video_stream_status != '0':
-                            program.is_video_active = True
+                            queryset.filter(id=program.id).update(isLive=True)
                         else:
-                            program.is_video_active = False
-                            program.video_link = ''
-                            program.video_stats_link = ''
-                            program.title_in_player = 'برنامه شروع نشده است'
+                            queryset.filter(id=program.id).update(isLive=False)
+                            queryset.filter(id=program.id).update(video_link='')
+                            queryset.filter(id=program.id).update(video_stats_link='')
+                            queryset.filter(id=program.id).update(title_in_player='برنامه شروع نشده است')
 
                 # Live audio player
                 if program.voice_stats_type == 'shoutcast':
                     voice_stats_text = requests.get('https://radio.masjedsafa.com/stats?sid=2').text
                     voice_stream_status = int(voice_stats_text[voice_stats_text.find('<STREAMSTATUS>') + 14])
                     if voice_stream_status:
-                        program.is_voice_active = True
+                        queryset.filter(id=program.id).update(isLive=True)
                     else:
-                        program.is_voice_active = False
-                        program.voice_link = ''
-                        program.voice_stats_link = ''
-                        program.title_in_player = 'برنامه شروع نشده است'
+                        queryset.filter(id=program.id).update(isLive=False)
+                        queryset.filter(id=program.id).update(voice_link='')
+                        queryset.filter(id=program.id).update(voice_stats_link='')
+                        queryset.filter(id=program.id).update(title_in_player='برنامه شروع نشده است')
                 else:
                     check_wowza_status('audio')
 
                 # Live video player
                 check_wowza_status('video')
 
-                programs.append(program)
-
-            serializer = serializers.ProgramSerializer(programs, context={'request': request}, many=True)
+            queryset.order_by('isLive')
+            serializer = serializers.ProgramSerializer(queryset, context={'request': request}, many=True)
             return response.Response(serializer.data, status=status.HTTP_200_OK)
         except:
             return HttpResponseServerError()
