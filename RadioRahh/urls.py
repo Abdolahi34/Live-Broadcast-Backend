@@ -19,14 +19,10 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
-from django.views.generic import RedirectView
-
-from RadioRahh import views
 
 urlpatterns = [
     path('api/', include('Programs.urls-api')),
     path('admin/', admin.site.urls, name='admin'),
-    path('contact/', views.ContactUs.as_view(), name='contact_us'),
 ]
 
 handler403 = 'RadioRahh.views.status_code_403_forbidden'
