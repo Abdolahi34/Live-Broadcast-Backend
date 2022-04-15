@@ -2,11 +2,12 @@ asgiref==3.5.0
 certifi==2021.10.8
 charset-normalizer==2.0.12
 Django==3.2.13
-django-recaptcha==3.0.0
+django-better-admin-arrayfield==1.4.2
 djangorestframework==3.13.1
 idna==3.3
 mysqlclient==2.1.0
 Pillow==9.1.0
+psycopg2==2.9.3
 pytz==2022.1
 requests==2.27.1
 sqlparse==0.4.2
