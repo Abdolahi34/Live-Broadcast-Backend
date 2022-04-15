@@ -79,8 +79,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'radio_db',
-        'USER': 'postgres',
-        'PASSWORD': 'as21234',
+        'USER': 'radio_usr',
+        'PASSWORD': '123456789',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
@@ -119,12 +119,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-if not DEBUG:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-else:
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'static')
-    ]
+# if not DEBUG:
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# else:
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static')
+# ]
 
 MEDIA_URL = 'assets/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'assets')
@@ -138,15 +138,3 @@ TIME_FORMAT = 'G:i:s'
 DATETIME_FORMAT = 'N j, Y, G:i:s'
 SHORT_DATETIME_FORMAT = 'm/d/Y G:i:s'
 FIRST_DAY_OF_WEEK = 6
-
-RECAPTCHA_PUBLIC_KEY = ''
-RECAPTCHA_PRIVATE_KEY = ''
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-
-DEFAULT_FROM_EMAIL = 'admin@radio-api.rahh.ir'
