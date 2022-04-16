@@ -153,36 +153,32 @@ class ProgramSerializer(serializers.ModelSerializer):
                         break
                 if not is_today:
                     obj.isLive = False
-        else:
-            obj.isLive = False
 
         return obj.isLive
 
     def get_streams(self, obj):
-        request = self.context.get('request')
-        player_background = obj.player_background.url
-        player_background_2 = request.build_absolute_uri(player_background)
+        streams = {}
 
-        if obj.voice_stats_type == None:
-            obj.voice_stats_type = ''
-        if obj.video_stats_type == None:
-            obj.video_stats_type = ''
+        if obj.is_voice_active:
+            request = self.context.get('request')
+            player_background = obj.player_background.url
+            player_background_2 = request.build_absolute_uri(player_background)
 
-
-        return {
-            'audio': {
+            streams['image'] = {'url': player_background_2}
+            streams['audio'] = {
                 'url': obj.voice_link,
                 'stats': {
                     'url': obj.voice_stats_link,
                     'type': obj.voice_stats_type
                 }
-            },
-            'video': {
+            }
+        if obj.is_video_active:
+            streams['video'] = {
                 'url': obj.video_link,
                 'stats': {
                     'url': obj.video_stats_link,
                     'type': obj.video_stats_type
                 }
-            },
-            'image': {'url': player_background_2}
-        }
+            }
+
+        return streams

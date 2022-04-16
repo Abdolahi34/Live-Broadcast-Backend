@@ -86,6 +86,8 @@ class Program(models.Model):
                                         verbose_name='آخرین تغییر دهنده', related_name='last_modified_by')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
     date_modified = models.DateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
+    is_voice_active = models.BooleanField(default=False, editable=False)
+    is_video_active = models.BooleanField(default=False, editable=False)
     isLive = models.BooleanField(default=False, editable=False)
 
     def __str__(self):
@@ -94,9 +96,11 @@ class Program(models.Model):
     def clean(self):
         errors = {}
         if self.logo.width != 150 or self.logo.height != 150:
-            errors['logo'] = 'اندازه لوگو باید 150x150 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
+            errors[
+                'logo'] = 'اندازه لوگو باید 150x150 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
         if self.player_background.width != 1000 or self.player_background.height != 562:
-            errors['player_background'] = 'اندازه تصویر پس زمینه پخش زنده باید 562x1000 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
+            errors[
+                'player_background'] = 'اندازه تصویر پس زمینه پخش زنده باید 562x1000 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
 
         if self.datetime_type == 'regular':
             if self.specified_date is not None:
