@@ -40,9 +40,9 @@ window.addEventListener('load', function () {
         (index, widgetElement) => initializeWidget(widgetElement)
     );
 
-    django.jQuery(document).on('formset:added', function(event, $row, formsetName) {
+    django.jQuery(document).on('formset:added', function (event, $row, formsetName) {
         $row[0].querySelectorAll(".dynamic-array-widget").forEach(
             widgetElement => initializeWidget(widgetElement)
         );
     });
-  });
+});
