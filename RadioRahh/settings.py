@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+from django.conf import settings
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,12 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-y-k=hd4k#3#mpa0ge4)g%_x^@1r5ppw170p2ei#h+419%_5nk4'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = ['radio-api.rahh.ir', '127.0.0.1']
+DEBUG = os.environ.get('DEBUG', '') != 'False'
+
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
 
 # Application definition
 
@@ -78,10 +83,10 @@ WSGI_APPLICATION = 'RadioRahh.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'radio_db',
-        'USER': 'radio_usr',
-        'PASSWORD': '123456789',
-        'HOST': '127.0.0.1',
+        'NAME': os.getenv('DATABASE_NAME'),
+        'USER': os.getenv('DATABASE_USER'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+        'HOST': os.getenv('DATABASE_HOST'),
         'PORT': '5432',
     }
 }
@@ -119,12 +124,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-# if not DEBUG:
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-# else:
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'static')
-# ]
+
+if not DEBUG:
+    STATIC_ROOT = BASE_DIR / 'static'
+else:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static')
+    ]
 
 MEDIA_URL = 'assets/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'assets')
@@ -138,3 +144,11 @@ TIME_FORMAT = 'G:i:s'
 DATETIME_FORMAT = 'N j, Y, G:i:s'
 SHORT_DATETIME_FORMAT = 'm/d/Y G:i:s'
 FIRST_DAY_OF_WEEK = 6
+
+if not settings.DEBUG:
+    SECURE_HSTS_SECONDS = int(os.getenv('SECURE_HSTS_SECONDS'))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('SECURE_HSTS_INCLUDE_SUBDOMAINS', '') != 'False'
+    SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', '') != 'False'
+    SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', '') != 'False'
+    CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', '') != 'False'
+    SECURE_HSTS_PRELOAD = os.environ.get('SECURE_HSTS_PRELOAD', '') != 'False'
