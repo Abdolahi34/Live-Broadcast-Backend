@@ -35,7 +35,10 @@ class ProgramSerializer(serializers.ModelSerializer):
         return obj.slug
 
     def get_title1(self, obj):
-        return obj.title_in_player
+        if not obj.is_voice_active and not obj.is_video_active:
+            return 'برنامه شروع نشده است.'
+        else:
+            return obj.title_in_player
 
     def get_title2(self, obj):
         return obj.description_in_player
@@ -73,7 +76,7 @@ class ProgramSerializer(serializers.ModelSerializer):
                                                       base_datetime.now().day, obj.start_time.hour,
                                                       obj.start_time.minute, obj.start_time.second, 0)
                     if end_time_datetime < base_datetime.now() < start_time_datetime:
-                        obj.isLive = False
+                        return False
                 else:
                     if obj.day_0:
                         if now_weekday == 6:
@@ -84,7 +87,7 @@ class ProgramSerializer(serializers.ModelSerializer):
                                                               base_datetime.now().day, obj.start_time.hour,
                                                               obj.start_time.minute, obj.start_time.second, 0)
                             if end_time_datetime < base_datetime.now() < start_time_datetime:
-                                obj.isLive = False
+                                return False
                     elif obj.day_1:
                         if now_weekday == 0:
                             start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
@@ -94,7 +97,7 @@ class ProgramSerializer(serializers.ModelSerializer):
                                                               base_datetime.now().day, obj.start_time.hour,
                                                               obj.start_time.minute, obj.start_time.second, 0)
                             if end_time_datetime < base_datetime.now() < start_time_datetime:
-                                obj.isLive = False
+                                return False
                     elif obj.day_2:
                         if now_weekday == 1:
                             start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
@@ -104,7 +107,7 @@ class ProgramSerializer(serializers.ModelSerializer):
                                                               base_datetime.now().day, obj.start_time.hour,
                                                               obj.start_time.minute, obj.start_time.second, 0)
                             if end_time_datetime < base_datetime.now() < start_time_datetime:
-                                obj.isLive = False
+                                return False
                     elif obj.day_3:
                         if now_weekday == 2:
                             start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
@@ -114,7 +117,7 @@ class ProgramSerializer(serializers.ModelSerializer):
                                                               base_datetime.now().day, obj.start_time.hour,
                                                               obj.start_time.minute, obj.start_time.second, 0)
                             if end_time_datetime < base_datetime.now() < start_time_datetime:
-                                obj.isLive = False
+                                return False
                     elif obj.day_4:
                         if now_weekday == 3:
                             start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
@@ -124,7 +127,7 @@ class ProgramSerializer(serializers.ModelSerializer):
                                                               base_datetime.now().day, obj.start_time.hour,
                                                               obj.start_time.minute, obj.start_time.second, 0)
                             if end_time_datetime < base_datetime.now() < start_time_datetime:
-                                obj.isLive = False
+                                return False
                     elif obj.day_5:
                         if now_weekday == 4:
                             start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
@@ -134,7 +137,7 @@ class ProgramSerializer(serializers.ModelSerializer):
                                                               base_datetime.now().day, obj.start_time.hour,
                                                               obj.start_time.minute, obj.start_time.second, 0)
                             if end_time_datetime < base_datetime.now() < start_time_datetime:
-                                obj.isLive = False
+                                return False
                     else:
                         if now_weekday == 5:
                             start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
@@ -144,7 +147,7 @@ class ProgramSerializer(serializers.ModelSerializer):
                                                               base_datetime.now().day, obj.start_time.hour,
                                                               obj.start_time.minute, obj.start_time.second, 0)
                             if end_time_datetime < base_datetime.now() < start_time_datetime:
-                                obj.isLive = False
+                                return False
             else:
                 is_today = False
                 for specified_date in obj.specified_date:
@@ -152,9 +155,9 @@ class ProgramSerializer(serializers.ModelSerializer):
                         is_today = True
                         break
                 if not is_today:
-                    obj.isLive = False
+                    return False
 
-        return obj.isLive
+        return False
 
     def get_streams(self, obj):
         streams = {}

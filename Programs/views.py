@@ -29,40 +29,36 @@ class ProgramApi(views.APIView):
                             'https://live.mostadrak.org/v2/servers/_defaultServer_/vhosts/_defaultVHost_/applications/masjed/monitoring/current').text
                         voice_stream_status = voice_stats_text[voice_stats_text.find('<string>RTMP') + 34]
                         if voice_stream_status != '0':
-                            queryset.filter(id=program.id).update(is_voice_active=True)
+                            queryset.filter(pk=program.id).update(is_voice_active=True)
                         else:
-                            queryset.filter(id=program.id).update(is_voice_active=False)
-                            queryset.filter(id=program.id).update(title_in_player='برنامه شروع نشده است')
+                            queryset.filter(pk=program.id).update(is_voice_active=False)
                     else:
                         video_stats_text = requests.get(
                             'https://live.mostadrak.org/v2/servers/_defaultServer_/vhosts/_defaultVHost_/applications/masjed/monitoring/current').text
                         video_stream_status = video_stats_text[video_stats_text.find('<string>RTMP') + 34]
                         if video_stream_status != '0':
-                            queryset.filter(id=program.id).update(is_video_active=True)
+                            queryset.filter(pk=program.id).update(is_video_active=True)
                         else:
-                            queryset.filter(id=program.id).update(is_video_active=False)
-                            queryset.filter(id=program.id).update(title_in_player='برنامه شروع نشده است')
+                            queryset.filter(pk=program.id).update(is_video_active=False)
 
                 # Live audio player
                 if program.voice_stats_type == 'shoutcast':
                     voice_stats_text = requests.get('https://radio.masjedsafa.com/stats?sid=2').text
                     voice_stream_status = int(voice_stats_text[voice_stats_text.find('<STREAMSTATUS>') + 14])
                     if voice_stream_status:
-                        queryset.filter(id=program.id).update(is_voice_active=True)
+                        queryset.filter(pk=program.id).update(is_voice_active=True)
                     else:
-                        queryset.filter(id=program.id).update(is_voice_active=False)
-                        queryset.filter(id=program.id).update(title_in_player='برنامه شروع نشده است')
+                        queryset.filter(pk=program.id).update(is_voice_active=False)
                 else:
                     check_wowza_status('audio')
 
                 # Live video player
                 check_wowza_status('video')
 
-                if queryset.filter(id=program.id).get('is_voice_active') or queryset.filter(id=program.id).get(
-                        'is_video_active'):
-                    queryset.filter(id=program.id).update(isLive=True)
+                if queryset.filter(pk=program.id).get().is_voice_active or queryset.filter(pk=program.id).get().is_video_active:
+                    queryset.filter(pk=program.id).update(isLive=True)
                 else:
-                    queryset.filter(id=program.id).update(isLive=False)
+                    queryset.filter(pk=program.id).update(isLive=False)
 
             queryset.order_by('-isLive')
             serializer = serializers.ProgramSerializer(queryset, context={'request': request}, many=True)
