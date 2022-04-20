@@ -125,7 +125,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-if not DEBUG:
+if not settings.DEBUG:
     STATIC_ROOT = BASE_DIR / 'static'
 else:
     STATICFILES_DIRS = [
