@@ -123,16 +123,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
-if not settings.DEBUG:
+if not DEBUG:
     STATIC_ROOT = BASE_DIR / 'static'
 else:
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'static')
     ]
 
-MEDIA_URL = 'assets/'
+MEDIA_URL = '/assets/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'assets')
 
 # Default primary key field type
@@ -145,7 +145,7 @@ DATETIME_FORMAT = 'N j, Y, G:i:s'
 SHORT_DATETIME_FORMAT = 'm/d/Y G:i:s'
 FIRST_DAY_OF_WEEK = 6
 
-if not settings.DEBUG:
+if not DEBUG:
     SECURE_HSTS_SECONDS = int(os.getenv('SECURE_HSTS_SECONDS'))
     SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('SECURE_HSTS_INCLUDE_SUBDOMAINS', '') != 'False'
     SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', '') != 'False'
