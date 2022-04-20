@@ -54,7 +54,7 @@ class Program(models.Model):
     day_6 = models.BooleanField(default=False, verbose_name='جمعه ها')
     specified_date = ArrayField(models.DateField(null=True, blank=True),
                                 size=10, blank=True, null=True,
-                                help_text='اگر برنامه به صورت مناسبتی برگزار می شود تاریخ آن را وارد نمایید.',
+                                help_text='اگر برنامه به صورت مناسبتی برگزار می شود تاریخ آن را وارد نمایید. (مثال: 01-01-2022)',
                                 verbose_name='تاریخ مشخص (مناسبتی)')
     start_time = models.TimeField(verbose_name='زمان شروع برنامه')
     end_time = models.TimeField(verbose_name='زمان پایان برنامه')
