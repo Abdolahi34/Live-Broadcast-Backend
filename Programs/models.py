@@ -113,7 +113,8 @@ class Program(models.Model):
                 if self.day_0 is False and self.day_1 is False and self.day_2 is False and self.day_3 is False and self.day_4 is False and self.day_5 is False and self.day_6 is False:
                     errors['regularly'] = 'با توجه به اینکه برنامه هفتگی است، حداقل یک روز هفته را انتخاب نمایید.'
                 elif self.day_0 is True and self.day_1 is True and self.day_2 is True and self.day_3 is True and self.day_4 is True and self.day_5 is True and self.day_6 is True:
-                    errors['regularly'] = 'اگر برنامه روزانه است، تیک روزهای هفته را بردارید و به جای گزینه هفتگی، روزانه را انتخاب کنید.'
+                    errors[
+                        'regularly'] = 'اگر برنامه روزانه است، تیک روزهای هفته را بردارید و به جای گزینه هفتگی، روزانه را انتخاب کنید.'
             else:
                 if self.day_0 is True or self.day_1 is True or self.day_2 is True or self.day_3 is True or self.day_4 is True or self.day_5 is True or self.day_6 is True:
                     errors['regularly'] = 'با توجه به اینکه برنامه روزانه است، هیچ روزی را نباید انتخاب نمایید.'
