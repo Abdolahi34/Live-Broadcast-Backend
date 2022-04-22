@@ -8,6 +8,7 @@ class Program(models.Model):
     class Meta:
         verbose_name = 'برنامه'
         verbose_name_plural = 'برنامه ها'
+        ordering = ['-isLive']
 
     datetime_type_choices = (
         ('regular', 'منظم'),
@@ -52,7 +53,7 @@ class Program(models.Model):
     day_4 = models.BooleanField(default=False, verbose_name='چهارشنبه ها')
     day_5 = models.BooleanField(default=False, verbose_name='پنج شنبه ها')
     day_6 = models.BooleanField(default=False, verbose_name='جمعه ها')
-    specified_date = ArrayField(models.DateField(null=True, blank=True),
+    specified_date = ArrayField(models.DateField(blank=True, null=True),
                                 size=10, blank=True, null=True,
                                 help_text='اگر برنامه به صورت مناسبتی برگزار می شود تاریخ آن را وارد نمایید. (مثال: 01-01-2022)',
                                 verbose_name='تاریخ مشخص (مناسبتی)')
@@ -65,6 +66,7 @@ class Program(models.Model):
                                         verbose_name='لینک کلیک روی لوگو')
     player_background = models.ImageField(upload_to='Programs/player_background/',
                                           default='Programs/logo/default_player_background.png',
+                                          blank=True, null=True,
                                           help_text='اندازه تصویر پس زمینه پخش زنده باید 1000*562 باشد.',
                                           verbose_name='تصویر پس زمینه پخش زنده')
     stream_type = models.CharField(max_length=15, choices=stream_type_choices, verbose_name='نوع پخش زنده')

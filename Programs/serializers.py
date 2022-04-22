@@ -47,14 +47,14 @@ class ProgramSerializer(serializers.ModelSerializer):
         return obj.date_display
 
     def get_hours(self, obj):
-        return f"ساعت {obj.start_time} تا {obj.end_time}"
+        return f"ساعت {obj.start_time.hour}:{obj.start_time.minute}"
 
     def get_link(self, obj):
         return obj.logo_onclick_link
 
-    def get_logo(self, queryset):
+    def get_logo(self, obj):
         request = self.context.get('request')
-        logo = queryset.logo.url
+        logo = obj.logo.url
         return request.build_absolute_uri(logo)
 
     def get_isLive(self, obj):

@@ -60,7 +60,6 @@ class ProgramApi(views.APIView):
                 else:
                     queryset.filter(pk=program.id).update(isLive=False)
 
-            queryset.order_by('-isLive')
             serializer = serializers.ProgramSerializer(queryset, context={'request': request}, many=True)
             return response.Response(serializer.data, status=status.HTTP_200_OK)
         except:
