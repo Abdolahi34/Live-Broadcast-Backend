@@ -68,6 +68,10 @@ class ProgramApi(views.APIView):
 
 class MenuApi(views.APIView):
     def get(self, request):
-        queryset = models.Menu.objects.all().order_by('num_order')
-        serializer = serializers.MenuSerializer(queryset, context={'request': request}, many=True)
-        return response.Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            queryset = models.Menu.objects.all()
+            serializer_data = serializers.MenuSerializer(queryset, context={'request': request}, many=True)
+            serializer = {'menuItems': serializer_data.data}
+            return response.Response(serializer, status=status.HTTP_200_OK)
+        except:
+            return HttpResponseServerError()

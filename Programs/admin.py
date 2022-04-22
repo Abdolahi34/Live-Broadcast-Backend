@@ -6,12 +6,18 @@ from Programs import models
 
 @admin.register(models.Menu)
 class MenuAdmin(admin.ModelAdmin):
-    search_fields = ['title', 'page_url']
+    search_fields = ['title', 'page_url', 'creator', 'latest_modifier', 'date_created', 'date_modified']
     list_per_page = 20
-    list_display = ['title', 'page_url', 'num_order']
+    list_display = ['title', 'page_url', 'num_order', 'creator']
     list_editable = ['num_order']
     list_display_links = ['title']
     ordering = ['num_order']
+
+    def save_model(self, request, obj, form, change):
+        if obj.creator_id is None:
+            obj.creator = request.user
+        obj.latest_modifier = request.user
+        super(MenuAdmin, self).save_model(request, obj, form, change)
 
 
 @admin.register(models.Program)

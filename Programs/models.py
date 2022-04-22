@@ -83,9 +83,9 @@ class Program(models.Model):
     video_stats_type = models.CharField(blank=True, null=True, max_length=20, choices=stats_type_choices,
                                         verbose_name='نوع پلتفرم آمار پخش زنده تصویری')
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False, verbose_name='سازنده',
-                                related_name='created_by')
+                                related_name='created_by_program')
     latest_modifier = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False,
-                                        verbose_name='آخرین تغییر دهنده', related_name='last_modified_by')
+                                        verbose_name='آخرین تغییر دهنده', related_name='last_modified_by_program')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
     date_modified = models.DateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
     is_voice_active = models.BooleanField(default=False, editable=False)
@@ -192,10 +192,17 @@ class Menu(models.Model):
     class Meta:
         verbose_name = 'منو'
         verbose_name_plural = 'منو ها'
+        ordering = ['num_order']
 
     title = models.CharField(max_length=20, verbose_name='عنوان')
     page_url = models.URLField(verbose_name='آدرس صفحه')
     num_order = models.PositiveSmallIntegerField(unique=True, verbose_name='ترتیب')
+    creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False, verbose_name='سازنده',
+                                related_name='created_by_menu')
+    latest_modifier = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False,
+                                        verbose_name='آخرین تغییر دهنده', related_name='last_modified_by_menu')
+    date_created = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
+    date_modified = models.DateTimeField(auto_now=True, verbose_name='تاریخ آخرین تغییر')
 
     def __str__(self):
         return self.title
