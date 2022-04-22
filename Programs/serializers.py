@@ -60,103 +60,49 @@ class ProgramSerializer(serializers.ModelSerializer):
     def get_isLive(self, obj):
         if obj.isLive:
             base_datetime = datetime.datetime
-            now_weekday = datetime.datetime.now().isoweekday()
+            start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                                base_datetime.now().day, obj.start_time.hour,
+                                                obj.start_time.minute, obj.start_time.second, 0)
+            end_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
+                                              base_datetime.now().day, obj.end_time.hour,
+                                              obj.end_time.minute, obj.end_time.second, 0)
 
-            if obj.datetime_type == 'regular':
-                '''
-                روز اول هفته در تقویم میلادی دوشنبه در نظر گرفته شده.
-                در تقویم میلادی منظور از کد 0 یکشنبه می باشد.
-                در تقویم شمسی منظور از کد 0 شنبه می باشد.
-                '''
-                if obj.regularly == 'daily':
-                    start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
-                                                        base_datetime.now().day, obj.start_time.hour,
-                                                        obj.start_time.minute, obj.start_time.second, 0)
-                    end_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
-                                                      base_datetime.now().day, obj.start_time.hour,
-                                                      obj.start_time.minute, obj.start_time.second, 0)
-                    if end_time_datetime < base_datetime.now() < start_time_datetime:
-                        return False
-                else:
-                    if obj.day_0:
-                        if now_weekday == 6:
-                            start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
-                                                                base_datetime.now().day, obj.start_time.hour,
-                                                                obj.start_time.minute, obj.start_time.second, 0)
-                            end_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
-                                                              base_datetime.now().day, obj.start_time.hour,
-                                                              obj.start_time.minute, obj.start_time.second, 0)
-                            if end_time_datetime < base_datetime.now() < start_time_datetime:
-                                return False
-                    elif obj.day_1:
-                        if now_weekday == 0:
-                            start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
-                                                                base_datetime.now().day, obj.start_time.hour,
-                                                                obj.start_time.minute, obj.start_time.second, 0)
-                            end_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
-                                                              base_datetime.now().day, obj.start_time.hour,
-                                                              obj.start_time.minute, obj.start_time.second, 0)
-                            if end_time_datetime < base_datetime.now() < start_time_datetime:
-                                return False
-                    elif obj.day_2:
-                        if now_weekday == 1:
-                            start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
-                                                                base_datetime.now().day, obj.start_time.hour,
-                                                                obj.start_time.minute, obj.start_time.second, 0)
-                            end_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
-                                                              base_datetime.now().day, obj.start_time.hour,
-                                                              obj.start_time.minute, obj.start_time.second, 0)
-                            if end_time_datetime < base_datetime.now() < start_time_datetime:
-                                return False
-                    elif obj.day_3:
-                        if now_weekday == 2:
-                            start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
-                                                                base_datetime.now().day, obj.start_time.hour,
-                                                                obj.start_time.minute, obj.start_time.second, 0)
-                            end_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
-                                                              base_datetime.now().day, obj.start_time.hour,
-                                                              obj.start_time.minute, obj.start_time.second, 0)
-                            if end_time_datetime < base_datetime.now() < start_time_datetime:
-                                return False
-                    elif obj.day_4:
-                        if now_weekday == 3:
-                            start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
-                                                                base_datetime.now().day, obj.start_time.hour,
-                                                                obj.start_time.minute, obj.start_time.second, 0)
-                            end_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
-                                                              base_datetime.now().day, obj.start_time.hour,
-                                                              obj.start_time.minute, obj.start_time.second, 0)
-                            if end_time_datetime < base_datetime.now() < start_time_datetime:
-                                return False
-                    elif obj.day_5:
-                        if now_weekday == 4:
-                            start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
-                                                                base_datetime.now().day, obj.start_time.hour,
-                                                                obj.start_time.minute, obj.start_time.second, 0)
-                            end_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
-                                                              base_datetime.now().day, obj.start_time.hour,
-                                                              obj.start_time.minute, obj.start_time.second, 0)
-                            if end_time_datetime < base_datetime.now() < start_time_datetime:
-                                return False
+            if start_time_datetime <= base_datetime.now() <= end_time_datetime:
+                now_weekday = datetime.datetime.now().isoweekday()
+                if obj.datetime_type == 'regular':
+                    '''
+                    روز اول هفته در تقویم میلادی دوشنبه در نظر گرفته شده.
+                    در تقویم میلادی منظور از کد 0 یکشنبه می باشد.
+                    در تقویم شمسی منظور از کد 0 شنبه می باشد.
+                    '''
+                    if obj.regularly == 'daily':
+                        return True
                     else:
-                        if now_weekday == 5:
-                            start_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
-                                                                base_datetime.now().day, obj.start_time.hour,
-                                                                obj.start_time.minute, obj.start_time.second, 0)
-                            end_time_datetime = base_datetime(base_datetime.now().year, base_datetime.now().month,
-                                                              base_datetime.now().day, obj.start_time.hour,
-                                                              obj.start_time.minute, obj.start_time.second, 0)
-                            if end_time_datetime < base_datetime.now() < start_time_datetime:
-                                return False
-            else:
-                is_today = False
-                for specified_date in obj.specified_date:
-                    if base_datetime.now().date() == specified_date:
-                        is_today = True
-                        break
-                if not is_today:
-                    return False
-
+                        if obj.day_0:
+                            if now_weekday == 6:
+                                return True
+                        if obj.day_1:
+                            if now_weekday == 0:
+                                return True
+                        if obj.day_2:
+                            if now_weekday == 1:
+                                return True
+                        if obj.day_3:
+                            if now_weekday == 2:
+                                return True
+                        if obj.day_4:
+                            if now_weekday == 3:
+                                return True
+                        if obj.day_5:
+                            if now_weekday == 4:
+                                return True
+                        if obj.day_6:
+                            if now_weekday == 5:
+                                return True
+                else:
+                    for specified_date in obj.specified_date:
+                        if base_datetime.now().date() == specified_date:
+                            return True
         return False
 
     def get_streams(self, obj):
