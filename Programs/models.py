@@ -110,6 +110,8 @@ class Program(models.Model):
             elif self.regularly == 'weekly':
                 if self.day_0 is False and self.day_1 is False and self.day_2 is False and self.day_3 is False and self.day_4 is False and self.day_5 is False and self.day_6 is False:
                     errors['regularly'] = 'با توجه به اینکه برنامه هفتگی است، حداقل یک روز هفته را انتخاب نمایید.'
+                elif self.day_0 is True and self.day_1 is True and self.day_2 is True and self.day_3 is True and self.day_4 is True and self.day_5 is True and self.day_6 is True:
+                    errors['regularly'] = 'اگر برنامه روزانه است، تیک روزهای هفته را بردارید و به جای گزینه هفتگی، روزانه را انتخاب کنید.'
             else:
                 if self.day_0 is True or self.day_1 is True or self.day_2 is True or self.day_3 is True or self.day_4 is True or self.day_5 is True or self.day_6 is True:
                     errors['regularly'] = 'با توجه به اینکه برنامه روزانه است، هیچ روزی را نباید انتخاب نمایید.'
@@ -133,19 +135,35 @@ class Program(models.Model):
             if self.specified_date is None:
                 errors['specified_date'] = 'با توجه به اینکه برنامه مناسبتی است، باید حداقل یک تاریخ وارد نمایید.'
         if self.stream_type == 'audio':
-            if self.video_link is not None:
-                errors['video_link'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.video_stats_link is not None:
-                errors['video_stats_link'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.video_stats_type is not None:
-                errors['video_stats_type'] = 'این مقدار نمی تواند خالی باشد.'
-        elif self.stream_type == 'video':
-            if self.voice_link is not None:
+            if self.voice_link is None:
                 errors['voice_link'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.voice_stats_link is not None:
+            if self.voice_stats_link is None:
                 errors['voice_stats_link'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.voice_stats_type is not None:
+            if self.voice_stats_type is None:
                 errors['voice_stats_type'] = 'این مقدار نمی تواند خالی باشد.'
+            if self.player_background is None:
+                errors['player_background'] = 'این مقدار نمی تواند خالی باشد.'
+            if self.video_link is not None:
+                errors['video_link'] = 'این مقدار باید خالی باشد.'
+            if self.video_stats_link is not None:
+                errors['video_stats_link'] = 'این مقدار باید خالی باشد.'
+            if self.video_stats_type is not None:
+                errors['video_stats_type'] = 'این مقدار باید خالی باشد.'
+        elif self.stream_type == 'video':
+            if self.video_link is None:
+                errors['video_link'] = 'این مقدار نمی تواند خالی باشد.'
+            if self.video_stats_link is None:
+                errors['video_stats_link'] = 'این مقدار نمی تواند خالی باشد.'
+            if self.video_stats_type is None:
+                errors['video_stats_type'] = 'این مقدار نمی تواند خالی باشد.'
+            if self.voice_link is not None:
+                errors['voice_link'] = 'این مقدار باید خالی باشد.'
+            if self.voice_stats_link is not None:
+                errors['voice_stats_link'] = 'این مقدار باید خالی باشد.'
+            if self.voice_stats_type is not None:
+                errors['voice_stats_type'] = 'این مقدار باید خالی باشد.'
+            if self.player_background is not None:
+                errors['player_background'] = 'پخش زنده تصویری به پس زمینه نیاز ندارد.'
         else:
             if self.voice_link is None:
                 errors['voice_link'] = 'این مقدار نمی تواند خالی باشد.'
@@ -153,6 +171,8 @@ class Program(models.Model):
                 errors['voice_stats_link'] = 'این مقدار نمی تواند خالی باشد.'
             if self.voice_stats_type is None:
                 errors['voice_stats_type'] = 'این مقدار نمی تواند خالی باشد.'
+            if self.player_background is None:
+                errors['player_background'] = 'پخش صوتی به پس زمینه نیاز دارد.'
             if self.video_link is None:
                 errors['video_link'] = 'این مقدار نمی تواند خالی باشد.'
             if self.video_stats_link is None:
