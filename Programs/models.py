@@ -9,6 +9,11 @@ class Program(models.Model):
         verbose_name = 'برنامه'
         verbose_name_plural = 'برنامه ها'
         ordering = ['-isLive']
+    status_choices = (
+        ('publish', 'انتشار'),
+        ('draft', 'پیش نویس'),
+        ('archive', 'آرشیو'),
+    )
 
     datetime_type_choices = (
         ('regular', 'منظم'),
@@ -31,6 +36,7 @@ class Program(models.Model):
         ('wowza', 'Wowza'),
     )
 
+    status = models.CharField(max_length=7, choices=status_choices, verbose_name='وضعیت برنامه')
     title = models.CharField(max_length=50, help_text='تعداد کاراکتر مجاز 50 عدد می باشد.', verbose_name='عنوان')
     description = models.TextField(max_length=250, help_text='تعداد کاراکتر مجاز 250 عدد می باشد.',
                                    verbose_name='توضیحات')
@@ -42,6 +48,8 @@ class Program(models.Model):
                             verbose_name='عنوان در url')
     date_display = models.CharField(max_length=30, help_text='تعداد کاراکتر مجاز 30 عدد می باشد.',
                                     verbose_name='تاریخ نمایش داده شده به کاربر')
+    time_display = models.CharField(max_length=30, help_text='تعداد کاراکتر مجاز 30 عدد می باشد.',
+                                    verbose_name='ساعت نمایش داده شده به کاربر')
     datetime_type = models.CharField(max_length=10, choices=datetime_type_choices, verbose_name='نوع برگزاری برنامه')
     regularly = models.CharField(max_length=6, choices=regularly_choices, blank=True, null=True,
                                  help_text='اگر برنامه به صورت منظم برگزار می شود، روزانه یا هفتگی بودن آن را مشخص کنید.',
@@ -59,6 +67,14 @@ class Program(models.Model):
                                 verbose_name='تاریخ مشخص (مناسبتی)')
     start_time = models.TimeField(verbose_name='زمان شروع برنامه')
     end_time = models.TimeField(verbose_name='زمان پایان برنامه')
+    specified_start_time = ArrayField(models.TimeField(blank=True, null=True),
+                                size=10, blank=True, null=True,
+                                help_text='اگر برنامه به صورت مناسبتی برگزار می شود ساعت شروع آن را وارد نمایید. (مثال: 16:00:00)',
+                                verbose_name='ساعت شروع برنامه مناسبتی')
+    specified_end_time = ArrayField(models.TimeField(blank=True, null=True),
+                                size=10, blank=True, null=True,
+                                help_text='اگر برنامه به صورت مناسبتی برگزار می شود ساعت پایان آن را وارد نمایید. (مثال: 16:00:00)',
+                                verbose_name='ساعت پایان برنامه مناسبتی')
     logo = models.ImageField(upload_to='Programs/logo/', default='Programs/logo/default_logo.png',
                              help_text='اندازه لوگو باید 150x150 باشد.', verbose_name='لوگو')
     logo_onclick_link = models.URLField(default='https://lesansedgh.ir',
