@@ -35,7 +35,7 @@ class ProgramSerializer(serializers.ModelSerializer):
         return obj.slug
 
     def get_title1(self, obj):
-        if not obj.is_voice_active and not obj.is_video_active:
+        if not obj.isLive:
             return 'برنامه شروع نشده است.'
         else:
             return obj.title_in_player
@@ -50,7 +50,7 @@ class ProgramSerializer(serializers.ModelSerializer):
         return f"ساعت {obj.start_time.hour}:{obj.start_time.minute}"
 
     def get_link(self, obj):
-        return obj.logo_onclick_link
+        return obj.logo_link
 
     def get_logo(self, obj):
         request = self.context.get('request')

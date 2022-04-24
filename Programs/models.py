@@ -8,7 +8,7 @@ class Program(models.Model):
     class Meta:
         verbose_name = 'برنامه'
         verbose_name_plural = 'برنامه ها'
-        ordering = ['-isLive']
+
     status_choices = (
         ('publish', 'انتشار'),
         ('draft', 'پیش نویس'),
@@ -61,12 +61,12 @@ class Program(models.Model):
     day_4 = models.BooleanField(default=False, verbose_name='چهارشنبه ها')
     day_5 = models.BooleanField(default=False, verbose_name='پنج شنبه ها')
     day_6 = models.BooleanField(default=False, verbose_name='جمعه ها')
+    start_time = models.TimeField(verbose_name='زمان شروع برنامه منظم')
+    end_time = models.TimeField(verbose_name='زمان پایان برنامه منظم')
     specified_date = ArrayField(models.DateField(blank=True, null=True),
                                 size=10, blank=True, null=True,
                                 help_text='اگر برنامه به صورت مناسبتی برگزار می شود تاریخ آن را وارد نمایید. (مثال: 01-01-2022)',
-                                verbose_name='تاریخ مشخص (مناسبتی)')
-    start_time = models.TimeField(verbose_name='زمان شروع برنامه')
-    end_time = models.TimeField(verbose_name='زمان پایان برنامه')
+                                verbose_name='تاریخ برنامه مناسبتی')
     specified_start_time = ArrayField(models.TimeField(blank=True, null=True),
                                 size=10, blank=True, null=True,
                                 help_text='اگر برنامه به صورت مناسبتی برگزار می شود ساعت شروع آن را وارد نمایید. (مثال: 16:00:00)',
@@ -77,9 +77,9 @@ class Program(models.Model):
                                 verbose_name='ساعت پایان برنامه مناسبتی')
     logo = models.ImageField(upload_to='Programs/logo/', default='Programs/logo/default_logo.png',
                              help_text='اندازه لوگو باید 150x150 باشد.', verbose_name='لوگو')
-    logo_onclick_link = models.URLField(default='https://lesansedgh.ir',
+    logo_link = models.URLField(default='https://lesansedgh.ir',
                                         help_text='تعداد کاراکتر مجاز 200 عدد می باشد.',
-                                        verbose_name='لینک کلیک روی لوگو')
+                                        verbose_name='لینک لوگو')
     player_background = models.ImageField(upload_to='Programs/player_background/',
                                           default='Programs/logo/default_player_background.png',
                                           blank=True, null=True,

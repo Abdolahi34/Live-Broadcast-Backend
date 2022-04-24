@@ -25,7 +25,7 @@ class ProgramAdmin(admin.ModelAdmin, DynamicArrayMixin):
     list_filter = ['datetime_type', 'regularly', 'day_0', 'day_1', 'day_2', 'day_3', 'day_4', 'day_5', 'day_6',
                    'stream_type', 'voice_stats_type', 'video_stats_type']
     search_fields = ['title', 'description', 'title_in_player', 'description_in_player', 'slug', 'date_display',
-                     'specified_date', 'start_time', 'end_time', 'logo_onclick_link', 'voice_link', 'voice_stats_link',
+                     'specified_date', 'start_time', 'end_time', 'logo_link', 'voice_link', 'voice_stats_link',
                      'video_link', 'video_stats_link', 'creator', 'latest_modifier', 'date_created', 'date_modified']
     list_per_page = 20
     list_display = [
