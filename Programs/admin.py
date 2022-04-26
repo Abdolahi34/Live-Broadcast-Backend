@@ -22,19 +22,23 @@ class MenuAdmin(admin.ModelAdmin):
 
 @admin.register(models.Program)
 class ProgramAdmin(admin.ModelAdmin, DynamicArrayMixin):
-    list_filter = ['datetime_type', 'regularly', 'day_0', 'day_1', 'day_2', 'day_3', 'day_4', 'day_5', 'day_6',
-                   'stream_type', 'voice_stats_type', 'video_stats_type']
+    list_filter = ['datetime_type', 'stream_type', 'voice_stats_type', 'video_stats_type', 'day_0', 'day_1', 'day_2',
+                   'day_3', 'day_4', 'day_5', 'day_6', ]
     search_fields = ['title', 'description', 'title_in_player', 'description_in_player', 'slug', 'date_display',
-                     'specified_date', 'start_time', 'end_time', 'logo_link', 'voice_link', 'voice_stats_link',
-                     'video_link', 'video_stats_link', 'creator', 'latest_modifier', 'date_created', 'date_modified']
+                     'time_display', 'start_time_day_0', 'end_time_day_0', 'start_time_day_1', 'end_time_day_1',
+                     'start_time_day_2', 'end_time_day_2', 'start_time_day_3', 'end_time_day_3', 'start_time_day_4',
+                     'end_time_day_4', 'start_time_day_5', 'end_time_day_5', 'start_time_day_6', 'end_time_day_6',
+                     'start_date', 'end_date', 'specified_date', 'specified_start_time', 'specified_end_time',
+                     'logo_link', 'voice_link', 'voice_stats_link', 'video_link', 'video_stats_link',
+                     'creator', 'latest_modifier', 'date_created', 'date_modified']
     list_per_page = 20
     list_display = [
         'title',
         'slug',
         'date_display',
-        'start_time',
-        'end_time',
+        'time_display',
         'stream_type',
+        'status',
         'date_created',
         'creator',
         'date_modified',
@@ -45,5 +49,8 @@ class ProgramAdmin(admin.ModelAdmin, DynamicArrayMixin):
     def save_model(self, request, obj, form, change):
         if obj.creator_id is None:
             obj.creator = request.user
+            # TODO
+            obj.timestamps_weekly = []
+            obj.timestamps_occasional = []
         obj.latest_modifier = request.user
         super(ProgramAdmin, self).save_model(request, obj, form, change)
