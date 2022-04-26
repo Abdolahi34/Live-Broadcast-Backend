@@ -22,7 +22,7 @@ class MenuAdmin(admin.ModelAdmin):
 
 @admin.register(models.Program)
 class ProgramAdmin(admin.ModelAdmin, DynamicArrayMixin):
-    list_filter = ['datetime_type', 'stream_type', 'voice_stats_type', 'video_stats_type', 'day_0', 'day_1', 'day_2',
+    list_filter = ['status', 'datetime_type', 'stream_type', 'voice_stats_type', 'video_stats_type', 'day_0', 'day_1', 'day_2',
                    'day_3', 'day_4', 'day_5', 'day_6', ]
     search_fields = ['title', 'description', 'title_in_player', 'description_in_player', 'slug', 'date_display',
                      'time_display', 'start_time_day_0', 'end_time_day_0', 'start_time_day_1', 'end_time_day_1',
