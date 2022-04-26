@@ -147,7 +147,7 @@ SHORT_DATETIME_FORMAT = 'm/d/Y G:i:s'
 FIRST_DAY_OF_WEEK = 6
 
 CRONJOBS = [
-    ('*/0.5 * * * *', 'Programs.cronjobs.a'),
+    ('*/1 * * * *', 'Programs.cron.program_isLive_check'),
 ]
 
 if not DEBUG:
