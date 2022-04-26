@@ -1,5 +1,4 @@
 from rest_framework import serializers
-import datetime
 
 from Programs import models
 
