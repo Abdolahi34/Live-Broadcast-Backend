@@ -60,7 +60,7 @@ def program_isLive_check():
                 در تقویم میلادی منظور از کد 0 دوشنبه می باشد.
                 در تقویم شمسی منظور از کد 0 شنبه می باشد.
                 """
-                if program.regularly == 'weekly':
+                if program.datetime_type == 'weekly':
                     now_weekday = datetime.datetime.now().weekday()
                     if now_weekday == 5:  # shanbe
                         # barname rooze ghabl ke ta bade 24:00:00 tool mikeshe
