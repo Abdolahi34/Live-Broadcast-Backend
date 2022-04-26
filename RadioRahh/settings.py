@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_better_admin_arrayfield',
+    'django_crontab',
     'Programs',
     'RadioRahh',
 ]
@@ -144,6 +145,10 @@ TIME_FORMAT = 'G:i:s'
 DATETIME_FORMAT = 'N j, Y, G:i:s'
 SHORT_DATETIME_FORMAT = 'm/d/Y G:i:s'
 FIRST_DAY_OF_WEEK = 6
+
+CRONJOBS = [
+    ('*/0.5 * * * *', 'Programs.cronjobs.a'),
+]
 
 if not DEBUG:
     SECURE_HSTS_SECONDS = int(os.getenv('SECURE_HSTS_SECONDS'))
