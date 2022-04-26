@@ -332,7 +332,7 @@ def program_isLive_check():
             if program.is_voice_active or program.is_video_active:
                 queryset.filter(pk=program.pk).update(isLive=True)
             elif program.isLive:
-                if program.error_count == 6:
+                if program.error_count == 3:
                     queryset.filter(pk=program.pk).update(isLive=False)
                     queryset.filter(pk=program.pk).update(error_count=0)
                 else:
