@@ -70,8 +70,10 @@ class Program(models.Model):
     end_time_day_6 = models.TimeField(blank=True, null=True, verbose_name='ساعت پایان برنامه (جمعه ها)')
     start_date = models.DateField(blank=True, null=True, verbose_name='تاریخ شروع برنامه هفتگی')
     end_date = models.DateField(blank=True, null=True, verbose_name='تاریخ پایان برنامه هفتگی')
-    timestamps_start_weekly = ArrayField(models.PositiveBigIntegerField(), editable=False)  # TODO
-    timestamps_end_weekly = ArrayField(models.PositiveBigIntegerField(), editable=False)  # TODO
+    timestamps_start_weekly = ArrayField(models.PositiveBigIntegerField(blank=True, null=True), editable=False,
+                                         blank=True, null=True)  # TODO
+    timestamps_end_weekly = ArrayField(models.PositiveBigIntegerField(blank=True, null=True), editable=False,
+                                       blank=True, null=True)  # TODO
     specified_date = ArrayField(models.DateField(blank=True, null=True),
                                 blank=True, null=True, verbose_name='تاریخ برنامه مناسبتی',
                                 help_text='اگر برنامه به صورت مناسبتی برگزار می شود تاریخ آن را وارد نمایید. (مثال: 01-01-2022)')
@@ -81,8 +83,10 @@ class Program(models.Model):
     specified_end_time = ArrayField(models.TimeField(blank=True, null=True),
                                     blank=True, null=True, verbose_name='ساعت پایان برنامه مناسبتی',
                                     help_text='اگر برنامه به صورت مناسبتی برگزار می شود ساعت پایان آن را وارد نمایید. (مثال: 16:00:00)')
-    timestamps_start_occasional = ArrayField(models.PositiveBigIntegerField(), editable=False)  # TODO
-    timestamps_end_occasional = ArrayField(models.PositiveBigIntegerField(), editable=False)  # TODO
+    timestamps_start_occasional = ArrayField(models.PositiveBigIntegerField(blank=True, null=True), editable=False,
+                                             blank=True, null=True)  # TODO
+    timestamps_end_occasional = ArrayField(models.PositiveBigIntegerField(blank=True, null=True), editable=False,
+                                           blank=True, null=True)  # TODO
     logo = models.ImageField(upload_to='Programs/logo/', help_text='نسبت طول و عرض لوگو باید 1:1 باشد.',
                              verbose_name='لوگو')
     logo_link = models.URLField(default='https://lesansedgh.ir',
@@ -120,55 +124,39 @@ class Program(models.Model):
 
     def clean(self):
         errors = {}
-        logo_ratio = self.logo.height / self.logo.width
-        if logo_ratio != 1:
-            errors[
-                'logo'] = 'نسبت اندازه های لوگو باید 1:1 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
-        if self.logo.size > 256000:
-            errors['logo'] = 'حداکثر اندازه قابل قبول برای لوگو 250Kb است.'
 
-        try:
-            player_background_ratio = self.player_background.height / self.player_background.width
-            if player_background_ratio < 1.76 or player_background_ratio > 1.78:
-                errors[
-                    'player_background'] = 'نسبت اندازه های پس زمینه پخش زنده باید 16:9 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
-            if self.player_background.size > 256000:
-                errors['player_background'] = 'حداکثر اندازه قابل قبول برای پس زمینه پخش زنده 250Kb است.'
-        except:
-            pass
-
-        if self.datetime_type == 'weekly':
-            if self.day_0 is True:
+        def validate_weekly():
+            if self.day_0:
                 if self.start_time_day_0 is None:
                     errors['start_time_day_0'] = 'این مقدار نمی تواند خالی باشد.'
                 if self.end_time_day_0 is None:
                     errors['end_time_day_0'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.day_1 is True:
+            if self.day_1:
                 if self.start_time_day_1 is None:
                     errors['start_time_day_1'] = 'این مقدار نمی تواند خالی باشد.'
                 if self.end_time_day_1 is None:
                     errors['end_time_day_1'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.day_2 is True:
+            if self.day_2:
                 if self.start_time_day_2 is None:
                     errors['start_time_day_2'] = 'این مقدار نمی تواند خالی باشد.'
                 if self.end_time_day_2 is None:
                     errors['end_time_day_2'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.day_3 is True:
+            if self.day_3:
                 if self.start_time_day_3 is None:
                     errors['start_time_day_3'] = 'این مقدار نمی تواند خالی باشد.'
                 if self.end_time_day_3 is None:
                     errors['end_time_day_3'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.day_4 is True:
+            if self.day_4:
                 if self.start_time_day_4 is None:
                     errors['start_time_day_4'] = 'این مقدار نمی تواند خالی باشد.'
                 if self.end_time_day_4 is None:
                     errors['end_time_day_4'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.day_5 is True:
+            if self.day_5:
                 if self.start_time_day_5 is None:
                     errors['start_time_day_5'] = 'این مقدار نمی تواند خالی باشد.'
                 if self.end_time_day_5 is None:
                     errors['end_time_day_5'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.day_6 is True:
+            if self.day_6:
                 if self.start_time_day_6 is None:
                     errors['start_time_day_6'] = 'این مقدار نمی تواند خالی باشد.'
                 if self.end_time_day_6 is None:
@@ -181,6 +169,7 @@ class Program(models.Model):
             if self.end_date is None:
                 errors['end_date'] = 'این مقدار نمی تواند خالی باشد.'
 
+        def validate_weekly_not_occasional():
             if self.specified_date is not None:
                 errors['specified_date'] = 'تاریخ در برنامه های هفتگی نباید وارد شود.'
             if self.specified_start_time is not None:
@@ -188,7 +177,7 @@ class Program(models.Model):
             if self.specified_end_time is not None:
                 errors['specified_end_time'] = 'ساعت در برنامه های هفتگی نباید وارد شود.'
 
-        elif self.datetime_type == 'occasional':
+        def validate_occasional():
             if self.specified_date is None:
                 errors['specified_date'] = 'با توجه به اینکه برنامه مناسبتی است، باید حداقل یک تاریخ وارد نمایید.'
             if self.specified_start_time is None:
@@ -196,6 +185,7 @@ class Program(models.Model):
             if self.specified_end_time is None:
                 errors['specified_end_time'] = 'با توجه به اینکه برنامه مناسبتی است، باید حداقل یک ساعت وارد نمایید.'
 
+        def validate_occasional_not_weekly():
             if self.day_0:
                 errors['day_0'] = 'با توجه به اینکه برنامه مناسبتی است، هیچ روزی را نباید انتخاب نمایید.'
             if self.day_1:
@@ -243,61 +233,7 @@ class Program(models.Model):
             if self.end_date is not None:
                 errors['end_date'] = 'با توجه به اینکه برنامه مناسبتی است، این مقدار باید خالی باشد.'
 
-        else:
-            if self.day_0 is True:
-                if self.start_time_day_0 is None:
-                    errors['start_time_day_0'] = 'این مقدار نمی تواند خالی باشد.'
-                if self.end_time_day_0 is None:
-                    errors['end_time_day_0'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.day_1 is True:
-                if self.start_time_day_1 is None:
-                    errors['start_time_day_1'] = 'این مقدار نمی تواند خالی باشد.'
-                if self.end_time_day_1 is None:
-                    errors['end_time_day_1'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.day_2 is True:
-                if self.start_time_day_2 is None:
-                    errors['start_time_day_2'] = 'این مقدار نمی تواند خالی باشد.'
-                if self.end_time_day_2 is None:
-                    errors['end_time_day_2'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.day_3 is True:
-                if self.start_time_day_3 is None:
-                    errors['start_time_day_3'] = 'این مقدار نمی تواند خالی باشد.'
-                if self.end_time_day_3 is None:
-                    errors['end_time_day_3'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.day_4 is True:
-                if self.start_time_day_4 is None:
-                    errors['start_time_day_4'] = 'این مقدار نمی تواند خالی باشد.'
-                if self.end_time_day_4 is None:
-                    errors['end_time_day_4'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.day_5 is True:
-                if self.start_time_day_5 is None:
-                    errors['start_time_day_5'] = 'این مقدار نمی تواند خالی باشد.'
-                if self.end_time_day_5 is None:
-                    errors['end_time_day_5'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.day_6 is True:
-                if self.start_time_day_6 is None:
-                    errors['start_time_day_6'] = 'این مقدار نمی تواند خالی باشد.'
-                if self.end_time_day_6 is None:
-                    errors['end_time_day_6'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.day_0 is False and self.day_1 is False and self.day_2 is False and self.day_3 is False and self.day_4 is False and self.day_5 is False and self.day_6 is False:
-                errors[
-                    'datetime_type'] = 'با توجه به اینکه برنامه هفتگی_مناسبتی است، حداقل یک روز هفته را انتخاب نمایید.'
-
-            if self.start_date is None:
-                errors['start_date'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.end_date is None:
-                errors['end_date'] = 'این مقدار نمی تواند خالی باشد.'
-
-            if self.specified_date is None:
-                errors['specified_date'] = 'با توجه به اینکه برنامه هفتگی_مناسبتی است، باید حداقل یک تاریخ وارد نمایید.'
-            if self.specified_start_time is None:
-                errors[
-                    'specified_start_time'] = 'با توجه به اینکه برنامه هفتگی_مناسبتی است، باید حداقل یک ساعت وارد نمایید.'
-            if self.specified_end_time is None:
-                errors[
-                    'specified_end_time'] = 'با توجه به اینکه برنامه هفتگی_مناسبتی است، باید حداقل یک ساعت وارد نمایید.'
-
-        if self.stream_type == 'audio':
+        def validate_audio():
             if self.voice_link is None:
                 errors['voice_link'] = 'این مقدار نمی تواند خالی باشد.'
             if self.voice_stats_link is None:
@@ -309,19 +245,24 @@ class Program(models.Model):
                     errors['player_background'] = 'این مقدار نمی تواند خالی باشد.'
             except:
                 errors['player_background'] = 'این مقدار نمی تواند خالی باشد.'
+
+        def validate_audio_not_video():
             if self.video_link is not None:
                 errors['video_link'] = 'این مقدار باید خالی باشد.'
             if self.video_stats_link is not None:
                 errors['video_stats_link'] = 'این مقدار باید خالی باشد.'
             if self.video_stats_type is not None:
                 errors['video_stats_type'] = 'این مقدار باید خالی باشد.'
-        elif self.stream_type == 'video':
+
+        def validate_video():
             if self.video_link is None:
                 errors['video_link'] = 'این مقدار نمی تواند خالی باشد.'
             if self.video_stats_link is None:
                 errors['video_stats_link'] = 'این مقدار نمی تواند خالی باشد.'
             if self.video_stats_type is None:
                 errors['video_stats_type'] = 'این مقدار نمی تواند خالی باشد.'
+
+        def validate_video_not_audio():
             if self.voice_link is not None:
                 errors['voice_link'] = 'این مقدار باید خالی باشد.'
             if self.voice_stats_link is not None:
@@ -333,24 +274,46 @@ class Program(models.Model):
                     errors['player_background'] = 'پخش زنده تصویری به پس زمینه نیاز ندارد.'
             except:
                 errors['player_background'] = 'پخش زنده تصویری به پس زمینه نیاز ندارد.'
+
+        logo_ratio = self.logo.height / self.logo.width
+        if logo_ratio != 1:
+            errors[
+                'logo'] = 'نسبت اندازه های لوگو باید 1:1 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
+        if self.logo.size > 256000:
+            errors['logo'] = 'حداکثر اندازه قابل قبول برای لوگو 250Kb است.'
+
+        try:
+            player_background_ratio = self.player_background.height / self.player_background.width
+            if player_background_ratio < 1.76 or player_background_ratio > 1.78:
+                errors[
+                    'player_background'] = 'نسبت اندازه های پس زمینه پخش زنده باید 16:9 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
+            if self.player_background.size > 256000:
+                errors['player_background'] = 'حداکثر اندازه قابل قبول برای پس زمینه پخش زنده 250Kb است.'
+        except:
+            pass
+
+        if self.datetime_type == 'weekly':
+            validate_weekly()
+            validate_weekly_not_occasional()
+
+        elif self.datetime_type == 'occasional':
+            validate_occasional()
+            validate_occasional_not_weekly()
+
         else:
-            if self.voice_link is None:
-                errors['voice_link'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.voice_stats_link is None:
-                errors['voice_stats_link'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.voice_stats_type is None:
-                errors['voice_stats_type'] = 'این مقدار نمی تواند خالی باشد.'
-            try:
-                if self.player_background is None:
-                    errors['player_background'] = 'پخش صوتی به پس زمینه نیاز دارد.'
-            except:
-                errors['player_background'] = 'پخش صوتی به پس زمینه نیاز دارد.'
-            if self.video_link is None:
-                errors['video_link'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.video_stats_link is None:
-                errors['video_stats_link'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.video_stats_type is None:
-                errors['video_stats_type'] = 'این مقدار نمی تواند خالی باشد.'
+            validate_weekly()
+            validate_occasional()
+
+        if self.stream_type == 'audio':
+            validate_audio()
+            validate_audio_not_video()
+        elif self.stream_type == 'video':
+            validate_video()
+            validate_video_not_audio()
+        else:
+            validate_audio()
+            validate_video()
+
         raise ValidationError(errors)
 
     def save(self, *args, **kwargs):

@@ -7,10 +7,10 @@ from Programs import models
 def program_isLive_check():
     queryset = models.Program.objects.all().filter(status='publish')
 
-    # Specify started and unstarted programs
-    for program in queryset:
-        # Start Check_Stats_Status
-        def check_stats_status():
+    # Start Check_Stats_Status
+    def check_stats_status():
+        global stats_status
+        try:
             if program.voice_stats_type == 'shoutcast':
                 url_var = urlopen('https://radio.masjedsafa.com/stats?sid=2')
                 # We're at the root node (<main tag>)
@@ -50,291 +50,68 @@ def program_isLive_check():
                     else:
                         queryset.filter(pk=program.pk).update(is_video_active=False)
                         program.is_video_active = False
+            stats_status = True
+        except:
+            stats_status = False
 
-        # End Check_Stats_Status
+    # End Check_Stats_Status
 
+    # Specify started and unstarted programs
+    check_stats_status()
+    for program in queryset:
         # Start Check_Time_of_Stream
         def check_stream_time():
-            try:
-                """
-                در تقویم میلادی منظور از کد 0 دوشنبه می باشد.
-                در تقویم شمسی منظور از کد 0 شنبه می باشد.
-                """
-                if program.datetime_type == 'weekly':
-                    now_weekday = datetime.datetime.now().weekday()
-                    if now_weekday == 5:  # shanbe
-                        # barname rooze ghabl ke ta bade 24:00:00 tool mikeshe
-                        if program.day_6:
-                            if program.end_time_day_6 < program.start_time_day_6:
-                                if datetime.datetime.now().time() <= program.end_time_day_6:
-                                    return True
-                        # barname emrooz
-                        if program.day_0:
-                            if program.start_time_day_0 < program.end_time_day_0:
-                                if program.start_time_day_0 <= datetime.datetime.now().time() <= program.end_time_day_0:
-                                    return True
-                            else:
-                                if program.start_time_day_0 <= datetime.datetime.now().time():
-                                    return True
-                    elif now_weekday == 6:  # 1shanbe
-                        # barname rooze ghabl ke ta bade 24:00:00 tool mikeshe
-                        if program.day_0:
-                            if program.end_time_day_0 < program.start_time_day_0:
-                                if datetime.datetime.now().time() <= program.end_time_day_0:
-                                    return True
-                        # barname emrooz
-                        if program.day_1:
-                            if program.start_time_day_1 < program.end_time_day_1:
-                                if program.start_time_day_1 <= datetime.datetime.now().time() <= program.end_time_day_1:
-                                    return True
-                            else:
-                                if program.start_time_day_1 <= datetime.datetime.now().time():
-                                    return True
-                    elif now_weekday == 0:  # 2shanbe
-                        # barname rooze ghabl ke ta bade 24:00:00 tool mikeshe
-                        if program.day_1:
-                            if program.end_time_day_1 < program.start_time_day_1:
-                                if datetime.datetime.now().time() <= program.end_time_day_1:
-                                    return True
-                        # barname emrooz
-                        if program.day_2:
-                            if program.start_time_day_2 < program.end_time_day_2:
-                                if program.start_time_day_2 <= datetime.datetime.now().time() <= program.end_time_day_2:
-                                    return True
-                            else:
-                                if program.start_time_day_2 <= datetime.datetime.now().time():
-                                    return True
-                    elif now_weekday == 1:  # 3shanbe
-                        # barname rooze ghabl ke ta bade 24:00:00 tool mikeshe
-                        if program.day_2:
-                            if program.end_time_day_2 < program.start_time_day_2:
-                                if datetime.datetime.now().time() <= program.end_time_day_2:
-                                    return True
-                        # barname emrooz
-                        if program.day_3:
-                            if program.start_time_day_3 < program.end_time_day_3:
-                                if program.start_time_day_3 <= datetime.datetime.now().time() <= program.end_time_day_3:
-                                    return True
-                            else:
-                                if program.start_time_day_3 <= datetime.datetime.now().time():
-                                    return True
-                    elif now_weekday == 2:  # 4shanbe
-                        # barname rooze ghabl ke ta bade 24:00:00 tool mikeshe
-                        if program.day_3:
-                            if program.end_time_day_3 < program.start_time_day_3:
-                                if datetime.datetime.now().time() <= program.end_time_day_3:
-                                    return True
-                        # barname emrooz
-                        if program.day_4:
-                            if program.start_time_day_4 < program.end_time_day_4:
-                                if program.start_time_day_4 <= datetime.datetime.now().time() <= program.end_time_day_4:
-                                    return True
-                            else:
-                                if program.start_time_day_4 <= datetime.datetime.now().time():
-                                    return True
-                    elif now_weekday == 3:  # 5shanbe
-                        # barname rooze ghabl ke ta bade 24:00:00 tool mikeshe
-                        if program.day_4:
-                            if program.end_time_day_4 < program.start_time_day_4:
-                                if datetime.datetime.now().time() <= program.end_time_day_4:
-                                    return True
-                        # barname emrooz
-                        if program.day_5:
-                            if program.start_time_day_5 < program.end_time_day_5:
-                                if program.start_time_day_5 <= datetime.datetime.now().time() <= program.end_time_day_5:
-                                    return True
-                            else:
-                                if program.start_time_day_5 <= datetime.datetime.now().time():
-                                    return True
-                    else:  # jome
-                        # barname rooze ghabl ke ta bade 24:00:00 tool mikeshe
-                        if program.day_5:
-                            if program.end_time_day_5 < program.start_time_day_5:
-                                if datetime.datetime.now().time() <= program.end_time_day_5:
-                                    return True
-                        # barname emrooz
-                        if program.day_6:
-                            if program.start_time_day_6 < program.end_time_day_6:
-                                if program.start_time_day_6 <= datetime.datetime.now().time() <= program.end_time_day_6:
-                                    return True
-                            else:
-                                if program.start_time_day_6 <= datetime.datetime.now().time():
-                                    return True
-                    return False
-                elif program.datetime_type == 'occasional':
-                    i = 0
-                    while i != -1:
-                        try:
-                            specified_date = program.specified_date[i]
-                            specified_start_time = program.specified_start_time[i]
-                            specified_end_time = program.specified_end_time[i]
-                        except IndexError:
-                            break
-                        if specified_end_time < specified_start_time:
-                            # ghable 24:00:00
-                            if datetime.datetime.now().date() == specified_date:
-                                if specified_start_time <= datetime.datetime.now().time():
-                                    return True
-                            # bade 24:00:00
-                            specified_date += datetime.timedelta(days=1)
-                            if datetime.datetime.now().date() == specified_date:
-                                if datetime.datetime.now().time() <= specified_end_time:
-                                    return True
-                        else:
-                            if datetime.datetime.now().date() == specified_date:
-                                if specified_start_time <= datetime.datetime.now().time() <= specified_end_time:
-                                    return True
+            def check_timestamp(start_timestamp, end_timestamp):
+                i = 0
+                while i != -1:
+                    try:
+                        if start_timestamp[i] <= now_timestamp:
+                            if now_timestamp < end_timestamp[i]:
+                                return True
                         i += 1
-                    return False
+                    except:
+                        return False
+
+            now_timestamp = datetime.datetime.now().timestamp()
+            if program.datetime_type == 'weekly':
+                if check_timestamp(program.timestamps_start_weekly, program.timestamps_end_weekly):
+                    return True
                 else:
-                    # check kardane haftegi
-                    now_weekday = datetime.datetime.now().weekday()
-                    if now_weekday == 5:  # shanbe
-                        # barname rooze ghabl ke ta bade 24:00:00 tool mikeshe
-                        if program.day_6:
-                            if program.end_time_day_6 < program.start_time_day_6:
-                                if datetime.datetime.now().time() <= program.end_time_day_6:
-                                    return True
-                        # barname emrooz
-                        if program.day_0:
-                            if program.start_time_day_0 < program.end_time_day_0:
-                                if program.start_time_day_0 <= datetime.datetime.now().time() <= program.end_time_day_0:
-                                    return True
-                            else:
-                                if program.start_time_day_0 <= datetime.datetime.now().time():
-                                    return True
-                    elif now_weekday == 6:  # 1shanbe
-                        # barname rooze ghabl ke ta bade 24:00:00 tool mikeshe
-                        if program.day_0:
-                            if program.end_time_day_0 < program.start_time_day_0:
-                                if datetime.datetime.now().time() <= program.end_time_day_0:
-                                    return True
-                        # barname emrooz
-                        if program.day_1:
-                            if program.start_time_day_1 < program.end_time_day_1:
-                                if program.start_time_day_1 <= datetime.datetime.now().time() <= program.end_time_day_1:
-                                    return True
-                            else:
-                                if program.start_time_day_1 <= datetime.datetime.now().time():
-                                    return True
-                    elif now_weekday == 0:  # 2shanbe
-                        # barname rooze ghabl ke ta bade 24:00:00 tool mikeshe
-                        if program.day_1:
-                            if program.end_time_day_1 < program.start_time_day_1:
-                                if datetime.datetime.now().time() <= program.end_time_day_1:
-                                    return True
-                        # barname emrooz
-                        if program.day_2:
-                            if program.start_time_day_2 < program.end_time_day_2:
-                                if program.start_time_day_2 <= datetime.datetime.now().time() <= program.end_time_day_2:
-                                    return True
-                            else:
-                                if program.start_time_day_2 <= datetime.datetime.now().time():
-                                    return True
-                    elif now_weekday == 1:  # 3shanbe
-                        # barname rooze ghabl ke ta bade 24:00:00 tool mikeshe
-                        if program.day_2:
-                            if program.end_time_day_2 < program.start_time_day_2:
-                                if datetime.datetime.now().time() <= program.end_time_day_2:
-                                    return True
-                        # barname emrooz
-                        if program.day_3:
-                            if program.start_time_day_3 < program.end_time_day_3:
-                                if program.start_time_day_3 <= datetime.datetime.now().time() <= program.end_time_day_3:
-                                    return True
-                            else:
-                                if program.start_time_day_3 <= datetime.datetime.now().time():
-                                    return True
-                    elif now_weekday == 2:  # 4shanbe
-                        # barname rooze ghabl ke ta bade 24:00:00 tool mikeshe
-                        if program.day_3:
-                            if program.end_time_day_3 < program.start_time_day_3:
-                                if datetime.datetime.now().time() <= program.end_time_day_3:
-                                    return True
-                        # barname emrooz
-                        if program.day_4:
-                            if program.start_time_day_4 < program.end_time_day_4:
-                                if program.start_time_day_4 <= datetime.datetime.now().time() <= program.end_time_day_4:
-                                    return True
-                            else:
-                                if program.start_time_day_4 <= datetime.datetime.now().time():
-                                    return True
-                    elif now_weekday == 3:  # 5shanbe
-                        # barname rooze ghabl ke ta bade 24:00:00 tool mikeshe
-                        if program.day_4:
-                            if program.end_time_day_4 < program.start_time_day_4:
-                                if datetime.datetime.now().time() <= program.end_time_day_4:
-                                    return True
-                        # barname emrooz
-                        if program.day_5:
-                            if program.start_time_day_5 < program.end_time_day_5:
-                                if program.start_time_day_5 <= datetime.datetime.now().time() <= program.end_time_day_5:
-                                    return True
-                            else:
-                                if program.start_time_day_5 <= datetime.datetime.now().time():
-                                    return True
-                    else:  # jome
-                        # barname rooze ghabl ke ta bade 24:00:00 tool mikeshe
-                        if program.day_5:
-                            if program.end_time_day_5 < program.start_time_day_5:
-                                if datetime.datetime.now().time() <= program.end_time_day_5:
-                                    return True
-                        # barname emrooz
-                        if program.day_6:
-                            if program.start_time_day_6 < program.end_time_day_6:
-                                if program.start_time_day_6 <= datetime.datetime.now().time() <= program.end_time_day_6:
-                                    return True
-                            else:
-                                if program.start_time_day_6 <= datetime.datetime.now().time():
-                                    return True
-                    # check kardane monasebati
-                    i = 0
-                    while i != -1:
-                        try:
-                            specified_date = program.specified_date[i]
-                            specified_start_time = program.specified_start_time[i]
-                            specified_end_time = program.specified_end_time[i]
-                        except IndexError:
-                            break
-                        if specified_end_time < specified_start_time:
-                            # ghable 24:00:00
-                            if datetime.datetime.now().date() == specified_date:
-                                if specified_start_time <= datetime.datetime.now().time():
-                                    return True
-                            # bade 24:00:00
-                            specified_date += datetime.timedelta(days=1)
-                            if datetime.datetime.now().date() == specified_date:
-                                if datetime.datetime.now().time() <= specified_end_time:
-                                    return True
-                        else:
-                            if datetime.datetime.now().date() == specified_date:
-                                if specified_start_time <= datetime.datetime.now().time() <= specified_end_time:
-                                    return True
-                        i += 1
                     return False
-            except:
-                return False
+            elif program.datetime_type == 'occasional':
+                if check_timestamp(program.timestamps_start_occasional, program.timestamps_end_occasional):
+                    return True
+                else:
+                    return False
+            else:
+                if check_timestamp(program.timestamps_start_weekly, program.timestamps_end_weekly) or check_timestamp(
+                        program.timestamps_start_occasional, program.timestamps_end_occasional):
+                    return True
+                else:
+                    return False
 
         # End Check_Time_of_Stream
 
-        check_stats_status()
-        stream_time_status = check_stream_time()
-        if not stream_time_status:
-            if program.is_voice_active:
-                queryset.filter(pk=program.pk).update(is_voice_active=False)
-            if program.is_video_active:
-                queryset.filter(pk=program.pk).update(is_video_active=False)
-            if program.isLive:
-                queryset.filter(pk=program.pk).update(isLive=False)
-            if program.error_count != 0:
-                queryset.filter(pk=program.pk).update(error_count=0)
-        else:
-            if program.is_voice_active or program.is_video_active:
-                queryset.filter(pk=program.pk).update(isLive=True)
-            elif program.isLive:
-                if program.error_count == 3:
+        if stats_status:
+            if not check_stream_time():
+                if program.is_voice_active:
+                    queryset.filter(pk=program.pk).update(is_voice_active=False)
+                if program.is_video_active:
+                    queryset.filter(pk=program.pk).update(is_video_active=False)
+                if program.isLive:
                     queryset.filter(pk=program.pk).update(isLive=False)
                     queryset.filter(pk=program.pk).update(error_count=0)
+            else:
+                if program.is_voice_active or program.is_video_active:
+                    queryset.filter(pk=program.pk).update(isLive=True)
+                elif program.isLive:
+                    if program.error_count == 3:
+                        queryset.filter(pk=program.pk).update(isLive=False)
+                        queryset.filter(pk=program.pk).update(error_count=0)
+                    else:
+                        program.error_count += 1
+                        queryset.filter(pk=program.pk).update(error_count=program.error_count)
                 else:
-                    program.error_count += 1
-                    queryset.filter(pk=program.pk).update(error_count=program.error_count)
+                    queryset.filter(pk=program.pk).update(error_count=0)
+        else:
+            break
