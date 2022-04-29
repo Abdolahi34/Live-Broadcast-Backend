@@ -111,7 +111,6 @@ class Program(models.Model):
     is_voice_active = models.BooleanField(default=False, editable=False)
     is_video_active = models.BooleanField(default=False, editable=False)
     isLive = models.BooleanField(default=False, editable=False)
-    error_count = models.PositiveSmallIntegerField(default=0, editable=False)
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False, verbose_name='سازنده',
                                 related_name='created_by_program')
     latest_modifier = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False,

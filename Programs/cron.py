@@ -92,6 +92,15 @@ def program_isLive_check():
 
         # End Check_Time_of_Stream
 
+        def read_error_count():
+            temp_var = open("error_count.txt", "r")
+            return int(temp_var.read())
+
+        def write_error_count(num):
+            temp_var = open("error_count.txt", "w")
+            temp_var.write(num)
+            temp_var.close()
+
         if stats_status:
             if not check_stream_time():
                 if program.is_voice_active:
@@ -100,18 +109,19 @@ def program_isLive_check():
                     queryset.filter(pk=program.pk).update(is_video_active=False)
                 if program.isLive:
                     queryset.filter(pk=program.pk).update(isLive=False)
-                    queryset.filter(pk=program.pk).update(error_count=0)
+                    write_error_count(0)
             else:
                 if program.is_voice_active or program.is_video_active:
                     queryset.filter(pk=program.pk).update(isLive=True)
                 elif program.isLive:
-                    if program.error_count == 3:
+                    file = read_error_count()
+                    if file == 3:
                         queryset.filter(pk=program.pk).update(isLive=False)
-                        queryset.filter(pk=program.pk).update(error_count=0)
+                        write_error_count(0)
                     else:
-                        program.error_count += 1
-                        queryset.filter(pk=program.pk).update(error_count=program.error_count)
+                        file += 1
+                        write_error_count(file)
                 else:
-                    queryset.filter(pk=program.pk).update(error_count=0)
+                    write_error_count(0)
         else:
             break
