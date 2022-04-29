@@ -113,6 +113,7 @@ def program_isLive_check():
             else:
                 if program.is_voice_active or program.is_video_active:
                     queryset.filter(pk=program.pk).update(isLive=True)
+                    write_error_count(0)
                 elif program.isLive:
                     file = read_error_count()
                     if file == 3:
