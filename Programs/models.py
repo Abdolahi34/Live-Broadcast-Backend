@@ -71,9 +71,9 @@ class Program(models.Model):
     start_date = models.DateField(blank=True, null=True, verbose_name='تاریخ شروع برنامه هفتگی')
     end_date = models.DateField(blank=True, null=True, verbose_name='تاریخ پایان برنامه هفتگی')
     timestamps_start_weekly = ArrayField(models.PositiveBigIntegerField(blank=True, null=True), editable=False,
-                                         blank=True, null=True)  # TODO
+                                         blank=True, null=True)
     timestamps_end_weekly = ArrayField(models.PositiveBigIntegerField(blank=True, null=True), editable=False,
-                                       blank=True, null=True)  # TODO
+                                       blank=True, null=True)
     specified_date = ArrayField(models.DateField(blank=True, null=True),
                                 blank=True, null=True, verbose_name='تاریخ برنامه مناسبتی',
                                 help_text='اگر برنامه به صورت مناسبتی برگزار می شود تاریخ آن را وارد نمایید. (مثال: 01-01-2022)')
@@ -84,9 +84,10 @@ class Program(models.Model):
                                     blank=True, null=True, verbose_name='ساعت پایان برنامه مناسبتی',
                                     help_text='اگر برنامه به صورت مناسبتی برگزار می شود ساعت پایان آن را وارد نمایید. (مثال: 16:00:00)')
     timestamps_start_occasional = ArrayField(models.PositiveBigIntegerField(blank=True, null=True), editable=False,
-                                             blank=True, null=True)  # TODO
+                                             blank=True, null=True)
     timestamps_end_occasional = ArrayField(models.PositiveBigIntegerField(blank=True, null=True), editable=False,
-                                           blank=True, null=True)  # TODO
+                                           blank=True, null=True)
+    timestamp_earliest = models.PositiveBigIntegerField(blank=True, null=True, editable=True)
     logo = models.ImageField(upload_to='Programs/logo/', help_text='نسبت طول و عرض لوگو باید 1:1 باشد.',
                              verbose_name='لوگو')
     logo_link = models.URLField(default='https://lesansedgh.ir',
