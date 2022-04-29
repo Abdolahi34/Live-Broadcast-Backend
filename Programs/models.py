@@ -325,7 +325,6 @@ class Menu(models.Model):
     class Meta:
         verbose_name = 'منو'
         verbose_name_plural = 'منو ها'
-        ordering = ['num_order']
 
     title = models.CharField(max_length=20, verbose_name='عنوان')
     page_url = models.URLField(verbose_name='آدرس صفحه')
