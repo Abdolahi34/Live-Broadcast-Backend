@@ -59,7 +59,7 @@ class ProgramAdmin(admin.ModelAdmin, DynamicArrayMixin):
                                                            end_time.second, 0).timestamp()
                     obj.timestamps_start_weekly.append(this_timestamp_start)
                     obj.timestamps_end_weekly.append(this_timestamp_end)
-                    start_date = datetime.timedelta(days=7)
+                    start_date += datetime.timedelta(days=7)
 
             if obj.start_date <= datetime.datetime.now().date():
                 now_weekday = datetime.datetime.now().weekday()
@@ -100,19 +100,19 @@ class ProgramAdmin(admin.ModelAdmin, DynamicArrayMixin):
                     append_days_timestamps_func(now_date, obj.start_time_day_6, obj.end_time_day_6)
             else:
                 if obj.day_0:
-                    append_days_timestamps_func(obj.end_date, obj.start_time_day_0, obj.end_time_day_0)
+                    append_days_timestamps_func(obj.start_date, obj.start_time_day_0, obj.end_time_day_0)
                 if obj.day_1:
-                    append_days_timestamps_func(obj.end_date, obj.start_time_day_1, obj.end_time_day_1)
+                    append_days_timestamps_func(obj.start_date, obj.start_time_day_1, obj.end_time_day_1)
                 if obj.day_2:
-                    append_days_timestamps_func(obj.end_date, obj.start_time_day_2, obj.end_time_day_2)
+                    append_days_timestamps_func(obj.start_date, obj.start_time_day_2, obj.end_time_day_2)
                 if obj.day_3:
-                    append_days_timestamps_func(obj.end_date, obj.start_time_day_3, obj.end_time_day_3)
+                    append_days_timestamps_func(obj.start_date, obj.start_time_day_3, obj.end_time_day_3)
                 if obj.day_4:
-                    append_days_timestamps_func(obj.end_date, obj.start_time_day_4, obj.end_time_day_4)
+                    append_days_timestamps_func(obj.start_date, obj.start_time_day_4, obj.end_time_day_4)
                 if obj.day_5:
-                    append_days_timestamps_func(obj.end_date, obj.start_time_day_5, obj.end_time_day_5)
+                    append_days_timestamps_func(obj.start_date, obj.start_time_day_5, obj.end_time_day_5)
                 if obj.day_6:
-                    append_days_timestamps_func(obj.end_date, obj.start_time_day_6, obj.end_time_day_6)
+                    append_days_timestamps_func(obj.start_date, obj.start_time_day_6, obj.end_time_day_6)
 
         def timestamps_occasional_func():
             i = 0

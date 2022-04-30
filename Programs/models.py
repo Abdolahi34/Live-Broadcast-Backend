@@ -87,7 +87,7 @@ class Program(models.Model):
                                              blank=True, null=True)
     timestamps_end_occasional = ArrayField(models.PositiveBigIntegerField(blank=True, null=True), editable=False,
                                            blank=True, null=True)
-    timestamp_earliest = models.PositiveBigIntegerField(blank=True, null=True, editable=True)
+    timestamp_earliest = models.PositiveBigIntegerField(blank=True, null=True, editable=False)
     logo = models.ImageField(upload_to='Programs/logo/', help_text='نسبت طول و عرض لوگو باید 1:1 باشد.',
                              verbose_name='لوگو')
     logo_link = models.URLField(default='https://lesansedgh.ir',
