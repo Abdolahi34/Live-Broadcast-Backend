@@ -175,7 +175,7 @@ def create_programs_json(request):
         program.save()
 
     # Start Create programs.json
-    file = open("static/programs.json", "w+", encoding="utf-8")  # TODO path
+    file = open("programs.json", "w+", encoding="utf-8")  # TODO path
     url_var = urlopen("http://127.0.0.1:8000/api/v1/programs/").read().decode("utf-8")  # TODO url
     file.write(url_var)
     file.close()
