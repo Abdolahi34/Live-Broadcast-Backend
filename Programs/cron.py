@@ -95,6 +95,7 @@ def create_programs_json():
                 # if file does not exist
                 temp_var = open("error_count.txt", "w")  # TODO path
                 temp_var.write('0')
+                temp_var.close()
                 temp_var = open("error_count.txt", "r")  # TODO path
             return int(temp_var.read())
 
