@@ -9,50 +9,26 @@ def program_isLive_check():
 
     # Start Check_Stats_Status
     def check_stats_status():
-        global stats_status
-        try:
-            if program.voice_stats_type == 'shoutcast':
-                url_var = urlopen('https://radio.masjedsafa.com/stats?sid=2')
-                # We're at the root node (<main tag>)
-                root_node = ET.parse(url_var).getroot()
-                # Find interested in tag
-                voice_stream_status = root_node.find('STREAMSTATUS').text
-                if voice_stream_status == '1':
-                    queryset.filter(pk=program.pk).update(is_voice_active=True)
-                    program.is_voice_active = True
-                else:
-                    queryset.filter(pk=program.pk).update(is_voice_active=False)
-                    program.is_voice_active = False
-            if program.voice_stats_type == 'wowza' or program.video_stats_type == 'wowza':
-                url_var = urlopen(
-                    'https://live.mostadrak.org/v2/servers/_defaultServer_/vhosts/_defaultVHost_/applications/masjed/monitoring/current')
-                # We're at the root node (<main tag>)
-                root_node = ET.parse(url_var).getroot()
-                # We need to go one level below to get (interested in tag)
-                i = 0
-                for tag in root_node.findall('ConnectionCount/entry/long'):
-                    # Get the value of the heading attribute
-                    i += 1
-                    if i == 3:
-                        stream_status = tag.text
-                        break
-                if program.voice_stats_type == 'wowza':
-                    if stream_status == '1':
-                        queryset.filter(pk=program.pk).update(is_voice_active=True)
-                        program.is_voice_active = True
-                    else:
-                        queryset.filter(pk=program.pk).update(is_voice_active=False)
-                        program.is_voice_active = False
-                if program.video_stats_type == 'wowza':
-                    if stream_status == '1':
-                        queryset.filter(pk=program.pk).update(is_video_active=True)
-                        program.is_video_active = True
-                    else:
-                        queryset.filter(pk=program.pk).update(is_video_active=False)
-                        program.is_video_active = False
-            stats_status = True
-        except:
-            stats_status = False
+        global shoutcast_stream_status, wowza_stream_status
+        # try:
+        url_var = urlopen('https://radio.masjedsafa.com/stats?sid=2')
+        # We're at the root node (<main tag>)
+        root_node = ET.parse(url_var).getroot()
+        # Find interested in tag
+        shoutcast_stream_status = root_node.find('STREAMSTATUS').text
+
+        url_var = urlopen(
+            'https://live.mostadrak.org/v2/servers/_defaultServer_/vhosts/_defaultVHost_/applications/masjed/monitoring/current')
+        # We're at the root node (<main tag>)
+        root_node = ET.parse(url_var).getroot()
+        # We need to go one level below to get (interested in tag)
+        i = 1
+        for tag in root_node.findall('ConnectionCount/entry/long'):
+            # Get the value of the heading attribute
+            if i == 3:
+                wowza_stream_status = tag.text
+                break
+            i += 1
 
     # End Check_Stats_Status
 
@@ -101,20 +77,32 @@ def program_isLive_check():
             temp_var.write(num)
             temp_var.close()
 
-        if stats_status:
-            if not check_stream_time():
-                if program.is_voice_active:
-                    queryset.filter(pk=program.pk).update(is_voice_active=False)
-                if program.is_video_active:
-                    queryset.filter(pk=program.pk).update(is_video_active=False)
+        if not check_stream_time():
+            if program.is_voice_active:
+                queryset.filter(pk=program.pk).update(is_voice_active=False)
+            if program.is_video_active:
+                queryset.filter(pk=program.pk).update(is_video_active=False)
+            if program.isLive:
+                queryset.filter(pk=program.pk).update(isLive=False)
+                write_error_count(0)
+        else:
+            if program.voice_stats_type == 'shoutcast' and shoutcast_stream_status == '1':
+                queryset.filter(pk=program.pk).update(is_voice_active=True)
+                program.is_voice_active = True
+            elif program.voice_stats_type == 'wowza' and wowza_stream_status == '1':
+                queryset.filter(pk=program.pk).update(is_voice_active=True)
+                program.is_voice_active = True
+            elif program.is_voice_active:
+                queryset.filter(pk=program.pk).update(is_voice_active=False)
+                program.is_voice_active = False
+            if program.video_stats_type == 'wowza' and wowza_stream_status == '1':
+                queryset.filter(pk=program.pk).update(is_video_active=True)
+                program.is_video_active = True
+            elif program.is_video_active:
+                queryset.filter(pk=program.pk).update(is_video_active=False)
+                program.is_video_active = False
+            if shoutcast_stream_status == '0' and wowza_stream_status == '0':
                 if program.isLive:
-                    queryset.filter(pk=program.pk).update(isLive=False)
-                    write_error_count(0)
-            else:
-                if program.is_voice_active or program.is_video_active:
-                    queryset.filter(pk=program.pk).update(isLive=True)
-                    write_error_count(0)
-                elif program.isLive:
                     file = read_error_count()
                     if file == 3:
                         queryset.filter(pk=program.pk).update(isLive=False)
@@ -124,5 +112,7 @@ def program_isLive_check():
                         write_error_count(file)
                 else:
                     write_error_count(0)
-        else:
-            break
+            else:
+                if not program.isLive:
+                    queryset.filter(pk=program.pk).update(isLive=True)
+                write_error_count(0)
