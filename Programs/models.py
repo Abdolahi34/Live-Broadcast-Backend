@@ -27,8 +27,12 @@ class Program(models.Model):
         ('audio_video', 'صوتی و تصویری'),
     )
 
-    stats_type_choices = (
+    audio_stats_type_choices = (
         ('shoutcast', 'Shoutcast'),
+        ('wowza', 'Wowza'),
+    )
+
+    video_stats_type_choices = (
         ('wowza', 'Wowza'),
     )
 
@@ -101,13 +105,13 @@ class Program(models.Model):
                                  verbose_name='لینک پخش زنده صوتی')
     voice_stats_link = models.URLField(blank=True, null=True, help_text='تعداد کاراکتر مجاز 200 عدد می باشد.',
                                        verbose_name='لینک آمار پخش زنده صوتی')
-    voice_stats_type = models.CharField(blank=True, null=True, max_length=9, choices=stats_type_choices,
+    voice_stats_type = models.CharField(blank=True, null=True, max_length=9, choices=audio_stats_type_choices,
                                         verbose_name='نوع پلتفرم آمار پخش زنده صوتی')
     video_link = models.URLField(blank=True, null=True, help_text='تعداد کاراکتر مجاز 200 عدد می باشد.',
                                  verbose_name='لینک پخش زنده تصویری')
     video_stats_link = models.URLField(blank=True, null=True, help_text='تعداد کاراکتر مجاز 200 عدد می باشد.',
                                        verbose_name='لینک آمار پخش زنده تصویری')
-    video_stats_type = models.CharField(blank=True, null=True, max_length=9, choices=stats_type_choices,
+    video_stats_type = models.CharField(blank=True, null=True, max_length=9, choices=video_stats_type_choices,
                                         verbose_name='نوع پلتفرم آمار پخش زنده تصویری')
     is_voice_active = models.BooleanField(default=False, editable=False)
     is_video_active = models.BooleanField(default=False, editable=False)
