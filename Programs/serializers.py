@@ -64,15 +64,14 @@ class ProgramSerializer(serializers.ModelSerializer):
         if obj.is_voice_active:
             request = self.context.get('request')
             player_background = request.build_absolute_uri(obj.player_background.url)
-
             streams['audio'] = {
                 'url': obj.voice_link,
                 'stats': {
                     'url': obj.voice_stats_link,
                     'type': obj.voice_stats_type
-                }
+                },
+                'image': {'url': player_background}
             }
-            streams['image'] = {'url': player_background}
         if obj.is_video_active:
             streams['video'] = {
                 'url': obj.video_link,
