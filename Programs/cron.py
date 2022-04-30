@@ -4,19 +4,20 @@ from urllib.request import urlopen
 from Programs import models
 
 
-def program_isLive_check():
+def create_programs_json():
     queryset = models.Program.objects.all().filter(status='publish')
 
     # Start Check_Stats_Status
     def check_stats_status():
-        global shoutcast_stream_status, wowza_stream_status
-        # try:
+        # Start Check Shoutcast Stats Status
         url_var = urlopen('https://radio.masjedsafa.com/stats?sid=2')
         # We're at the root node (<main tag>)
         root_node = ET.parse(url_var).getroot()
         # Find interested in tag
         shoutcast_stream_status = root_node.find('STREAMSTATUS').text
+        # End Check Shoutcast Stats Status
 
+        # Start Check Wowza Stats Status
         url_var = urlopen(
             'https://live.mostadrak.org/v2/servers/_defaultServer_/vhosts/_defaultVHost_/applications/masjed/monitoring/current')
         # We're at the root node (<main tag>)
@@ -29,10 +30,12 @@ def program_isLive_check():
                 wowza_stream_status = tag.text
                 break
             i += 1
+        # End Check Wowza Stats Status
 
     # End Check_Stats_Status
 
     # Specify started and unstarted programs
+    shoutcast_stream_status, wowza_stream_status = '0', '0'
     check_stats_status()
     for program in queryset:
         # Start Check_Time_of_Stream
@@ -68,51 +71,80 @@ def program_isLive_check():
 
         # End Check_Time_of_Stream
 
+        # Start Set_Timestamps
+        def set_timestamps():
+            try:
+                if program.datetime_type == 'weekly':
+                    program.timestamp_earliest = min(program.timestamps_start_weekly)
+                elif program.datetime_type == 'occasional':
+                    program.timestamp_earliest = min(program.timestamps_start_occasional)
+                else:
+                    timestamps_weekly_earliest = min(program.timestamps_start_weekly)
+                    timestamps_occasional_earliest = min(program.timestamps_start_occasional)
+                    program.timestamp_earliest = min(timestamps_weekly_earliest, timestamps_occasional_earliest)
+            except:
+                program.timestamp_earliest = []
+
+        # End Set_Timestamps
+
+        # Start work on error_count.txt
         def read_error_count():
-            temp_var = open("error_count.txt", "r")
+            try:
+                temp_var = open("error_count.txt", "r")  # TODO path
+            except:
+                # if file does not exist
+                temp_var = open("error_count.txt", "w")  # TODO path
+                temp_var.write('0')
+                temp_var = open("error_count.txt", "r")  # TODO path
             return int(temp_var.read())
 
         def write_error_count(num):
-            temp_var = open("error_count.txt", "w")
+            temp_var = open("error_count.txt", "w")  # TODO path
             temp_var.write(num)
             temp_var.close()
 
+        # End work on error_count.txt
+
+        set_timestamps()
         if not check_stream_time():
             if program.is_voice_active:
-                queryset.filter(pk=program.pk).update(is_voice_active=False)
+                program.is_voice_active = False
             if program.is_video_active:
-                queryset.filter(pk=program.pk).update(is_video_active=False)
+                program.is_video_active = False
             if program.isLive:
-                queryset.filter(pk=program.pk).update(isLive=False)
-                write_error_count(0)
+                program.isLive = False
+                write_error_count('0')
         else:
             if program.voice_stats_type == 'shoutcast' and shoutcast_stream_status == '1':
-                queryset.filter(pk=program.pk).update(is_voice_active=True)
                 program.is_voice_active = True
             elif program.voice_stats_type == 'wowza' and wowza_stream_status == '1':
-                queryset.filter(pk=program.pk).update(is_voice_active=True)
                 program.is_voice_active = True
             elif program.is_voice_active:
-                queryset.filter(pk=program.pk).update(is_voice_active=False)
                 program.is_voice_active = False
             if program.video_stats_type == 'wowza' and wowza_stream_status == '1':
-                queryset.filter(pk=program.pk).update(is_video_active=True)
                 program.is_video_active = True
             elif program.is_video_active:
-                queryset.filter(pk=program.pk).update(is_video_active=False)
                 program.is_video_active = False
             if shoutcast_stream_status == '0' and wowza_stream_status == '0':
                 if program.isLive:
                     file = read_error_count()
                     if file == 3:
-                        queryset.filter(pk=program.pk).update(isLive=False)
-                        write_error_count(0)
+                        program.isLive = False
+                        write_error_count('0')
                     else:
                         file += 1
-                        write_error_count(file)
+                        write_error_count(str(file))
                 else:
-                    write_error_count(0)
+                    write_error_count('0')
             else:
                 if not program.isLive:
-                    queryset.filter(pk=program.pk).update(isLive=True)
-                write_error_count(0)
+                    program.isLive = True
+                write_error_count('0')
+        program.save()
+
+    # Start Create programs.json
+    file = open("programs.json", "w+", encoding="utf-8")  # TODO path
+    url_var = urlopen('/api/v1/programs/?format=json').read().decode("utf-8")  # TODO url
+    file.write(url_var)
+    file.close()
+    # End Create programs.json
