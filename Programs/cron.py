@@ -7,38 +7,9 @@ from Programs import models
 def create_programs_json():
     queryset = models.Program.objects.all().filter(status='publish')
 
-    # Start Check_Stats_Status
-    def check_stats_status():
-        # Start Check Shoutcast Stats Status
-        url_var = urlopen('https://radio.masjedsafa.com/stats?sid=2')
-        # We're at the root node (<main tag>)
-        root_node = ET.parse(url_var).getroot()
-        # Find interested in tag
-        shoutcast_stream_status = root_node.find('STREAMSTATUS').text
-        # End Check Shoutcast Stats Status
-
-        # Start Check Wowza Stats Status
-        url_var = urlopen(
-            'https://live.mostadrak.org/v2/servers/_defaultServer_/vhosts/_defaultVHost_/applications/masjed/monitoring/current')
-        # We're at the root node (<main tag>)
-        root_node = ET.parse(url_var).getroot()
-        # We need to go one level below to get (interested in tag)
-        i = 1
-        for tag in root_node.findall('ConnectionCount/entry/long'):
-            # Get the value of the heading attribute
-            if i == 3:
-                wowza_stream_status = tag.text
-                break
-            i += 1
-        # End Check Wowza Stats Status
-
-    # End Check_Stats_Status
-
     # Specify started and unstarted programs
-    shoutcast_stream_status, wowza_stream_status = '0', '0'
-    check_stats_status()
     for program in queryset:
-        # Start Check_Time_of_Stream
+        # Start Check Time of Stream
         def check_stream_time():
             def check_timestamp(start_timestamp, end_timestamp):
                 i = 0
@@ -69,10 +40,37 @@ def create_programs_json():
                 else:
                     return False
 
-        # End Check_Time_of_Stream
+        # End Check Time of Stream
+
+        # Start Check Shoutcast Stream Status
+        def check_shoutcast_stream_status(stats_url):
+            url_var = urlopen(stats_url)
+            # We're at the root node (<main tag>)
+            root_node = ET.parse(url_var).getroot()
+            # Find interested in tag
+            shoutcast_status = root_node.find('STREAMSTATUS').text
+            return shoutcast_status
+
+        # End Check Shoutcast Stream Status
+
+        # Start Check Wowza Stream Status
+        def check_wowza_stream_status(stats_url):
+            url_var = urlopen(stats_url)
+            # We're at the root node (<main tag>)
+            root_node = ET.parse(url_var).getroot()
+            # We need to go one level below to get (interested in tag)
+            i = 1
+            for tag in root_node.findall('ConnectionCount/entry/long'):
+                # Get the value of the heading attribute
+                if i == 3:
+                    wowza_status = tag.text
+                    return wowza_status
+                i += 1
+
+        # End Check Wowza Stream Status
 
         # Start Set_Timestamps
-        def set_timestamps():
+        def set_timestamp_earliest():
             try:
                 if program.datetime_type == 'weekly':
                     program.timestamp_earliest = min(program.timestamps_start_weekly)
@@ -106,7 +104,7 @@ def create_programs_json():
 
         # End work on error_count.txt
 
-        set_timestamps()
+        set_timestamp_earliest()
         if not check_stream_time():
             if program.is_voice_active:
                 program.is_voice_active = False
@@ -116,17 +114,27 @@ def create_programs_json():
                 program.isLive = False
                 write_error_count('0')
         else:
-            if program.voice_stats_type == 'shoutcast' and shoutcast_stream_status == '1':
-                program.is_voice_active = True
-            elif program.voice_stats_type == 'wowza' and wowza_stream_status == '1':
-                program.is_voice_active = True
-            elif program.is_voice_active:
-                program.is_voice_active = False
-            if program.video_stats_type == 'wowza' and wowza_stream_status == '1':
-                program.is_video_active = True
-            elif program.is_video_active:
-                program.is_video_active = False
-            if shoutcast_stream_status == '0' and wowza_stream_status == '0':
+            if program.voice_stats_type == 'shoutcast':
+                if check_shoutcast_stream_status(program.voice_stats_link) == '1':
+                    program.is_voice_active = True
+                else:
+                    program.is_voice_active = False
+            elif program.voice_stats_type == 'wowza':
+                if check_wowza_stream_status(program.voice_stats_link) == '1':
+                    program.is_voice_active = True
+                else:
+                    program.is_voice_active = False
+            if program.video_stats_type == 'wowza':
+                if check_wowza_stream_status(program.video_stats_link) == '1':
+                    program.is_video_active = True
+                else:
+                    program.is_video_active = False
+
+            if program.is_voice_active is True or program.is_video_active is True:
+                if not program.isLive:
+                    program.isLive = True
+                write_error_count('0')
+            else:
                 if program.isLive:
                     file = read_error_count()
                     if file == 3:
@@ -135,17 +143,12 @@ def create_programs_json():
                     else:
                         file += 1
                         write_error_count(str(file))
-                else:
-                    write_error_count('0')
-            else:
-                if not program.isLive:
-                    program.isLive = True
-                write_error_count('0')
+                        break
         program.save()
 
     # Start Create programs.json
     file = open("programs.json", "w+", encoding="utf-8")  # TODO path
-    url_var = urlopen('/api/v1/programs/?format=json').read().decode("utf-8")  # TODO url
+    url_var = urlopen("http://127.0.0.1:8000/api/v1/programs/").read().decode("utf-8")  # TODO url
     file.write(url_var)
     file.close()
     # End Create programs.json
