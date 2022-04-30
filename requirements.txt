@@ -3,7 +3,6 @@ certifi==2021.10.8
 charset-normalizer==2.0.12
 Django==3.2.13
 django-better-admin-arrayfield==1.4.2
-django-crontab==0.7.1
 djangorestframework==3.13.1
 idna==3.3
 Pillow==9.1.0
