@@ -116,17 +116,17 @@ def create_programs_json(request):
         # Start work on error_count.txt
         def read_error_count():
             try:
-                temp_var = open("error_count.txt", "r")  # TODO path
+                temp_var = open("Programs/error_count.txt", "r")  # TODO path
             except:
                 # if file does not exist
-                temp_var = open("error_count.txt", "w")  # TODO path
+                temp_var = open("Programs/error_count.txt", "w")  # TODO path
                 temp_var.write('0')
                 temp_var.close()
-                temp_var = open("error_count.txt", "r")  # TODO path
+                temp_var = open("Programs/error_count.txt", "r")  # TODO path
             return int(temp_var.read())
 
         def write_error_count(num):
-            temp_var = open("error_count.txt", "w")  # TODO path
+            temp_var = open("Programs/error_count.txt", "w")  # TODO path
             temp_var.write(num)
             temp_var.close()
 
