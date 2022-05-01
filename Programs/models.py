@@ -244,11 +244,6 @@ class Program(models.Model):
                 errors['voice_stats_link'] = 'این مقدار نمی تواند خالی باشد.'
             if self.voice_stats_type is None:
                 errors['voice_stats_type'] = 'این مقدار نمی تواند خالی باشد.'
-            try:
-                if self.player_background is None:
-                    errors['player_background'] = 'این مقدار نمی تواند خالی باشد.'
-            except:
-                errors['player_background'] = 'این مقدار نمی تواند خالی باشد.'
 
         def validate_audio_not_video():
             if self.video_link is not None:
@@ -273,11 +268,25 @@ class Program(models.Model):
                 errors['voice_stats_link'] = 'این مقدار باید خالی باشد.'
             if self.voice_stats_type is not None:
                 errors['voice_stats_type'] = 'این مقدار باید خالی باشد.'
+
+        def validate_player_background():
             try:
-                if self.player_background is not None:
+                if 0 < self.player_background.height:
+                    player_background_ratio = self.player_background.height / self.player_background.width
+                    if player_background_ratio < 1.76 or 1.78 < player_background_ratio:
+                        errors[
+                            'player_background'] = 'نسبت اندازه های پس زمینه پخش زنده باید 16:9 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
+                    if self.player_background.size > 256000:
+                        errors['player_background'] = 'حداکثر اندازه قابل قبول برای پس زمینه پخش زنده 250Kb است.'
+            except:
+                errors['player_background'] = 'این مقدار نمی تواند خالی باشد.'
+
+        def validate_not_player_background():
+            try:
+                if 0 < self.player_background.height:
                     errors['player_background'] = 'پخش زنده تصویری به پس زمینه نیاز ندارد.'
             except:
-                errors['player_background'] = 'پخش زنده تصویری به پس زمینه نیاز ندارد.'
+                pass
 
         logo_ratio = self.logo.height / self.logo.width
         if logo_ratio != 1:
@@ -285,16 +294,6 @@ class Program(models.Model):
                 'logo'] = 'نسبت اندازه های لوگو باید 1:1 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
         if self.logo.size > 256000:
             errors['logo'] = 'حداکثر اندازه قابل قبول برای لوگو 250Kb است.'
-
-        try:
-            player_background_ratio = self.player_background.height / self.player_background.width
-            if player_background_ratio < 1.76 or player_background_ratio > 1.78:
-                errors[
-                    'player_background'] = 'نسبت اندازه های پس زمینه پخش زنده باید 16:9 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
-            if self.player_background.size > 256000:
-                errors['player_background'] = 'حداکثر اندازه قابل قبول برای پس زمینه پخش زنده 250Kb است.'
-        except:
-            pass
 
         if self.datetime_type == 'weekly':
             validate_weekly()
@@ -310,12 +309,15 @@ class Program(models.Model):
 
         if self.stream_type == 'audio':
             validate_audio()
+            validate_player_background()
             validate_audio_not_video()
         elif self.stream_type == 'video':
             validate_video()
             validate_video_not_audio()
+            validate_not_player_background()
         else:
             validate_audio()
+            validate_player_background()
             validate_video()
 
         raise ValidationError(errors)
