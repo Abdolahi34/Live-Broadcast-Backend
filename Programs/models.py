@@ -136,36 +136,71 @@ class Program(models.Model):
                     errors['start_time_day_0'] = 'این مقدار نمی تواند خالی باشد.'
                 if self.end_time_day_0 is None:
                     errors['end_time_day_0'] = 'این مقدار نمی تواند خالی باشد.'
+            else:
+                if self.start_time_day_0 is not None:
+                    errors['start_time_day_0'] = 'این مقدار باید خالی باشد.'
+                if self.end_time_day_0 is not None:
+                    errors['end_time_day_0'] = 'این مقدار باید خالی باشد.'
             if self.day_1:
                 if self.start_time_day_1 is None:
                     errors['start_time_day_1'] = 'این مقدار نمی تواند خالی باشد.'
                 if self.end_time_day_1 is None:
                     errors['end_time_day_1'] = 'این مقدار نمی تواند خالی باشد.'
+            else:
+                if self.start_time_day_1 is not None:
+                    errors['start_time_day_1'] = 'این مقدار باید خالی باشد.'
+                if self.end_time_day_1 is not None:
+                    errors['end_time_day_1'] = 'این مقدار باید خالی باشد.'
             if self.day_2:
                 if self.start_time_day_2 is None:
                     errors['start_time_day_2'] = 'این مقدار نمی تواند خالی باشد.'
                 if self.end_time_day_2 is None:
                     errors['end_time_day_2'] = 'این مقدار نمی تواند خالی باشد.'
+            else:
+                if self.start_time_day_2 is not None:
+                    errors['start_time_day_2'] = 'این مقدار باید خالی باشد.'
+                if self.end_time_day_2 is not None:
+                    errors['end_time_day_2'] = 'این مقدار باید خالی باشد.'
             if self.day_3:
                 if self.start_time_day_3 is None:
                     errors['start_time_day_3'] = 'این مقدار نمی تواند خالی باشد.'
                 if self.end_time_day_3 is None:
                     errors['end_time_day_3'] = 'این مقدار نمی تواند خالی باشد.'
+            else:
+                if self.start_time_day_3 is not None:
+                    errors['start_time_day_3'] = 'این مقدار باید خالی باشد.'
+                if self.end_time_day_3 is not None:
+                    errors['end_time_day_3'] = 'این مقدار باید خالی باشد.'
             if self.day_4:
                 if self.start_time_day_4 is None:
                     errors['start_time_day_4'] = 'این مقدار نمی تواند خالی باشد.'
                 if self.end_time_day_4 is None:
                     errors['end_time_day_4'] = 'این مقدار نمی تواند خالی باشد.'
+            else:
+                if self.start_time_day_4 is not None:
+                    errors['start_time_day_4'] = 'این مقدار باید خالی باشد.'
+                if self.end_time_day_4 is not None:
+                    errors['end_time_day_4'] = 'این مقدار باید خالی باشد.'
             if self.day_5:
                 if self.start_time_day_5 is None:
                     errors['start_time_day_5'] = 'این مقدار نمی تواند خالی باشد.'
                 if self.end_time_day_5 is None:
                     errors['end_time_day_5'] = 'این مقدار نمی تواند خالی باشد.'
+            else:
+                if self.start_time_day_5 is not None:
+                    errors['start_time_day_5'] = 'این مقدار باید خالی باشد.'
+                if self.end_time_day_5 is not None:
+                    errors['end_time_day_5'] = 'این مقدار باید خالی باشد.'
             if self.day_6:
                 if self.start_time_day_6 is None:
                     errors['start_time_day_6'] = 'این مقدار نمی تواند خالی باشد.'
                 if self.end_time_day_6 is None:
                     errors['end_time_day_6'] = 'این مقدار نمی تواند خالی باشد.'
+            else:
+                if self.start_time_day_6 is not None:
+                    errors['start_time_day_6'] = 'این مقدار باید خالی باشد.'
+                if self.end_time_day_6 is not None:
+                    errors['end_time_day_6'] = 'این مقدار باید خالی باشد.'
             if self.day_0 is False and self.day_1 is False and self.day_2 is False and self.day_3 is False and self.day_4 is False and self.day_5 is False and self.day_6 is False:
                 errors['datetime_type'] = 'با توجه به اینکه برنامه هفتگی است، حداقل یک روز هفته را انتخاب نمایید.'
 
@@ -189,6 +224,15 @@ class Program(models.Model):
                 errors['specified_start_time'] = 'با توجه به اینکه برنامه مناسبتی است، باید حداقل یک ساعت وارد نمایید.'
             if self.specified_end_time is None:
                 errors['specified_end_time'] = 'با توجه به اینکه برنامه مناسبتی است، باید حداقل یک ساعت وارد نمایید.'
+            if len(self.specified_date) != len(self.specified_start_time):
+                errors['specified_date'] = 'در برنامه های مناسبتی تعداد تاریخ و ساعت ها باید یکسان باشد.'
+                errors['specified_start_time'] = 'در برنامه های مناسبتی تعداد تاریخ و ساعت ها باید یکسان باشد.'
+            if len(self.specified_date) != len(self.specified_end_time):
+                errors['specified_date'] = 'در برنامه های مناسبتی تعداد تاریخ و ساعت ها باید یکسان باشد.'
+                errors['specified_end_time'] = 'در برنامه های مناسبتی تعداد تاریخ و ساعت ها باید یکسان باشد.'
+            if len(self.specified_start_time) != len(self.specified_end_time):
+                errors['specified_start_time'] = 'در برنامه های مناسبتی تعداد تاریخ و ساعت ها باید یکسان باشد.'
+                errors['specified_end_time'] = 'در برنامه های مناسبتی تعداد تاریخ و ساعت ها باید یکسان باشد.'
 
         def validate_occasional_not_weekly():
             if self.day_0:
