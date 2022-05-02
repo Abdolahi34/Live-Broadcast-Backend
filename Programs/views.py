@@ -40,15 +40,12 @@ def create_programs_json(request):
         # Start Check Time of Stream
         def check_stream_time():
             def check_timestamp(start_timestamp, end_timestamp):
-                i = 0
-                while i != -1:
-                    try:
-                        if start_timestamp[i] <= now_timestamp:
-                            if now_timestamp < end_timestamp[i]:
-                                return True
-                        i += 1
-                    except:
-                        return False
+                obj_len = len(start_timestamp)
+                for i in range(obj_len):
+                    if start_timestamp[i] <= now_timestamp:
+                        if now_timestamp < end_timestamp[i]:
+                            return True
+                return False
 
             now_timestamp = datetime.datetime.now().timestamp()
             if program.datetime_type == 'weekly':
@@ -77,7 +74,7 @@ def create_programs_json(request):
             root_node = ET.parse(url_var).getroot()
             # Find interested in tag
             shoutcast_status = root_node.find('STREAMSTATUS').text
-            return shoutcast_status
+            return int(shoutcast_status)
 
         # End Check Shoutcast Stream Status
 
@@ -92,7 +89,7 @@ def create_programs_json(request):
                 # Get the value of the heading attribute
                 if i == 3:
                     wowza_status = tag.text
-                    return wowza_status
+                    return int(wowza_status)
                 i += 1
 
         # End Check Wowza Stream Status
@@ -109,7 +106,7 @@ def create_programs_json(request):
                     timestamps_occasional_earliest = min(program.timestamps_start_occasional)
                     program.timestamp_earliest = min(timestamps_weekly_earliest, timestamps_occasional_earliest)
             except:
-                program.timestamp_earliest = []
+                program.timestamp_earliest = None
 
         # End Set_Timestamps
 
@@ -126,6 +123,7 @@ def create_programs_json(request):
             return int(temp_var.read())
 
         def write_error_count(num):
+            num = str(num)
             temp_var = open("Programs/error_count.txt", "w")  # TODO path
             temp_var.write(num)
             temp_var.close()
@@ -140,7 +138,7 @@ def create_programs_json(request):
                 program.is_video_active = False
             if program.isLive:
                 program.isLive = False
-                write_error_count('0')
+                write_error_count(0)
         else:
             if program.voice_stats_type == 'shoutcast':
                 if check_shoutcast_stream_status(program.voice_stats_link) == '1':
@@ -176,8 +174,8 @@ def create_programs_json(request):
 
     # Start Create programs.json
     file = open("static/programs.json", "w+", encoding="utf-8")  # TODO path
-    url_var = urlopen("http://127.0.0.1:8000/api/v1/programs/").read().decode("utf-8")  # TODO url
-    file.write(url_var)
+    json_var = urlopen("http://127.0.0.1:8000/api/v1/programs/").read().decode("utf-8")  # TODO url
+    file.write(json_var)
     file.close()
     # End Create programs.json
 
