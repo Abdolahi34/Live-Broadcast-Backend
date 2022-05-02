@@ -140,36 +140,51 @@ def create_programs_json(request):
                 program.isLive = False
                 write_error_count(0)
         else:
-            if program.voice_stats_type == 'shoutcast':
-                if check_shoutcast_stream_status(program.voice_stats_link) == '1':
-                    program.is_voice_active = True
-                else:
-                    program.is_voice_active = False
-            elif program.voice_stats_type == 'wowza':
-                if check_wowza_stream_status(program.voice_stats_link) == '1':
-                    program.is_voice_active = True
-                else:
-                    program.is_voice_active = False
-            if program.video_stats_type == 'wowza':
-                if check_wowza_stream_status(program.video_stats_link) == '1':
-                    program.is_video_active = True
-                else:
-                    program.is_video_active = False
-
-            if program.is_voice_active is True or program.is_video_active is True:
-                if not program.isLive:
-                    program.isLive = True
-                write_error_count('0')
-            else:
-                if program.isLive:
-                    file = read_error_count()
-                    if file == 3:
-                        program.isLive = False
-                        write_error_count('0')
+            error_count = read_error_count()
+            if error_count == 0:
+                if program.voice_stats_type == 'shoutcast':
+                    if check_shoutcast_stream_status(program.voice_stats_link):
+                        program.is_voice_active = True
                     else:
-                        file += 1
-                        write_error_count(str(file))
-                        break
+                        program.is_voice_active = False
+                elif program.voice_stats_type == 'wowza':
+                    if check_wowza_stream_status(program.voice_stats_link):
+                        program.is_voice_active = True
+                    else:
+                        program.is_voice_active = False
+                if program.video_stats_type == 'wowza':
+                    if check_wowza_stream_status(program.video_stats_link):
+                        program.is_video_active = True
+                    else:
+                        program.is_video_active = False
+                if program.is_voice_active is True or program.is_video_active is True:
+                    program.isLive = True
+                else:
+                    if program.isLive:
+                        write_error_count(1)
+            elif 0 < error_count < 5:
+                if program.voice_stats_type == 'shoutcast':
+                    if check_shoutcast_stream_status(program.voice_stats_link):
+                        program.is_voice_active = True
+                    else:
+                        program.is_voice_active = False
+                elif program.voice_stats_type == 'wowza':
+                    if check_wowza_stream_status(program.voice_stats_link):
+                        program.is_voice_active = True
+                    else:
+                        program.is_voice_active = False
+                if program.video_stats_type == 'wowza':
+                    if check_wowza_stream_status(program.video_stats_link):
+                        program.is_video_active = True
+                    else:
+                        program.is_video_active = False
+                if program.is_voice_active is True or program.is_video_active is True:
+                    write_error_count(0)
+                else:
+                    write_error_count(error_count + 1)
+            elif error_count == 5:
+                program.isLive = False
+                write_error_count(0)
         program.save()
 
     # Start Create programs.json
