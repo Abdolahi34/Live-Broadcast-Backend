@@ -20,7 +20,7 @@ from Programs import models, serializers
 
 class ProgramApi(views.APIView):
     def get(self, request):
-        queryset = models.Program.objects.all().filter(status='publish').order_by('-isLive', 'timestamp_earliest')
+        queryset = models.Program.objects.all().filter(status='publish').order_by('-isLive', '-timestamp_earliest')
         serializer = serializers.ProgramSerializer(queryset, context={'request': request}, many=True)
         return response.Response(serializer.data, status=status.HTTP_200_OK)
 
