@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_better_admin_arrayfield',
     'Programs.apps.ProgramsConfig',
+    'RadioRahh',
 ]
 
 MIDDLEWARE = [
