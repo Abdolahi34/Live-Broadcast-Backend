@@ -185,6 +185,8 @@ def create_programs_json(request):
             elif error_count == 5:
                 program.isLive = False
                 write_error_count(0)
+        if program.timestamp_earliest is None:
+            program.status = 'archive'
         program.save()
 
     # Start Create programs.json
