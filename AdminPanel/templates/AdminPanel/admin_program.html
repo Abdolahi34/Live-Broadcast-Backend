@@ -1,0 +1,139 @@
+{% extends 'Admin/admin_base.html' %}
+
+{% block head %}
+    <script>
+        {% if temp_var == 1 %}
+            alert("برنامه مدنظر شما قبلا حذف شده است.")
+        {% elif temp_var == 2 %}
+            alert("برنامه مدنظر شما با موفقیت حذف شد.")
+        {% endif %}
+        function delete_func(delete_id) {
+            if (confirm('آیا می خواهید این برنامه را حذف کنید؟') == true) {
+                location.replace("{% url 'Admin:program' %}?del_id=" + delete_id)
+            } else {
+                alert("برنامه به در خواست شما حذف نشد.")
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block message %}
+    {% if temp_var == 6 %}
+        <blockquote class="quote-warning">
+            <h5 id="note">توجه !</h5>
+            <p>.برنامه ای وجود ندارد</p>
+        </blockquote>
+        <div class="col-12">
+            <a href="{% url 'Admin:program_add' %}" class="btn btn-info">افزودن برنامه</a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block main_content %}
+    <section class="content">
+        <!-- Default box -->
+        {% if temp_var != 6 %}
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">برنامه ها</h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-striped projects">
+                        <thead>
+                        <tr>
+                            <th>
+                                ردیف
+                            </th>
+                            <th>
+                                عنوان
+                            </th>
+                            <th>
+                                عنوان در url
+                            </th>
+                            <th>
+                                تاریخ
+                            </th>
+                            <th>
+                                زمان شروع
+                            </th>
+                            <th>
+                                زمان پایان
+                            </th>
+                            <th>
+                                محتویات برنامه
+                            </th>
+                            <th>
+                                فعال / غیرفعال
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for program in programs %}
+                            <tr>
+                                <td>
+                                    {{ program.title }}
+                                </td>
+                                <td>
+                                    {{ program.slug }}
+                                </td>
+                                <td>
+                                    {{ program.datetype }}
+                                </td>
+                                <td>
+                                    {{ program.start_time }}
+                                </td>
+                                <td>
+                                    {{ program.end_time }}
+                                </td>
+                                <td>
+                                    {{ program.streams }}
+                                </td>
+                                <td class="project-state">
+                                    {% if program.is_active %}
+                                        <span class="badge badge-success">فعال</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">غیرفعال</span>
+                                    {% endif %}
+                                </td>
+                                <td class="project-actions text-right">
+                                    <a class="btn btn-primary btn-sm" href="{% url 'Admin:program_view' program.id %}">
+                                        <i class="fas fa-folder">
+                                        </i>
+                                        View
+                                    </a>
+                                    <a class="btn btn-info btn-sm" href="{% url 'Admin:program_edit' program.id %}">
+                                        <i class="fas fa-pencil-alt">
+                                        </i>
+                                        Edit
+                                    </a>
+                                    <button class="btn btn-danger btn-sm" onclick="delete_func({{ program.id }})">
+                                        <i class="fas fa-trash">
+                                        </i>
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <a class="btn btn-success btn-sm" href="{% url 'Admin:program_add' %}">
+                <i class="fas fa-plus">
+                </i>
+                افزودن
+            </a>
+        {% endif %}
+        <!-- /.card -->
+    </section>
+{% endblock %}

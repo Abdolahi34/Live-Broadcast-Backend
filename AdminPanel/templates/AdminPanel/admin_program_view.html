@@ -1,0 +1,139 @@
+{% extends 'Admin/admin_base.html' %}
+
+{% block head %}
+    {% if not is_exist %}
+        <script>
+            alert('برنامه مدنظر شما وجود ندارد.')
+            location.replace("{% url 'Admin:program' %}")
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block main_content %}
+    {% if is_exist %}
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">{{ program.title }} اطلاعات برنامه </h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body" style="display: block;">
+                <div class="row">
+                    <!-- program image -->
+                    <div class="user-block">
+                        <img class="img-circle img-bordered-sm" src="{{ program.logo.url }}"
+                             alt="User Image"
+                             style="height: 150px; width: 150px; margin: 10px">
+                    </div>
+                    <!-- /.program image -->
+                    <div class="col-12 col-md-12 col-lg-8 order-2 order-md-1">
+                        <div class="row">
+                            <div class="col-12 col-sm-4">
+                                <div class="info-box bg-light">
+                                    <div class="info-box-content">
+                                        <span class="info-box-text text-center text-muted">ردیف</span>
+                                        <span class="info-box-number text-center text-muted mb-0">{{ program.num_order }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-4">
+                                <div class="info-box bg-light">
+                                    <div class="info-box-content">
+                                        <span class="info-box-text text-center text-muted">سازنده</span>
+                                        <span class="info-box-number text-center text-muted mb-0">{{ program.created_by }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-4">
+                                <div class="info-box bg-light">
+                                    <div class="info-box-content">
+                                        <span class="info-box-text text-center text-muted">تاریخ ایجاد</span>
+                                        <span class="info-box-number text-center text-muted mb-0">{{ program.date_created }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-4">
+                                <div class="info-box bg-light">
+                                    <div class="info-box-content">
+                                        <span class="info-box-text text-center text-muted">آخرین تغییر دهنده</span>
+                                        <span class="info-box-number text-center text-muted mb-0">{{ program.last_modified_by }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-4">
+                                <div class="info-box bg-light">
+                                    <div class="info-box-content">
+                                        <span class="info-box-text text-center text-muted">تاریخ آخرین تغییر</span>
+                                        <span class="info-box-number text-center text-muted mb-0">{{ program.date_modified }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-4">
+                                <div class="info-box bg-light">
+                                    <div class="info-box-content">
+                                        <span class="info-box-text text-center text-muted">فعال / غیرفعال</span>
+                                        {% if program.is_active %}
+                                            <span class="info-box-number text-center text-muted mb-0"
+                                                  style="color: #00d95a !important;">فعال</span>
+                                        {% else %}
+                                            <span class="info-box-number text-center text-muted mb-0"
+                                                  style="color: red !important;">غیرفعال</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="post clearfix" style="margin-left: 20px !important;">
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">عنوان :</span>
+                                        <br> {{ program.title }}
+                                    </p>
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">url عنوان در :</span>
+                                        <br> {{ program.slug }}
+                                    </p>
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">تاریخ :</span>
+                                        <br> {{ program.datetype }}
+                                    </p>
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">زمان شروع :</span>
+                                        <br> {{ program.start_time }}
+                                    </p>
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">زمان پایان :</span>
+                                        <br> {{ program.end_time }}
+                                    </p>
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">لینک کلیک روی لوگو :</span>
+                                        <br> {{ program.logo_onclick_link }}
+                                    </p>
+                                    <p>
+                                        <span style="font-weight: bold">محتویات برنامه :</span>
+                                        <br> {{ program.streams }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <a class="btn btn-info btn-sm" href="{% url 'Admin:program_edit' program.id %}">
+                    <i class="fas fa-pencil-alt">
+                    </i>
+                    ویرایش
+                </a>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    {% endif %}
+{% endblock %}
