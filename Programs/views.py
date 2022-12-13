@@ -63,7 +63,7 @@ def create_programs_json(request):
                 else:
                     if check_timestamp(program.timestamps_start_weekly,
                                        program.timestamps_end_weekly) or check_timestamp(
-                            program.timestamps_start_occasional, program.timestamps_end_occasional):
+                        program.timestamps_start_occasional, program.timestamps_end_occasional):
                         return True
                     else:
                         return False

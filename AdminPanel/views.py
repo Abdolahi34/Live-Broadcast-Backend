@@ -41,9 +41,10 @@ def AdminProgramAdd(request):
         specified_date = None
         specified_start_time = None
         specified_end_time = None
-        args = {'username': get_user(request), 'form': form, 'specified_date': specified_date,
+        is_add = True
+        args = {'username': get_user(request), 'form': form, 'is_add': is_add, 'specified_date': specified_date,
                 'specified_start_time': specified_start_time, 'specified_end_time': specified_end_time}
-        return render(request, 'AdminPanel/admin_program_add.html', args)
+        return render(request, 'AdminPanel/admin_program_add_edit.html', args)
     elif request.method == 'POST':
         is_valid = False
         specified_date = None
@@ -54,13 +55,14 @@ def AdminProgramAdd(request):
             # Set occasional
             list_specified_date = change_data['list_specified_date']
             list_specified_date_splitted = list_specified_date.split(",")
+            list_specified_date_splitted = list(dict.fromkeys(list_specified_date_splitted))
             list_specified_date_removed = change_data['list_specified_date_removed']
             list_specified_date_removed_splitted = list_specified_date_removed.split(",")
+            list_specified_date_removed_splitted = list(dict.fromkeys(list_specified_date_removed_splitted))
             list_specified_date_splitted = [item for item in list_specified_date_splitted if
                                             item not in list_specified_date_removed_splitted]
-            list_specified_date_splitted_noDuplicates = list(dict.fromkeys(list_specified_date_splitted))
             change_data['specified_date'] = []
-            for i in list_specified_date_splitted_noDuplicates:
+            for i in list_specified_date_splitted:
                 try:
                     if change_data[i] != '' and change_data[i] is not None:
                         change_data['specified_date'].append(change_data[i])
@@ -69,13 +71,14 @@ def AdminProgramAdd(request):
 
             list_specified_start_time = change_data['list_specified_start_time']
             list_specified_start_time_splitted = list_specified_start_time.split(",")
+            list_specified_start_time_splitted = list(dict.fromkeys(list_specified_start_time_splitted))
             list_specified_start_time_removed = change_data['list_specified_start_time_removed']
             list_specified_start_time_removed_splitted = list_specified_start_time_removed.split(",")
+            list_specified_start_time_removed_splitted = list(dict.fromkeys(list_specified_start_time_removed_splitted))
             list_specified_start_time_splitted = [item for item in list_specified_start_time_splitted if
                                                   item not in list_specified_start_time_removed_splitted]
-            list_specified_start_time_splitted_noDuplicates = list(dict.fromkeys(list_specified_start_time_splitted))
             change_data['specified_start_time'] = []
-            for i in list_specified_start_time_splitted_noDuplicates:
+            for i in list_specified_start_time_splitted:
                 try:
                     if change_data[i] != '' and change_data[i] is not None:
                         change_data['specified_start_time'].append(change_data[i])
@@ -84,13 +87,14 @@ def AdminProgramAdd(request):
 
             list_specified_end_time = change_data['list_specified_end_time']
             list_specified_end_time_splitted = list_specified_end_time.split(",")
+            list_specified_end_time_splitted = list(dict.fromkeys(list_specified_end_time_splitted))
             list_specified_end_time_removed = change_data['list_specified_end_time_removed']
             list_specified_end_time_removed_splitted = list_specified_end_time_removed.split(",")
+            list_specified_end_time_removed_splitted = list(dict.fromkeys(list_specified_end_time_removed_splitted))
             list_specified_end_time_splitted = [item for item in list_specified_end_time_splitted if
                                                 item not in list_specified_end_time_removed_splitted]
-            list_specified_end_time_splitted_noDuplicates = list(dict.fromkeys(list_specified_end_time_splitted))
             change_data['specified_end_time'] = []
-            for i in list_specified_end_time_splitted_noDuplicates:
+            for i in list_specified_end_time_splitted:
                 try:
                     if change_data[i] != '' and change_data[i] is not None:
                         change_data['specified_end_time'].append(change_data[i])
@@ -138,9 +142,11 @@ def AdminProgramAdd(request):
             specified_date = change_data['specified_date']
             specified_start_time = change_data['specified_start_time']
             specified_end_time = change_data['specified_end_time']
-        args = {'is_valid': is_valid, 'username': get_user(request), 'form': form, 'specified_date': specified_date,
-                'specified_start_time': specified_start_time, 'specified_end_time': specified_end_time}
-        return render(request, 'AdminPanel/admin_program_add.html', args)
+        is_add = True
+        args = {'is_valid': is_valid, 'is_add': is_add, 'username': get_user(request), 'form': form,
+                'specified_date': specified_date, 'specified_start_time': specified_start_time,
+                'specified_end_time': specified_end_time}
+        return render(request, 'AdminPanel/admin_program_add_edit.html', args)
 
 
 @staff_member_required
@@ -165,13 +171,15 @@ def AdminProgramEdit(request, num):
             specified_date = program.specified_date
             specified_start_time = program.specified_start_time
             specified_end_time = program.specified_end_time
-            args = {'username': get_user(request), 'program': program, 'form': form, 'specified_date': specified_date,
-                    'specified_start_time': specified_start_time, 'specified_end_time': specified_end_time}
-            return render(request, 'AdminPanel/admin_program_edit.html', args)
+            is_edit = True
+            args = {'username': get_user(request), 'program': program, 'form': form, 'is_edit': is_edit,
+                    'specified_date': specified_date, 'specified_start_time': specified_start_time,
+                    'specified_end_time': specified_end_time}
+            return render(request, 'AdminPanel/admin_program_add_edit.html', args)
         except:
             is_exist = False
             args = {'is_exist': is_exist}
-            return render(request, 'AdminPanel/admin_program_edit.html', args)
+            return render(request, 'AdminPanel/admin_program_add_edit.html', args)
 
     if request.method == 'POST':
         is_valid = False
@@ -183,13 +191,14 @@ def AdminProgramEdit(request, num):
             # Set occasional
             list_specified_date = change_data['list_specified_date']
             list_specified_date_splitted = list_specified_date.split(",")
+            list_specified_date_splitted = list(dict.fromkeys(list_specified_date_splitted))
             list_specified_date_removed = change_data['list_specified_date_removed']
             list_specified_date_removed_splitted = list_specified_date_removed.split(",")
+            list_specified_date_removed_splitted = list(dict.fromkeys(list_specified_date_removed_splitted))
             list_specified_date_splitted = [item for item in list_specified_date_splitted if
                                             item not in list_specified_date_removed_splitted]
-            list_specified_date_splitted_noDuplicates = list(dict.fromkeys(list_specified_date_splitted))
             change_data['specified_date'] = []
-            for i in list_specified_date_splitted_noDuplicates:
+            for i in list_specified_date_splitted:
                 try:
                     if change_data[i] != '' and change_data[i] is not None:
                         change_data['specified_date'].append(change_data[i])
@@ -198,13 +207,14 @@ def AdminProgramEdit(request, num):
 
             list_specified_start_time = change_data['list_specified_start_time']
             list_specified_start_time_splitted = list_specified_start_time.split(",")
+            list_specified_start_time_splitted = list(dict.fromkeys(list_specified_start_time_splitted))
             list_specified_start_time_removed = change_data['list_specified_start_time_removed']
             list_specified_start_time_removed_splitted = list_specified_start_time_removed.split(",")
+            list_specified_start_time_removed_splitted = list(dict.fromkeys(list_specified_start_time_removed_splitted))
             list_specified_start_time_splitted = [item for item in list_specified_start_time_splitted if
                                                   item not in list_specified_start_time_removed_splitted]
-            list_specified_start_time_splitted_noDuplicates = list(dict.fromkeys(list_specified_start_time_splitted))
             change_data['specified_start_time'] = []
-            for i in list_specified_start_time_splitted_noDuplicates:
+            for i in list_specified_start_time_splitted:
                 try:
                     if change_data[i] != '' and change_data[i] is not None:
                         change_data['specified_start_time'].append(change_data[i])
@@ -213,13 +223,14 @@ def AdminProgramEdit(request, num):
 
             list_specified_end_time = change_data['list_specified_end_time']
             list_specified_end_time_splitted = list_specified_end_time.split(",")
+            list_specified_end_time_splitted = list(dict.fromkeys(list_specified_end_time_splitted))
             list_specified_end_time_removed = change_data['list_specified_end_time_removed']
             list_specified_end_time_removed_splitted = list_specified_end_time_removed.split(",")
+            list_specified_end_time_removed_splitted = list(dict.fromkeys(list_specified_end_time_removed_splitted))
             list_specified_end_time_splitted = [item for item in list_specified_end_time_splitted if
                                                 item not in list_specified_end_time_removed_splitted]
-            list_specified_end_time_splitted_noDuplicates = list(dict.fromkeys(list_specified_end_time_splitted))
             change_data['specified_end_time'] = []
-            for i in list_specified_end_time_splitted_noDuplicates:
+            for i in list_specified_end_time_splitted:
                 try:
                     if change_data[i] != '' and change_data[i] is not None:
                         change_data['specified_end_time'].append(change_data[i])
@@ -256,7 +267,7 @@ def AdminProgramEdit(request, num):
             change_data['specified_date'] = None
             change_data['specified_start_time'] = None
             change_data['specified_end_time'] = None
-        program = models.Program.objects.get(pk=request.POST.get('pk'))
+        program = models.Program.objects.get(pk=num)
         form = forms.AdminAddProgramForm(change_data, request.FILES, instance=program)
         if form.is_valid():
             obj = form.save(commit=False)
@@ -267,10 +278,11 @@ def AdminProgramEdit(request, num):
             specified_date = change_data['specified_date']
             specified_start_time = change_data['specified_start_time']
             specified_end_time = change_data['specified_end_time']
-        args = {'is_valid': is_valid, 'username': get_user(request), 'program': program, 'form': form,
-                'specified_date': specified_date, 'specified_start_time': specified_start_time,
+        is_edit = True
+        args = {'is_valid': is_valid, 'is_edit': is_edit, 'username': get_user(request), 'program': program,
+                'form': form, 'specified_date': specified_date, 'specified_start_time': specified_start_time,
                 'specified_end_time': specified_end_time}
-        return render(request, 'AdminPanel/admin_program_edit.html', args)
+        return render(request, 'AdminPanel/admin_program_add_edit.html', args)
 
 
 @staff_member_required
