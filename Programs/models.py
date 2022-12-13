@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django_better_admin_arrayfield.models.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField
 import datetime
 
 
@@ -19,7 +19,7 @@ class Program(models.Model):
     datetime_type_choices = (
         ('weekly', 'هفتگی'),
         ('occasional', 'مناسبتی'),
-        ('weekly_occasional', 'هفتگی_مناسبتی'),
+        ('weekly_occasional', 'هفتگی - مناسبتی'),
     )
 
     stream_type_choices = (
@@ -28,12 +28,12 @@ class Program(models.Model):
         ('audio_video', 'صوتی و تصویری'),
     )
 
-    audio_stats_type_choices = (
+    audio_platform_type_choices = (
         ('shoutcast', 'Shoutcast'),
         ('wowza', 'Wowza'),
     )
 
-    video_stats_type_choices = (
+    video_platform_type_choices = (
         ('wowza', 'Wowza'),
     )
 
@@ -46,12 +46,16 @@ class Program(models.Model):
     description_in_player = models.TextField(max_length=250, help_text='تعداد کاراکتر مجاز 250 عدد می باشد.',
                                              verbose_name='توضیحات در صفحه پخش زنده')
     slug = models.SlugField(max_length=70, help_text='تعداد کاراکتر مجاز 70 عدد می باشد.', unique=True, db_index=True,
-                            verbose_name='عنوان در url')
+                            verbose_name='Slug')
     date_display = models.CharField(max_length=30, help_text='تعداد کاراکتر مجاز 30 عدد می باشد.',
                                     verbose_name='تاریخ نمایش داده شده به کاربر')
     time_display = models.CharField(max_length=30, help_text='تعداد کاراکتر مجاز 30 عدد می باشد.',
                                     verbose_name='ساعت نمایش داده شده به کاربر')
     datetime_type = models.CharField(max_length=17, choices=datetime_type_choices, verbose_name='نوع برگزاری برنامه')
+    start_date = models.DateField(blank=True, null=True, verbose_name='تاریخ شروع برنامه هفتگی',
+                                  help_text='تاریخ به فرمت (01-01-2022) باید وارد شود')
+    end_date = models.DateField(blank=True, null=True, verbose_name='تاریخ پایان برنامه هفتگی',
+                                help_text='تاریخ به فرمت (01-01-2022) باید وارد شود')
     day_0 = models.BooleanField(default=False, verbose_name='شنبه ها')
     start_time_day_0 = models.TimeField(blank=True, null=True, verbose_name='ساعت شروع برنامه (شنبه ها)')
     end_time_day_0 = models.TimeField(blank=True, null=True, verbose_name='ساعت پایان برنامه (شنبه ها)')
@@ -73,8 +77,6 @@ class Program(models.Model):
     day_6 = models.BooleanField(default=False, verbose_name='جمعه ها')
     start_time_day_6 = models.TimeField(blank=True, null=True, verbose_name='ساعت شروع برنامه (جمعه ها)')
     end_time_day_6 = models.TimeField(blank=True, null=True, verbose_name='ساعت پایان برنامه (جمعه ها)')
-    start_date = models.DateField(blank=True, null=True, verbose_name='تاریخ شروع برنامه هفتگی')
-    end_date = models.DateField(blank=True, null=True, verbose_name='تاریخ پایان برنامه هفتگی')
     timestamps_start_weekly = ArrayField(models.PositiveBigIntegerField(blank=True, null=True), editable=False,
                                          blank=True, null=True)
     timestamps_end_weekly = ArrayField(models.PositiveBigIntegerField(blank=True, null=True), editable=False,
@@ -92,33 +94,34 @@ class Program(models.Model):
                                              blank=True, null=True)
     timestamps_end_occasional = ArrayField(models.PositiveBigIntegerField(blank=True, null=True), editable=False,
                                            blank=True, null=True)
-    timestamp_earliest = models.PositiveBigIntegerField(blank=True, null=True, editable=False)
-    logo = models.ImageField(upload_to='Programs/logo/', help_text='نسبت طول و عرض لوگو باید 1:1 باشد.',
+    timestamp_earliest = models.PositiveBigIntegerField(blank=True, null=True, editable=False, default=0)
+    logo = models.ImageField(upload_to='Programs/logo/',
+                             help_text='نسبت طول و عرض لوگو باید 1:1 باشد. (حداکثر سایز 250KB)',
                              verbose_name='لوگو')
     logo_link = models.URLField(default='https://lesansedgh.ir',
                                 help_text='تعداد کاراکتر مجاز 200 عدد می باشد.',
                                 verbose_name='لینک لوگو')
     player_background = models.ImageField(upload_to='Programs/player_background/', blank=True, null=True,
-                                          help_text='نسبت طول و عرض تصویر پس زمینه پخش زنده باید 16:9 باشد.',
+                                          help_text='نسبت طول و عرض تصویر پس زمینه پخش زنده باید 16:9 باشد. (حداکثر سایز 250KB)',
                                           verbose_name='تصویر پس زمینه پخش زنده')
     stream_type = models.CharField(max_length=11, choices=stream_type_choices, verbose_name='نوع پخش زنده')
-    voice_link = models.URLField(blank=True, null=True, help_text='تعداد کاراکتر مجاز 200 عدد می باشد.',
+    audio_link = models.URLField(blank=True, null=True, help_text='تعداد کاراکتر مجاز 200 عدد می باشد.',
                                  verbose_name='لینک پخش زنده صوتی')
-    voice_stats_link = models.URLField(blank=True, null=True, help_text='تعداد کاراکتر مجاز 200 عدد می باشد.',
+    audio_stats_link = models.URLField(blank=True, null=True, help_text='تعداد کاراکتر مجاز 200 عدد می باشد.',
                                        verbose_name='لینک آمار پخش زنده صوتی')
-    voice_stats_type = models.CharField(blank=True, null=True, max_length=9, choices=audio_stats_type_choices,
-                                        verbose_name='نوع پلتفرم آمار پخش زنده صوتی')
+    audio_platform_type = models.CharField(blank=True, null=True, max_length=9, choices=audio_platform_type_choices,
+                                           verbose_name='نوع پلتفرم پخش زنده صوتی')
     video_link = models.URLField(blank=True, null=True, help_text='تعداد کاراکتر مجاز 200 عدد می باشد.',
                                  verbose_name='لینک پخش زنده تصویری')
     video_stats_link = models.URLField(blank=True, null=True, help_text='تعداد کاراکتر مجاز 200 عدد می باشد.',
                                        verbose_name='لینک آمار پخش زنده تصویری')
-    video_stats_type = models.CharField(blank=True, null=True, max_length=9, choices=video_stats_type_choices,
-                                        verbose_name='نوع پلتفرم آمار پخش زنده تصویری')
-    is_voice_active = models.BooleanField(default=False, editable=False)
+    video_platform_type = models.CharField(blank=True, null=True, max_length=9, choices=video_platform_type_choices,
+                                           verbose_name='نوع پلتفرم پخش زنده تصویری')
+    is_audio_active = models.BooleanField(default=False, editable=False)
     is_video_active = models.BooleanField(default=False, editable=False)
     isLive = models.BooleanField(default=False, editable=False)
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False, verbose_name='سازنده',
-                                related_name='created_by_program')
+                                related_name='creator_program')
     latest_modifier = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False,
                                         verbose_name='آخرین تغییر دهنده', related_name='last_modified_by_program')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
@@ -210,11 +213,11 @@ class Program(models.Model):
                 errors['end_date'] = 'این مقدار نمی تواند خالی باشد.'
 
         def validate_weekly_not_occasional():
-            if self.specified_date is not None:
+            if self.specified_date:
                 errors['specified_date'] = 'تاریخ در برنامه های هفتگی نباید وارد شود.'
-            if self.specified_start_time is not None:
+            if self.specified_start_time:
                 errors['specified_start_time'] = 'ساعت در برنامه های هفتگی نباید وارد شود.'
-            if self.specified_end_time is not None:
+            if self.specified_end_time:
                 errors['specified_end_time'] = 'ساعت در برنامه های هفتگی نباید وارد شود.'
 
         def validate_occasional():
@@ -283,36 +286,36 @@ class Program(models.Model):
                 errors['end_date'] = 'با توجه به اینکه برنامه مناسبتی است، این مقدار باید خالی باشد.'
 
         def validate_audio():
-            if self.voice_link is None:
-                errors['voice_link'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.voice_stats_link is None:
-                errors['voice_stats_link'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.voice_stats_type is None:
-                errors['voice_stats_type'] = 'این مقدار نمی تواند خالی باشد.'
+            if self.audio_link is None:
+                errors['audio_link'] = 'این مقدار نمی تواند خالی باشد.'
+            if self.audio_stats_link is None:
+                errors['audio_stats_link'] = 'این مقدار نمی تواند خالی باشد.'
+            if self.audio_platform_type is None:
+                errors['audio_platform_type'] = 'این مقدار نمی تواند خالی باشد.'
 
         def validate_audio_not_video():
             if self.video_link is not None:
                 errors['video_link'] = 'این مقدار باید خالی باشد.'
             if self.video_stats_link is not None:
                 errors['video_stats_link'] = 'این مقدار باید خالی باشد.'
-            if self.video_stats_type is not None:
-                errors['video_stats_type'] = 'این مقدار باید خالی باشد.'
+            if self.video_platform_type is not None:
+                errors['video_platform_type'] = 'این مقدار باید خالی باشد.'
 
         def validate_video():
             if self.video_link is None:
                 errors['video_link'] = 'این مقدار نمی تواند خالی باشد.'
             if self.video_stats_link is None:
                 errors['video_stats_link'] = 'این مقدار نمی تواند خالی باشد.'
-            if self.video_stats_type is None:
-                errors['video_stats_type'] = 'این مقدار نمی تواند خالی باشد.'
+            if self.video_platform_type is None:
+                errors['video_platform_type'] = 'این مقدار نمی تواند خالی باشد.'
 
         def validate_video_not_audio():
-            if self.voice_link is not None:
-                errors['voice_link'] = 'این مقدار باید خالی باشد.'
-            if self.voice_stats_link is not None:
-                errors['voice_stats_link'] = 'این مقدار باید خالی باشد.'
-            if self.voice_stats_type is not None:
-                errors['voice_stats_type'] = 'این مقدار باید خالی باشد.'
+            if self.audio_link is not None:
+                errors['audio_link'] = 'این مقدار باید خالی باشد.'
+            if self.audio_stats_link is not None:
+                errors['audio_stats_link'] = 'این مقدار باید خالی باشد.'
+            if self.audio_platform_type is not None:
+                errors['audio_platform_type'] = 'این مقدار باید خالی باشد.'
 
         def validate_player_background():
             try:
@@ -320,7 +323,7 @@ class Program(models.Model):
                     player_background_ratio = self.player_background.height / self.player_background.width
                     if player_background_ratio < 1.76 or 1.78 < player_background_ratio:
                         errors[
-                            'player_background'] = 'نسبت اندازه های پس زمینه پخش زنده باید 16:9 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
+                            'player_background'] = 'نسبت اندازه های پس زمینه پخش زنده باید 9:16 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
                     if self.player_background.size > 256000:
                         errors['player_background'] = 'حداکثر اندازه قابل قبول برای پس زمینه پخش زنده 250Kb است.'
             except:
@@ -472,11 +475,11 @@ class Menu(models.Model):
         verbose_name = 'منو'
         verbose_name_plural = 'منو ها'
 
-    title = models.CharField(max_length=20, verbose_name='عنوان')
+    title = models.CharField(max_length=20, verbose_name='عنوان', help_text='تعداد کاراکتر مجاز 20 عدد می باشد')
     page_url = models.URLField(verbose_name='آدرس صفحه')
     num_order = models.PositiveSmallIntegerField(unique=True, verbose_name='ترتیب')
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False, verbose_name='سازنده',
-                                related_name='created_by_menu')
+                                related_name='creator_menu')
     latest_modifier = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False,
                                         verbose_name='آخرین تغییر دهنده', related_name='last_modified_by_menu')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')

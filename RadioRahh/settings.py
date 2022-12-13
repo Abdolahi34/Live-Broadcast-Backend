@@ -41,8 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'django_better_admin_arrayfield',
+    'widget_tweaks',
     'Programs.apps.ProgramsConfig',
+    'AdminPanel.apps.AdminPanelConfig',
     'RadioRahh',
 ]
 

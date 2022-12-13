@@ -21,7 +21,9 @@ from django.conf import settings
 
 urlpatterns = [
     path('api/', include('Programs.urls-api')),
-    path('admin/', admin.site.urls, name='admin'),
+    path('admin/', include('AdminPanel.urls')),
+    path('admin2/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 
 handler403 = 'RadioRahh.views.status_code_403_forbidden'
@@ -30,3 +32,7 @@ handler500 = 'RadioRahh.views.status_code_500_internal_server_error'
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+admin.site.site_header = 'پیشخوان مدیریت سایت راه'
+admin.site.site_title = 'پیشخوان مدیریت سایت راه'
+admin.site.index_title = 'پیشخوان مدیریت'
