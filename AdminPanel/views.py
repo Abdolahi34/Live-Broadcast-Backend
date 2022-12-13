@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth import get_user
 from django.contrib.admin.views.decorators import staff_member_required
+import os
 
 from Programs import models
 
@@ -272,6 +273,14 @@ def AdminProgramEdit(request, num):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.last_modified_by = request.user
+            # remove old logo
+            logo_path = program.logo.path
+            if os.path.exists(logo_path):
+                os.remove(logo_path)
+            # remove old player_background
+            player_background_path = program.player_background.path
+            if os.path.exists(player_background_path):
+                os.remove(player_background_path)
             obj.save()
             is_valid = True
         else:
