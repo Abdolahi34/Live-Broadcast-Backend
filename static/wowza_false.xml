@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CurrentApplicationStatistics serverName="_defaultServer_">
-  <h>masjed</h>
   <Uptime>0</Uptime>
   <BytesIn>0</BytesIn>
   <BytesOut>0</BytesOut>
@@ -8,37 +7,13 @@
   <BytesOutRate>0</BytesOutRate>
   <TotalConnections>0</TotalConnections>
   <ConnectionCount>
-    <entry>
-      <string>WEBM</string>
-      <long>0</long>
-    </entry>
-    <entry>
-      <string>DVRCHUNKS</string>
-      <long>0</long>
-    </entry>
-    <entry>
-      <string>RTMP</string>
-      <long>0</long>
-    </entry>
-    <entry>
-      <string>MPEGDASH</string>
-      <long>0</long>
-    </entry>
-    <entry>
-      <string>CUPERTINO</string>
-      <long>0</long>
-    </entry>
-    <entry>
-      <string>SANJOSE</string>
-      <long>0</long>
-    </entry>
-    <entry>
-      <string>SMOOTH</string>
-      <long>0</long>
-    </entry>
-    <entry>
-      <string>RTP</string>
-      <long>0</long>
-    </entry>
+    <WEBM>0</WEBM>
+    <DVRCHUNKS>0</DVRCHUNKS>
+    <RTMP>0</RTMP>
+    <MPEGDASH>0</MPEGDASH>
+    <CUPERTINO>0</CUPERTINO>
+    <SANJOSE>0</SANJOSE>
+    <SMOOTH>0</SMOOTH>
+    <RTP>0</RTP>
   </ConnectionCount>
 </CurrentApplicationStatistics>
