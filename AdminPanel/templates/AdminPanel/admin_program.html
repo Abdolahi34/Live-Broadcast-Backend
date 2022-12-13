@@ -1,15 +1,16 @@
-{% extends 'Admin/admin_base.html' %}
+{% extends 'AdminPanel/admin_base.html' %}
 
 {% block head %}
     <script>
-        {% if temp_var == 1 %}
-            alert("برنامه مدنظر شما قبلا حذف شده است.")
-        {% elif temp_var == 2 %}
+        {% if is_exist is False %}
+            alert("برنامه مدنظر شما وجود ندارد.")
+        {% endif %}
+        {% if is_deleted is True %}
             alert("برنامه مدنظر شما با موفقیت حذف شد.")
         {% endif %}
         function delete_func(delete_id) {
-            if (confirm('آیا می خواهید این برنامه را حذف کنید؟') == true) {
-                location.replace("{% url 'Admin:program' %}?del_id=" + delete_id)
+            if (confirm('آیا می خواهید این برنامه را حذف کنید؟')) {
+                location.replace("{% url 'AdminPanel:admin_panel_program' %}?delete_id=" + delete_id)
             } else {
                 alert("برنامه به در خواست شما حذف نشد.")
             }
@@ -18,13 +19,13 @@
 {% endblock %}
 
 {% block message %}
-    {% if temp_var == 6 %}
+    {% if program_null is True %}
         <blockquote class="quote-warning">
             <h5 id="note">توجه !</h5>
             <p>.برنامه ای وجود ندارد</p>
         </blockquote>
         <div class="col-12">
-            <a href="{% url 'Admin:program_add' %}" class="btn btn-info">افزودن برنامه</a>
+            <a href="{% url 'AdminPanel:admin_panel_program_add' %}" class="btn btn-info">افزودن برنامه</a>
         </div>
     {% endif %}
 {% endblock %}
@@ -32,7 +33,7 @@
 {% block main_content %}
     <section class="content">
         <!-- Default box -->
-        {% if temp_var != 6 %}
+        {% if program_null is False %}
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">برنامه ها</h3>
@@ -41,84 +42,92 @@
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                             <i class="fas fa-minus"></i>
                         </button>
-                        <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                            <i class="fas fa-times"></i>
-                        </button>
                     </div>
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-striped projects">
                         <thead>
                         <tr>
-                            <th>
-                                ردیف
-                            </th>
-                            <th>
+                            <th style="text-align: center; direction: rtl">
                                 عنوان
                             </th>
-                            <th>
-                                عنوان در url
+                            <th style="text-align: center; direction: rtl">
+                                Slug
                             </th>
-                            <th>
+                            <th style="text-align: center; direction: rtl">
                                 تاریخ
                             </th>
-                            <th>
-                                زمان شروع
+                            <th style="text-align: center; direction: rtl">
+                                زمان
                             </th>
-                            <th>
-                                زمان پایان
+                            <th style="text-align: center; direction: rtl">
+                                نوع پخش زنده
                             </th>
-                            <th>
-                                محتویات برنامه
+                            <th style="text-align: center; direction: rtl">
+                                وضعیت
                             </th>
-                            <th>
-                                فعال / غیرفعال
+                            <th style="text-align: center; direction: rtl">
+                                آخرین تغییر دهنده
                             </th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for program in programs %}
                             <tr>
-                                <td>
+                                <td style="text-align: center; direction: rtl">
                                     {{ program.title }}
                                 </td>
-                                <td>
+                                <td style="text-align: center; direction: rtl">
                                     {{ program.slug }}
                                 </td>
-                                <td>
-                                    {{ program.datetype }}
+                                <td style="text-align: center; direction: rtl">
+                                    {{ program.date_display }}
                                 </td>
-                                <td>
-                                    {{ program.start_time }}
+                                <td style="text-align: center; direction: rtl">
+                                    {{ program.time_display }}
                                 </td>
-                                <td>
-                                    {{ program.end_time }}
-                                </td>
-                                <td>
-                                    {{ program.streams }}
-                                </td>
-                                <td class="project-state">
-                                    {% if program.is_active %}
-                                        <span class="badge badge-success">فعال</span>
-                                    {% else %}
-                                        <span class="badge badge-danger">غیرفعال</span>
+                                <td style="text-align: center; direction: rtl">
+                                    {% if program.stream_type == 'audio' %}
+                                        صوتی
+                                    {% elif program.stream_type == 'video' %}
+                                        تصویری
+                                    {% elif program.stream_type == 'audio_video' %}
+                                        صوتی و تصویری
                                     {% endif %}
                                 </td>
-                                <td class="project-actions text-right">
-                                    <a class="btn btn-primary btn-sm" href="{% url 'Admin:program_view' program.id %}">
+                                <td class="project-state" style="text-align: center; direction: rtl">
+                                    {% if program.status == 'publish' %}
+                                        <span class="badge badge-success">انتشار</span>
+                                    {% elif program.status == 'draft' %}
+                                        <span class="badge badge-warning">آرشیو</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">آرشیو</span>
+                                    {% endif %}
+                                </td>
+                                <td style="text-align: center">
+                                    {{ program.latest_modifier }}
+                                </td>
+                                <td class="project-actions text-right" style="text-align: center; direction: rtl">
+                                    <a class="btn btn-primary btn-sm"
+                                       href="{% url 'AdminPanel:admin_panel_program_view' program.pk %}">
                                         <i class="fas fa-folder">
                                         </i>
-                                        View
+                                        مشاهده
                                     </a>
-                                    <a class="btn btn-info btn-sm" href="{% url 'Admin:program_edit' program.id %}">
+                                </td>
+                                <td class="project-actions text-right" style="text-align: center; direction: rtl">
+                                    <a class="btn btn-info btn-sm"
+                                       href="{% url 'AdminPanel:admin_panel_program_edit' program.pk %}">
                                         <i class="fas fa-pencil-alt">
                                         </i>
-                                        Edit
+                                        ویرایش
                                     </a>
-                                    <button class="btn btn-danger btn-sm" onclick="delete_func({{ program.id }})">
+                                </td>
+                                <td class="project-actions text-right" style="text-align: center; direction: rtl">
+                                    <button class="btn btn-danger btn-sm" onclick="delete_func({{ program.pk }})">
                                         <i class="fas fa-trash">
                                         </i>
-                                        Delete
+                                        حذف
                                     </button>
                                 </td>
                             </tr>
@@ -128,7 +137,7 @@
                 </div>
                 <!-- /.card-body -->
             </div>
-            <a class="btn btn-success btn-sm" href="{% url 'Admin:program_add' %}">
+            <a class="btn btn-success btn-sm" href="{% url 'AdminPanel:admin_panel_program_add' %}">
                 <i class="fas fa-plus">
                 </i>
                 افزودن

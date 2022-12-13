@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>کپی کردن برنامه</title>
+    <script>
+        {% if is_exist is False %}
+            alert('برنامه مدنظر شما وجود ندارد.');
+            location.replace("{% url 'AdminPanel:admin_panel_program' %}");
+        {% endif %}
+        {% if is_copy is True %}
+            alert('برنامه مدنظر شما کپی شد.');
+            location.replace("{% url 'AdminPanel:admin_panel_program' %}");
+        {% endif %}
+    </script>
+</head>
+<body>
+
+</body>
+</html>

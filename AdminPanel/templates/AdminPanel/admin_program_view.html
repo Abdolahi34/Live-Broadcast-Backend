@@ -1,139 +1,390 @@
-{% extends 'Admin/admin_base.html' %}
+{% extends 'AdminPanel/admin_base.html' %}
 
 {% block head %}
-    {% if not is_exist %}
+    {% if is_exist is False %}
         <script>
-            alert('برنامه مدنظر شما وجود ندارد.')
-            location.replace("{% url 'Admin:program' %}")
+            alert('برنامه مدنظر شما وجود ندارد.');
+            location.replace("{% url 'AdminPanel:admin_panel_program' %}");
         </script>
     {% endif %}
 {% endblock %}
 
 {% block main_content %}
-    {% if is_exist %}
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">{{ program.title }} اطلاعات برنامه </h3>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title" style="direction: rtl">{{ program.title }} اطلاعات برنامه </h3>
 
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
             </div>
-            <div class="card-body" style="display: block;">
-                <div class="row">
-                    <!-- program image -->
-                    <div class="user-block">
-                        <img class="img-circle img-bordered-sm" src="{{ program.logo.url }}"
-                             alt="User Image"
-                             style="height: 150px; width: 150px; margin: 10px">
-                    </div>
-                    <!-- /.program image -->
-                    <div class="col-12 col-md-12 col-lg-8 order-2 order-md-1">
-                        <div class="row">
-                            <div class="col-12 col-sm-4">
-                                <div class="info-box bg-light">
-                                    <div class="info-box-content">
-                                        <span class="info-box-text text-center text-muted">ردیف</span>
-                                        <span class="info-box-number text-center text-muted mb-0">{{ program.num_order }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-4">
-                                <div class="info-box bg-light">
-                                    <div class="info-box-content">
-                                        <span class="info-box-text text-center text-muted">سازنده</span>
-                                        <span class="info-box-number text-center text-muted mb-0">{{ program.created_by }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-4">
-                                <div class="info-box bg-light">
-                                    <div class="info-box-content">
-                                        <span class="info-box-text text-center text-muted">تاریخ ایجاد</span>
-                                        <span class="info-box-number text-center text-muted mb-0">{{ program.date_created }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-4">
-                                <div class="info-box bg-light">
-                                    <div class="info-box-content">
-                                        <span class="info-box-text text-center text-muted">آخرین تغییر دهنده</span>
-                                        <span class="info-box-number text-center text-muted mb-0">{{ program.last_modified_by }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-4">
-                                <div class="info-box bg-light">
-                                    <div class="info-box-content">
-                                        <span class="info-box-text text-center text-muted">تاریخ آخرین تغییر</span>
-                                        <span class="info-box-number text-center text-muted mb-0">{{ program.date_modified }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-4">
-                                <div class="info-box bg-light">
-                                    <div class="info-box-content">
-                                        <span class="info-box-text text-center text-muted">فعال / غیرفعال</span>
-                                        {% if program.is_active %}
-                                            <span class="info-box-number text-center text-muted mb-0"
-                                                  style="color: #00d95a !important;">فعال</span>
-                                        {% else %}
-                                            <span class="info-box-number text-center text-muted mb-0"
-                                                  style="color: red !important;">غیرفعال</span>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="post clearfix" style="margin-left: 20px !important;">
-                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
-                                        <span style="font-weight: bold">عنوان :</span>
-                                        <br> {{ program.title }}
-                                    </p>
-                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
-                                        <span style="font-weight: bold">url عنوان در :</span>
-                                        <br> {{ program.slug }}
-                                    </p>
-                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
-                                        <span style="font-weight: bold">تاریخ :</span>
-                                        <br> {{ program.datetype }}
-                                    </p>
-                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
-                                        <span style="font-weight: bold">زمان شروع :</span>
-                                        <br> {{ program.start_time }}
-                                    </p>
-                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
-                                        <span style="font-weight: bold">زمان پایان :</span>
-                                        <br> {{ program.end_time }}
-                                    </p>
-                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
-                                        <span style="font-weight: bold">لینک کلیک روی لوگو :</span>
-                                        <br> {{ program.logo_onclick_link }}
-                                    </p>
-                                    <p>
-                                        <span style="font-weight: bold">محتویات برنامه :</span>
-                                        <br> {{ program.streams }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <a class="btn btn-info btn-sm" href="{% url 'Admin:program_edit' program.id %}">
-                    <i class="fas fa-pencil-alt">
-                    </i>
-                    ویرایش
-                </a>
-            </div>
-            <!-- /.card-body -->
         </div>
-    {% endif %}
+        <div class="card-body" style="display: block;">
+            <div class="row">
+                <!-- program image -->
+                <div class="user-block">
+                    <img class="img-circle img-bordered-sm" src="{{ program.logo.url }}"
+                         alt="Logo"
+                         style="height: 150px; width: 150px; margin: 10px">
+                    <br>
+                    <img class="img-circle img-bordered-sm" src="{{ program.player_background.url }}"
+                         alt="Player Background"
+                         style="height: 150px; width: 150px; margin: 10px">
+                </div>
+                <!-- /.program image -->
+                <div class="col-12 col-md-12 col-lg-8 order-2 order-md-1">
+                    <div class="row">
+                        <div class="col-12 col-sm-4">
+                            <div class="info-box bg-light">
+                                <div class="info-box-content">
+                                    <span class="info-box-text text-center text-muted">وضعیت</span>
+                                    {% if program.status == 'publish' %}
+                                        <span class="info-box-number text-center text-muted mb-0"
+                                              style="color: #00ff00 !important;">انتشار</span>
+                                    {% elif program.status == 'draft' %}
+                                        <span class="info-box-number text-center text-muted mb-0"
+                                              style="color: #ffff00 !important;">پیش نویس</span>
+                                    {% else %}
+                                        <span class="info-box-number text-center text-muted mb-0"
+                                              style="color: #ff0000 !important;">آرشیو</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <div class="info-box bg-light">
+                                <div class="info-box-content">
+                                    <span class="info-box-text text-center text-muted">عنوان</span>
+                                    <span class="info-box-number text-center text-muted mb-0"
+                                          style="direction: rtl">{{ program.title }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <div class="info-box bg-light">
+                                <div class="info-box-content">
+                                    <span class="info-box-text text-center text-muted">Slug</span>
+                                    <span class="info-box-number text-center text-muted mb-0">{{ program.slug }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <div class="info-box bg-light">
+                                <div class="info-box-content">
+                                    <span class="info-box-text text-center text-muted">تاریخ نمایشی</span>
+                                    <span class="info-box-number text-center text-muted mb-0"
+                                          style="direction: rtl">{{ program.date_display }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <div class="info-box bg-light">
+                                <div class="info-box-content">
+                                    <span class="info-box-text text-center text-muted">زمان نمایشی</span>
+                                    <span class="info-box-number text-center text-muted mb-0"
+                                          style="direction: rtl">{{ program.time_display }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <div class="info-box bg-light">
+                                <div class="info-box-content">
+                                    <span class="info-box-text text-center text-muted">آخرین تغییر دهنده</span>
+                                    <span class="info-box-number text-center text-muted mb-0">{{ program.date_modified }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="post clearfix" style="margin-left: 20px !important;">
+                                <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                    <span style="font-weight: bold">توضیحات :</span>
+                                    <br> {{ program.description }}
+                                </p>
+                                <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                    <span style="font-weight: bold">عنوان در صفحه پخش زنده :</span>
+                                    <br> {{ program.title_in_player }}
+                                </p>
+                                <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                    <span style="font-weight: bold">توضیحات در صفحه پخش زنده :</span>
+                                    <br> {{ program.description_in_player }}
+                                </p>
+                                <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                    <span style="font-weight: bold">نوع برگزاری برنامه :</span>
+                                    <br>
+                                    {% if program.datetime_type == 'weekly' %}
+                                        هفتگی
+                                    {% elif program.datetime_type == 'occasional' %}
+                                        مناسبتی
+                                    {% else %}
+                                        هفتگی - مناسبتی
+                                    {% endif %}
+                                </p>
+                                <div id="div_weekly" style="display: none">
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">تاریخ شروع برنامه هفتگی :</span>
+                                        <br> {{ program.start_date }}
+                                    </p>
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">تاریخ پایان برنامه هفتگی :</span>
+                                        <br> {{ program.end_date }}
+                                    </p>
+                                    <div id="div_id_day_0" style="display: none">
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">شنبه ها : </span>
+                                            <input type="checkbox" id="day_0" value="{{ program.day_0 }}"
+                                                   disabled="disabled">
+                                        </p>
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">ساعت شروع برنامه (شنبه ها) :</span>
+                                            <br> {{ program.start_time_day_0 }}
+                                        </p>
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">ساعت پایان برنامه (شنبه ها) :</span>
+                                            <br> {{ program.end_time_day_0 }}
+                                        </p>
+                                    </div>
+                                    <div id="div_id_day_1" style="display: none">
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">یکشنبه ها : </span>
+                                            <input type="checkbox" id="day_1" value="{{ program.day_1 }}"
+                                                   disabled="disabled">
+                                        </p>
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">ساعت شروع برنامه (یکشنبه ها) :</span>
+                                            <br> {{ program.start_time_day_1 }}
+                                        </p>
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">ساعت پایان برنامه (یکشنبه ها) :</span>
+                                            <br> {{ program.end_time_day_1 }}
+                                        </p>
+                                    </div>
+                                    <div id="div_id_day_2" style="display: none">
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">دوشنبه ها : </span>
+                                            <input type="checkbox" id="day_2" value="{{ program.day_2 }}"
+                                                   disabled="disabled">
+                                        </p>
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">ساعت شروع برنامه (دوشنبه ها) :</span>
+                                            <br> {{ program.start_time_day_2 }}
+                                        </p>
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">ساعت پایان برنامه (دوشنبه ها) :</span>
+                                            <br> {{ program.end_time_day_2 }}
+                                        </p>
+                                    </div>
+                                    <div id="div_id_day_3" style="display: none">
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">سه شنبه ها : </span>
+                                            <input type="checkbox" id="day_3" value="{{ program.day_3 }}"
+                                                   disabled="disabled">
+                                        </p>
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">ساعت شروع برنامه (سه شنبه ها) :</span>
+                                            <br> {{ program.start_time_day_3 }}
+                                        </p>
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">ساعت پایان برنامه (سه شنبه ها) :</span>
+                                            <br> {{ program.end_time_day_3 }}
+                                        </p>
+                                    </div>
+                                    <div id="div_id_day_4" style="display: none">
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">چهارشنبه ها : </span>
+                                            <input type="checkbox" id="day_4" value="{{ program.day_4 }}"
+                                                   disabled="disabled">
+                                        </p>
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">ساعت شروع برنامه (چهارشنبه ها) :</span>
+                                            <br> {{ program.start_time_day_4 }}
+                                        </p>
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">ساعت پایان برنامه (چهارشنبه ها) :</span>
+                                            <br> {{ program.end_time_day_4 }}
+                                        </p>
+                                    </div>
+                                    <div id="div_id_day_5" style="display: none">
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">پنجشنبه ها : </span>
+                                            <input type="checkbox" id="day_5" value="{{ program.day_5 }}"
+                                                   disabled="disabled">
+                                        </p>
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">ساعت شروع برنامه (پنجشنبه ها) :</span>
+                                            <br> {{ program.start_time_day_5 }}
+                                        </p>
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">ساعت پایان برنامه (پنجشنبه ها) :</span>
+                                            <br> {{ program.end_time_day_5 }}
+                                        </p>
+                                    </div>
+                                    <div id="div_id_day_6" style="display: none">
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">جمعه ها : </span>
+                                            <input type="checkbox" id="day_6" value="{{ program.day_6 }}"
+                                                   disabled="disabled">
+                                        </p>
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">ساعت شروع برنامه (جمعه ها) :</span>
+                                            <br> {{ program.start_time_day_6 }}
+                                        </p>
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">ساعت پایان برنامه (جمعه ها) :</span>
+                                            <br> {{ program.end_time_day_6 }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div id="div_occasional" style="display: none">
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">تاریخ برنامه مناسبتی :</span>
+                                        {% for this_program in program.specified_date %}
+                                            <br> {{ this_program }}
+                                        {% endfor %}
+                                    </p>
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">ساعت شروع برنامه مناسبتی :</span>
+                                        {% for this_program in program.specified_start_time %}
+                                            <br> {{ this_program }}
+                                        {% endfor %}
+                                    </p>
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">ساعت پایان برنامه مناسبتی :</span>
+                                        {% for this_program in program.specified_end_time %}
+                                            <br> {{ this_program }}
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                                <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                    <span style="font-weight: bold">لینک لوگو :</span>
+                                    <br> {{ program.logo_link }}
+                                </p>
+                                <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                    <span style="font-weight: bold">نوع پخش زنده :</span>
+                                    <br>
+                                    {% if program.stream_type == 'audio' %}
+                                        صوتی
+                                    {% elif program.datetime_type == 'video' %}
+                                        تصویری
+                                    {% else %}
+                                        صوتی و تصویری
+                                    {% endif %}
+                                </p>
+                                <div id="div_audio" style="display: none">
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">لینک پخش زنده صوتی :</span>
+                                        <br> {{ program.audio_link }}
+                                    </p>
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">لینک آمار پخش زنده صوتی :</span>
+                                        <br> {{ program.audio_stats_link }}
+                                    </p>
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">نوع پلتفرم پخش زنده صوتی :</span>
+                                        <br> {{ program.audio_platform_type }}
+                                    </p>
+                                </div>
+                                <div id="div_video" style="display: none">
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">لینک پخش زنده تصویری :</span>
+                                        <br> {{ program.video_link }}
+                                    </p>
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">لینک آمار پخش زنده تصویری :</span>
+                                        <br> {{ program.video_stats_link }}
+                                    </p>
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">نوع پلتفرم پخش زنده تصویری :</span>
+                                        <br> {{ program.video_platform_type }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a class="btn btn-warning" style="margin-right: 5px"
+               href="{% url 'AdminPanel:admin_panel_program_edit' program.pk %}">
+                <i class="fas fa-pencil-alt">
+                </i>
+                ویرایش
+            </a>
+            <a class="btn btn-secondary"
+               href="{% url 'AdminPanel:admin_panel_program_duplicate' program.pk %}">
+                <i class="fas fa-copy">
+                </i>
+                کپی
+            </a>
+        </div>
+        <!-- /.card-body -->
+    </div>
+{% endblock %}
+{% block body_script %}
+    <script>
+        {#datetime_type#}
+        if ('{{ program.datetime_type }}' == 'weekly') {
+            {#Show weekly#}
+            weekly = document.getElementById("div_weekly");
+            weekly.style.display = "block";
+        } else if ('{{ program.datetime_type }}' == 'occasional') {
+            {#Show occasional#}
+            occasional = document.getElementById("div_occasional");
+            occasional.style.display = "block";
+        } else if ('{{ program.datetime_type }}' == 'weekly_occasional') {
+            {#Show weekly#}
+            weekly = document.getElementById("div_weekly");
+            weekly.style.display = "block";
+            {#Show occasional#}
+            occasional = document.getElementById("div_occasional");
+            occasional.style.display = "block";
+        }
+
+        if ('{{ program.stream_type }}' == 'audio') {
+            {#Show audio#}
+            audio = document.getElementById("div_audio");
+            audio.style.display = "block";
+        } else if ('{{ program.stream_type }}' == 'video') {
+            {#Show video#}
+            video = document.getElementById("div_video");
+            video.style.display = "block";
+        } else {
+            {#Show audio#}
+            audio = document.getElementById("div_audio");
+            audio.style.display = "block";
+            {#Show video#}
+            video = document.getElementById("div_video");
+            video.style.display = "block";
+        }
+
+        if ('{{ program.day_0 }}' == 'True') {
+            document.getElementById("day_0").checked = true;
+            document.getElementById("div_id_day_0").style.display = "block";
+        }
+        if ('{{ program.day_1 }}' == 'True') {
+            document.getElementById("day_1").checked = true;
+            document.getElementById("div_id_day_1").style.display = "block";
+        }
+        if ('{{ program.day_2 }}' == 'True') {
+            document.getElementById("day_2").checked = true;
+            document.getElementById("div_id_day_2").style.display = "block";
+        }
+        if ('{{ program.day_3 }}' == 'True') {
+            document.getElementById("day_3").checked = true;
+            document.getElementById("div_id_day_3").style.display = "block";
+        }
+        if ('{{ program.day_4 }}' == 'True') {
+            document.getElementById("day_4").checked = true;
+            document.getElementById("div_id_day_4").style.display = "block";
+        }
+        if ('{{ program.day_5 }}' == 'True') {
+            document.getElementById("day_5").checked = true;
+            document.getElementById("div_id_day_5").style.display = "block";
+        }
+        if ('{{ program.day_6 }}' == 'True') {
+            document.getElementById("day_6").checked = true;
+            document.getElementById("div_id_day_6").style.display = "block";
+        }
+    </script>
 {% endblock %}

@@ -8,10 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>پخش زنده - لسان صدق</title>
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{% static 'LesanLive/lesan_icon.png' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'AdminPanel/rahh_icon.png' %}">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+          href="{% static 'AdminPanel/dist2/css/googlefont-SourceSansPro300-400-400i-700.css' %}">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{% static 'AdminPanel/plugins/fontawesome-free/css/all.min.css' %}">
     <!-- Ionicons -->
@@ -21,14 +21,10 @@
           href="{% static 'AdminPanel/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
     <!-- iCheck -->
     <link rel="stylesheet" href="{% static 'AdminPanel/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
-    <!-- JQVMap -->
-    <link rel="stylesheet" href="{% static 'AdminPanel/plugins/jqvmap/jqvmap.min.css' %}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'AdminPanel/dist2/css/adminlte.min.css' %}">
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="{% static 'AdminPanel/plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
-    <!-- Daterange picker -->
-    <link rel="stylesheet" href="{% static 'AdminPanel/plugins/daterangepicker/daterangepicker.css' %}">
     <!-- summernote -->
     <link rel="stylesheet" href="{% static 'AdminPanel/plugins/summernote/summernote-bs4.min.css' %}">
     {% block head %}
@@ -53,8 +49,7 @@
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
             <li class="nav-item d-none d-sm-inline-block">
-{#                TODO#}
-                <a href="#" class="nav-link">Logout</a>
+                <a href="{% url 'logout' %}" class="nav-link">خروج</a>
             </li>
             <!-- Navbar Search -->
             {#            <li class="nav-item">#}
@@ -90,9 +85,8 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
-{#        TODO#}
-{#        <a href="{% url 'Admin:admin' %}" class="brand-link">#}
-            <img src="{% static 'LesanLive/lesan_icon.png' %}" alt="LesanLogo"
+        <a href="{% url 'AdminPanel:admin_panel' %}" class="brand-link">
+            <img src="{% static 'AdminPanel/rahh_icon.png' %}" alt="RahhLogo"
                  class="brand-image img-circle elevation-3"
                  style="opacity: .8">
             <span class="brand-text font-weight-light">داشبورد مدیریت</span>
@@ -103,14 +97,12 @@
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
-                    {#        TODO#}
-{#                    <a href="{% url 'Accounts:profile' %}">#}
+                    <a href="/admin2/auth/user/{{ username.pk }}/change/">
                         <i class="img-circle elevation-2 fa fa-user-circle fa-2x" aria-hidden="true"></i>
                     </a>
                 </div>
                 <div class="info">
-                    {#        TODO#}
-{#                    <a href="{% url 'Accounts:profile' %}" class="d-block">{{ username }}</a>#}
+                    <a href="/admin2/auth/user/{{ username.pk }}/change/" class="d-block">{{ username }}</a>
                 </div>
             </div>
 
@@ -181,9 +173,9 @@
     </div>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
-        <strong>پخش زنده - موسسه لسان صدق 1367 - 1401</strong>
+        <strong>پخش زنده - رادیو راه 1367 - 1401</strong>
         <div class="float-right d-none d-sm-inline-block">
-            <b><a href="https://lesansedgh.ir">Lesansedgh.ir</a></b>
+            <b><a href="https://rahh.ir">Rahh.ir</a></b>
         </div>
     </footer>
 
@@ -206,22 +198,8 @@
 </script>
 <!-- Bootstrap 4 -->
 <script src="{% static 'AdminPanel/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-<!-- ChartJS -->
-<script src="
-{% static 'AdminPanel/plugins/chart.js/Chart.min.js' %}"></script>
-<!-- Sparkline -->
-<script src="{% static 'AdminPanel/plugins/sparklines/sparkline.js' %}"></script>
-<!-- JQVMap -->
-<script src="
-{% static 'AdminPanel/plugins/jqvmap/jquery.vmap.min.js' %}"></script>
-<script src="{% static 'AdminPanel/plugins/jqvmap/maps/jquery.vmap.usa.js' %}"></script>
-<!-- jQuery Knob Chart -->
-<script src="
-{% static 'AdminPanel/plugins/jquery-knob/jquery.knob.min.js' %}"></script>
 <!-- daterangepicker -->
 <script src="{% static 'AdminPanel/plugins/moment/moment.min.js' %}"></script>
-<script src="
-{% static 'AdminPanel/plugins/daterangepicker/daterangepicker.js' %}"></script>
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="{% static 'AdminPanel/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
 <!-- Summernote -->
@@ -231,6 +209,9 @@
 <script src="{% static 'AdminPanel/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
 <!-- AdminLTE App -->
 <script src="
-{% static 'AdminPanel/dist2/js/adminlte.js' %}"></script>
+{% static 'AdminPanel/dist2/js/adminlte.min.js' %}"></script>
+{% block body_script %}
+
+{% endblock %}
 </body>
 </html>
