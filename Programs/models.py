@@ -13,7 +13,7 @@ class Program(models.Model):
     status_choices = (
         ('publish', 'انتشار'),
         ('draft', 'پیش نویس'),
-        ('archive', 'آرشیو'),
+        ('archive', 'بایگانی'),
     )
 
     datetime_type_choices = (

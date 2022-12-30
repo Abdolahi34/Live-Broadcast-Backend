@@ -10,7 +10,13 @@ from AdminPanel import forms
 
 @staff_member_required
 def Admin(request):
-    return render(request, 'AdminPanel/admin_main.html', {'username': get_user(request)})
+    programs_publish = models.Program.objects.filter(status='publish').count()
+    programs_draft = models.Program.objects.filter(status='draft').count()
+    programs_archive = models.Program.objects.filter(status='archive').count()
+    programs_live = models.Program.objects.filter(isLive=True).count()
+    args = {'username': get_user(request), 'programs_publish': programs_publish, 'programs_draft': programs_draft,
+            'programs_archive': programs_archive, 'programs_live': programs_live}
+    return render(request, 'AdminPanel/admin_main.html', args)
 
 
 @staff_member_required
