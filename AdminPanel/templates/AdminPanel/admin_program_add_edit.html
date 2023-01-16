@@ -79,11 +79,15 @@
                 <form method="post" enctype="multipart/form-data" id="form1">
                     {% csrf_token %}
                     {% if form.non_field_errors %}
-                        <br> {{ form.non_field_errors }}
+                        <div style="color: #dc3545; direction: rtl">
+                            <br> {{ form.non_field_errors }}
+                        </div>
                     {% endif %}
                     <div class="form-group">
                         {% if form.status.errors %}
-                            {{ form.status.errors }}
+                            <div style="color: #dc3545; direction: rtl">
+                                {{ form.status.errors }}
+                            </div>
                         {% endif %}
                         <label for="{{ form.status.id_for_label }}">وضعیت :</label> <br>
                         {% render_field form.status class+="form-control" %}
@@ -93,7 +97,9 @@
                     </div>
                     <div class="form-group">
                         {% if form.title.errors %}
-                            {{ form.title.errors }}
+                            <div style="color: #dc3545; direction: rtl">
+                                {{ form.title.errors }}
+                            </div>
                         {% endif %}
                         <label for="{{ form.title.id_for_label }}">عنوان :</label> <br>
                         {% if form.title.value != None %}
@@ -109,7 +115,9 @@
                     </div>
                     <div class="form-group">
                         {% if form.description.errors %}
-                            {{ form.description.errors }}
+                            <div style="color: #dc3545; direction: rtl">
+                                {{ form.description.errors }}
+                            </div>
                         {% endif %}
                         <label for="{{ form.description.id_for_label }}">توضیحات :</label> <br>
                         {% render_field form.description class+="form-control" rows="4" %}
@@ -119,7 +127,9 @@
                     </div>
                     <div class="form-group">
                         {% if form.title_in_player.errors %}
-                            {{ form.title_in_player.errors }}
+                            <div style="color: #dc3545; direction: rtl">
+                                {{ form.title_in_player.errors }}
+                            </div>
                         {% endif %}
                         <label for="{{ form.title_in_player.id_for_label }}">عنوان در صفحه پخش زنده :</label> <br>
                         {% if form.title_in_player.value != None %}
@@ -135,7 +145,9 @@
                     </div>
                     <div class="form-group">
                         {% if form.description_in_player.errors %}
-                            {{ form.description_in_player.errors }}
+                            <div style="color: #dc3545; direction: rtl">
+                                {{ form.description_in_player.errors }}
+                            </div>
                         {% endif %}
                         <label for="{{ form.description_in_player.id_for_label }}">توضیحات در صفحه پخش زنده :</label>
                         <br>
@@ -146,7 +158,9 @@
                     </div>
                     <div class="form-group">
                         {% if form.slug.errors %}
-                            {{ form.slug.errors }}
+                            <div style="color: #dc3545; direction: rtl">
+                                {{ form.slug.errors }}
+                            </div>
                         {% endif %}
                         <label for="{{ form.slug.id_for_label }}">Slug :</label> <br>
                         {% if form.slug.value != None %}
@@ -162,7 +176,9 @@
                     </div>
                     <div class="form-group">
                         {% if form.date_display.errors %}
-                            {{ form.date_display.errors }}
+                            <div style="color: #dc3545; direction: rtl">
+                                {{ form.date_display.errors }}
+                            </div>
                         {% endif %}
                         <label for="{{ form.date_display.id_for_label }}">تاریخ نمایش داده شده به کاربر :</label> <br>
                         {% if form.date_display.value != None %}
@@ -178,7 +194,9 @@
                     </div>
                     <div class="form-group">
                         {% if form.time_display.errors %}
-                            {{ form.time_display.errors }}
+                            <div style="color: #dc3545; direction: rtl">
+                                {{ form.time_display.errors }}
+                            </div>
                         {% endif %}
                         <label for="{{ form.time_display.id_for_label }}">زمان نمایش داده شده به کاربر :</label> <br>
                         {% if form.time_display.value != None %}
@@ -194,7 +212,9 @@
                     </div>
                     <div class="form-group">
                         {% if form.datetime_type.errors %}
-                            {{ form.datetime_type.errors }}
+                            <div style="color: #dc3545; direction: rtl">
+                                {{ form.datetime_type.errors }}
+                            </div>
                         {% endif %}
                         <label for="{{ form.datetime_type.id_for_label }}">نوع برگزاری برنامه :</label> <br>
                         {% render_field form.datetime_type onchange="show_hide_datetime_type()" class+="form-control" %}
@@ -207,7 +227,9 @@
                         <hr class="between">
                         <div class="form-group">
                             {% if form.start_date.errors %}
-                                {{ form.start_date.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.start_date.errors }}
+                                </div>
                             {% endif %}
                             <label for="{{ form.start_date.id_for_label }}">تاریخ شروع برنامه هفتگی :</label> <br>
                             <div class="input-group">
@@ -231,7 +253,9 @@
                         </div>
                         <div class="form-group">
                             {% if form.end_date.errors %}
-                                {{ form.end_date.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.end_date.errors }}
+                                </div>
                             {% endif %}
                             <label for="{{ form.end_date.id_for_label }}">تاریخ پایان برنامه هفتگی :</label> <br>
                             <div class="input-group">
@@ -256,25 +280,39 @@
                         <hr class="between_dotted">
                         <div class="form-group">
                             {% if form.day_0.errors %}
-                                {{ form.day_0.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.day_0.errors }}
+                                </div>
                             {% endif %}
                             {% if form.day_1.errors %}
-                                {{ form.day_1.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.day_1.errors }}
+                                </div>
                             {% endif %}
                             {% if form.day_2.errors %}
-                                {{ form.day_2.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.day_2.errors }}
+                                </div>
                             {% endif %}
                             {% if form.day_3.errors %}
-                                {{ form.day_3.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.day_3.errors }}
+                                </div>
                             {% endif %}
                             {% if form.day_4.errors %}
-                                {{ form.day_4.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.day_4.errors }}
+                                </div>
                             {% endif %}
                             {% if form.day_5.errors %}
-                                {{ form.day_5.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.day_5.errors }}
+                                </div>
                             {% endif %}
                             {% if form.day_6.errors %}
-                                {{ form.day_6.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.day_6.errors }}
+                                </div>
                             {% endif %}
                             <table class="table table-bordered">
                                 <thead>
@@ -327,7 +365,9 @@
                         <div id="div_id_day_0" style="display: none">
                             <div class="form-group">
                                 {% if form.start_time_day_0.errors %}
-                                    {{ form.start_time_day_0.errors }}
+                                    <div style="color: #dc3545; direction: rtl">
+                                        {{ form.start_time_day_0.errors }}
+                                    </div>
                                 {% endif %}
                                 <label for="{{ form.start_time_day_0.id_for_label }}">ساعت شروع برنامه (شنبه ها)
                                     :</label>
@@ -353,7 +393,9 @@
                             </div>
                             <div class="form-group">
                                 {% if form.end_time_day_0.errors %}
-                                    {{ form.end_time_day_0.errors }}
+                                    <div style="color: #dc3545; direction: rtl">
+                                        {{ form.end_time_day_0.errors }}
+                                    </div>
                                 {% endif %}
                                 <label for="{{ form.end_time_day_0.id_for_label }}">ساعت پایان برنامه (شنبه ها)
                                     :</label>
@@ -382,7 +424,9 @@
                         <div id="div_id_day_1" style="display: none">
                             <div class="form-group">
                                 {% if form.start_time_day_1.errors %}
-                                    {{ form.start_time_day_1.errors }}
+                                    <div style="color: #dc3545; direction: rtl">
+                                        {{ form.start_time_day_1.errors }}
+                                    </div>
                                 {% endif %}
                                 <label for="{{ form.start_time_day_1.id_for_label }}">ساعت شروع برنامه (یکشنبه ها)
                                     :</label>
@@ -408,7 +452,9 @@
                             </div>
                             <div class="form-group">
                                 {% if form.end_time_day_1.errors %}
-                                    {{ form.end_time_day_1.errors }}
+                                    <div style="color: #dc3545; direction: rtl">
+                                        {{ form.end_time_day_1.errors }}
+                                    </div>
                                 {% endif %}
                                 <label for="{{ form.end_time_day_1.id_for_label }}">ساعت پایان برنامه (یکشنبه ها)
                                     :</label>
@@ -437,7 +483,9 @@
                         <div id="div_id_day_2" style="display: none">
                             <div class="form-group">
                                 {% if form.start_time_day_2.errors %}
-                                    {{ form.start_time_day_2.errors }}
+                                    <div style="color: #dc3545; direction: rtl">
+                                        {{ form.start_time_day_2.errors }}
+                                    </div>
                                 {% endif %}
                                 <label for="{{ form.start_time_day_2.id_for_label }}">ساعت شروع برنامه (دوشنبه ها)
                                     :</label>
@@ -463,7 +511,9 @@
                             </div>
                             <div class="form-group">
                                 {% if form.end_time_day_2.errors %}
-                                    {{ form.end_time_day_2.errors }}
+                                    <div style="color: #dc3545; direction: rtl">
+                                        {{ form.end_time_day_2.errors }}
+                                    </div>
                                 {% endif %}
                                 <label for="{{ form.end_time_day_2.id_for_label }}">ساعت پایان برنامه (دوشنبه ها)
                                     :</label>
@@ -492,7 +542,9 @@
                         <div id="div_id_day_3" style="display: none">
                             <div class="form-group">
                                 {% if form.start_time_day_3.errors %}
-                                    {{ form.start_time_day_3.errors }}
+                                    <div style="color: #dc3545; direction: rtl">
+                                        {{ form.start_time_day_3.errors }}
+                                    </div>
                                 {% endif %}
                                 <label for="{{ form.start_time_day_3.id_for_label }}">ساعت شروع برنامه (سه شنبه ها)
                                     :</label>
@@ -518,7 +570,9 @@
                             </div>
                             <div class="form-group">
                                 {% if form.end_time_day_3.errors %}
-                                    {{ form.end_time_day_3.errors }}
+                                    <div style="color: #dc3545; direction: rtl">
+                                        {{ form.end_time_day_3.errors }}
+                                    </div>
                                 {% endif %}
                                 <label for="{{ form.end_time_day_3.id_for_label }}">ساعت پایان برنامه (سه شنبه ها)
                                     :</label>
@@ -548,7 +602,9 @@
                         <div id="div_id_day_4" style="display: none">
                             <div class="form-group">
                                 {% if form.start_time_day_4.errors %}
-                                    {{ form.start_time_day_4.errors }}
+                                    <div style="color: #dc3545; direction: rtl">
+                                        {{ form.start_time_day_4.errors }}
+                                    </div>
                                 {% endif %}
                                 <label for="{{ form.start_time_day_4.id_for_label }}">ساعت شروع برنامه (چهارشنبه ها)
                                     :</label>
@@ -574,7 +630,9 @@
                             </div>
                             <div class="form-group">
                                 {% if form.end_time_day_4.errors %}
-                                    {{ form.end_time_day_4.errors }}
+                                    <div style="color: #dc3545; direction: rtl">
+                                        {{ form.end_time_day_4.errors }}
+                                    </div>
                                 {% endif %}
                                 <label for="{{ form.end_time_day_4.id_for_label }}">ساعت پایان برنامه (چهارشنبه ها)
                                     :</label>
@@ -603,7 +661,9 @@
                         <div id="div_id_day_5" style="display: none">
                             <div class="form-group">
                                 {% if form.start_time_day_5.errors %}
-                                    {{ form.start_time_day_5.errors }}
+                                    <div style="color: #dc3545; direction: rtl">
+                                        {{ form.start_time_day_5.errors }}
+                                    </div>
                                 {% endif %}
                                 <label for="{{ form.start_time_day_5.id_for_label }}">ساعت شروع برنامه (پنجشنبه ها)
                                     :</label>
@@ -629,7 +689,9 @@
                             </div>
                             <div class="form-group">
                                 {% if form.end_time_day_5.errors %}
-                                    {{ form.end_time_day_5.errors }}
+                                    <div style="color: #dc3545; direction: rtl">
+                                        {{ form.end_time_day_5.errors }}
+                                    </div>
                                 {% endif %}
                                 <label for="{{ form.end_time_day_5.id_for_label }}">ساعت پایان برنامه (پنجشنبه ها)
                                     :</label>
@@ -658,7 +720,9 @@
                         <div id="div_id_day_6" style="display: none">
                             <div class="form-group">
                                 {% if form.start_time_day_6.errors %}
-                                    {{ form.start_time_day_6.errors }}
+                                    <div style="color: #dc3545; direction: rtl">
+                                        {{ form.start_time_day_6.errors }}
+                                    </div>
                                 {% endif %}
                                 <label for="{{ form.start_time_day_6.id_for_label }}">ساعت شروع برنامه (جمعه ها)
                                     :</label>
@@ -684,7 +748,9 @@
                             </div>
                             <div class="form-group">
                                 {% if form.end_time_day_6.errors %}
-                                    {{ form.end_time_day_6.errors }}
+                                    <div style="color: #dc3545; direction: rtl">
+                                        {{ form.end_time_day_6.errors }}
+                                    </div>
                                 {% endif %}
                                 <label for="{{ form.end_time_day_6.id_for_label }}">ساعت پایان برنامه (جمعه ها)
                                     :</label>
@@ -719,7 +785,9 @@
                             <input type="hidden" id="id_list_specified_date_removed" name="list_specified_date_removed"
                                    value="">
                             {% if form.specified_date.errors %}
-                                {{ form.specified_date.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.specified_date.errors }}
+                                </div>
                             {% endif %}
                             <label for="{{ form.specified_date.id_for_label }}">تاریخ برنامه مناسبتی :</label>
                             <div id="div_id_specified_date_add">
@@ -808,7 +876,9 @@
                             <input type="hidden" id="id_list_specified_start_time_removed"
                                    name="list_specified_start_time_removed" value="">
                             {% if form.specified_start_time.errors %}
-                                {{ form.specified_start_time.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.specified_start_time.errors }}
+                                </div>
                             {% endif %}
                             <label for="{{ form.specified_start_time.id_for_label }}">ساعت شروع برنامه مناسبتی :</label>
                             <div id="div_id_specified_start_time_add">
@@ -900,7 +970,9 @@
                             <input type="hidden" id="id_list_specified_end_time_removed"
                                    name="list_specified_end_time_removed" value="">
                             {% if form.specified_end_time.errors %}
-                                {{ form.specified_end_time.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.specified_end_time.errors }}
+                                </div>
                             {% endif %}
                             <label for="{{ form.specified_end_time.id_for_label }}">ساعت پایان برنامه مناسبتی :</label>
                             <div id="div_id_specified_end_time_add">
@@ -992,7 +1064,9 @@
                     </div>
                     <div class="form-group">
                         {% if form.logo.errors %}
-                            {{ form.logo.errors }}
+                            <div style="color: #dc3545; direction: rtl">
+                                {{ form.logo.errors }}
+                            </div>
                         {% endif %}
                         <label for="{{ form.logo.id_for_label }}">لوگو :</label> <br>
                         {% if program.logo != None %}
@@ -1011,7 +1085,9 @@
                     </div>
                     <div class="form-group">
                         {% if form.logo_link.errors %}
-                            {{ form.logo_link.errors }}
+                            <div style="color: #dc3545; direction: rtl">
+                                {{ form.logo_link.errors }}
+                            </div>
                         {% endif %}
                         <label for="{{ form.logo_link.id_for_label }}">لینک لوگو :</label> <br>
                         {% if form.logo_link.value != None %}
@@ -1027,7 +1103,9 @@
                     </div>
                     <div class="form-group">
                         {% if form.player_background.errors %}
-                            {{ form.player_background.errors }}
+                            <div style="color: #dc3545; direction: rtl">
+                                {{ form.player_background.errors }}
+                            </div>
                         {% endif %}
                         <label for="{{ form.player_background.id_for_label }}">تصویر پس زمینه پخش زنده :</label> <br>
                         {% if program.player_background != None %}
@@ -1047,7 +1125,9 @@
                     </div>
                     <div class="form-group">
                         {% if form.stream_type.errors %}
-                            {{ form.stream_type.errors }}
+                            <div style="color: #dc3545; direction: rtl">
+                                {{ form.stream_type.errors }}
+                            </div>
                         {% endif %}
                         <label for="{{ form.stream_type.id_for_label }}">نوع پخش زنده :</label> <br>
                         {% render_field form.stream_type onchange="show_hide_stream_type()" class+="form-control" %}
@@ -1060,7 +1140,9 @@
                         <hr class="between">
                         <div class="form-group">
                             {% if form.audio_link.errors %}
-                                {{ form.audio_link.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.audio_link.errors }}
+                                </div>
                             {% endif %}
                             <label for="{{ form.audio_link.id_for_label }}">لینک پخش زنده صوتی :</label> <br>
                             {% if form.audio_link.value != None %}
@@ -1076,7 +1158,9 @@
                         </div>
                         <div class="form-group">
                             {% if form.audio_stats_link.errors %}
-                                {{ form.audio_stats_link.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.audio_stats_link.errors }}
+                                </div>
                             {% endif %}
                             <label for="{{ form.audio_stats_link.id_for_label }}">لینک آمار پخش زنده صوتی :</label> <br>
                             {% if form.audio_stats_link.value != None %}
@@ -1092,7 +1176,9 @@
                         </div>
                         <div class="form-group">
                             {% if form.audio_platform_type.errors %}
-                                {{ form.audio_platform_type.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.audio_platform_type.errors }}
+                                </div>
                             {% endif %}
                             <label for="{{ form.audio_platform_type.id_for_label }}">نوع پلتفرم آمار پخش زنده صوتی
                                 :</label>
@@ -1107,7 +1193,9 @@
                         <hr class="between">
                         <div class="form-group">
                             {% if form.video_link.errors %}
-                                {{ form.video_link.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.video_link.errors }}
+                                </div>
                             {% endif %}
                             <label for="{{ form.video_link.id_for_label }}">لینک پخش زنده تصویری :</label> <br>
                             {% if form.video_link.value != None %}
@@ -1123,7 +1211,9 @@
                         </div>
                         <div class="form-group">
                             {% if form.video_stats_link.errors %}
-                                {{ form.video_stats_link.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.video_stats_link.errors }}
+                                </div>
                             {% endif %}
                             <label for="{{ form.video_stats_link.id_for_label }}">لینک آمار پخش زنده تصویری :</label>
                             <br>
@@ -1140,7 +1230,9 @@
                         </div>
                         <div class="form-group">
                             {% if form.video_platform_type.errors %}
-                                {{ form.video_platform_type.errors }}
+                                <div style="color: #dc3545; direction: rtl">
+                                    {{ form.video_platform_type.errors }}
+                                </div>
                             {% endif %}
                             <label for="{{ form.video_platform_type.id_for_label }}">نوع پلتفرم آمار پخش زنده تصویری
                                 :</label>
