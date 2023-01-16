@@ -5,24 +5,31 @@
 {% load widget_tweaks %}
 
 {% block head %}
+    <script src="{% static 'AdminPanel/custom/admin_program_add_edit.js' %}"></script>
     <script>
+        let alert_text;
+        let url;
         {% if is_exist is False %}
-            alert('برنامه مدنظر شما وجود ندارد.');
-            location.replace("{% url 'AdminPanel:admin_panel_program' %}");
+            alert_text = 'برنامه مدنظر شما وجود ندارد.';
+            url = "{% url 'AdminPanel:admin_panel_program' %}";
+            redirect_to(url, alert_text);
         {% endif %}
         {% if is_valid is False %}
-            alert('اطلاعات، اشتباه وارد شده است.');
+            alert_text = 'اطلاعات، اشتباه وارد شده است.';
+            alert_func(alert_text);
         {% endif %}
         {% if is_add %}
             {% if is_valid %}
-                alert('برنامه با موفقیت اضافه شد.');
-                location.replace("{% url 'AdminPanel:admin_panel_program' %}");
+                alert_text = 'برنامه با موفقیت اضافه شد.';
+                url = "{% url 'AdminPanel:admin_panel_program' %}";
+                redirect_to(url, alert_text);
             {% endif %}
         {% endif %}
         {% if is_edit %}
             {% if is_valid %}
-                alert("تغییرات مدنظر شما با موفقیت اعمال شد.");
-                location.replace("{% url 'AdminPanel:admin_panel_program' %}");
+                alert_text = "تغییرات مدنظر شما با موفقیت اعمال شد.";
+                url = "{% url 'AdminPanel:admin_panel_program' %}";
+                redirect_to(url, alert_text);
             {% endif %}
         {% endif %}
     </script>
@@ -1158,497 +1165,86 @@
 {% block body_script %}
     <!-- flatpickr -->
     <script src="{% static 'AdminPanel/plugins/flatpickr/flatpickr.min.js' %}"></script>
+    <!-- bs-custom-file-input -->
+    <script src="{% static 'AdminPanel/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
 
+    <script src="{% static 'AdminPanel/custom/admin_program_add_edit.js' %}"></script>
     <script>
         let count_specified_date = 1;
         let count_specified_start_time = 1;
         let count_specified_end_time = 1;
 
         {#status#}
+        let status_value;
         {% if form.status.value != None %}
-            if ('{{ form.status.value }}' == 'publish') {
-                document.getElementById('id_status').value = 'publish';
-            } else if ('{{ form.status.value }}' == 'draft') {
-                document.getElementById('id_status').value = 'draft';
-            } else if ('{{ form.status.value }}' == 'archive') {
-                document.getElementById('id_status').value = 'archive';
-            }
+            status_value = '{{ form.status.value }}';
+            set_status(status_value);
         {% elif program.status != None %}
-            if ('{{ program.status }}' == 'publish') {
-                document.getElementById('id_status').value = 'publish';
-            } else if ('{{ program.status }}' == 'draft') {
-                document.getElementById('id_status').value = 'draft';
-            } else if ('{{ program.status }}' == 'archive') {
-                document.getElementById('id_status').value = 'archive';
-            }
+            status_value = '{{ program.status }}';
+            set_status(status_value);
         {% endif %}
 
         {#description#}
+        let description_value;
         {% if form.description.value != None %}
-            if ('{{ form.description.value }}' != 'None') {
-                document.getElementById('id_description').innerHTML = '{{ form.description.value }}';
-            }
+            description_value = '{{ form.description.value }}';
+            set_description(description_value);
         {% elif program.description != None %}
-            if ('{{ program.description }}' != 'None') {
-                document.getElementById('id_description').innerHTML = '{{ program.description }}';
-            }
+            description_value = '{{ program.description }}';
+            set_description(description_value);
         {% endif %}
 
         {#description_in_player#}
+        let description_in_player_value;
         {% if form.description_in_player.value != None %}
-            if ('{{ form.description_in_player.value }}' != 'None') {
-                document.getElementById('id_description_in_player').innerHTML = '{{ form.description_in_player.value }}';
-            }
+            description_in_player_value = '{{ form.description_in_player.value }}';
+            set_description_in_player(description_in_player_value);
         {% elif program.description_in_player != None %}
-            if ('{{ program.description_in_player }}' != 'None') {
-                document.getElementById('id_description_in_player').innerHTML = '{{ program.description_in_player }}';
-            }
+            description_in_player_value = '{{ program.description_in_player }}';
+            set_description_in_player(description_in_player_value);
         {% endif %}
 
         {#datetime_type#}
+        let datetime_type_value;
+        let day_0;
+        let day_1;
+        let day_2;
+        let day_3;
+        let day_4;
+        let day_5;
+        let day_6;
         {% if form.datetime_type.value != None %}
-            if ('{{ form.datetime_type.value }}' == 'weekly') {
-                document.getElementById('id_datetime_type').value = 'weekly';
-                {% if form.day_0.value %}
-                    document.getElementById("id_day_0").checked = true;
-                {% endif %}
-                {% if form.day_1.value %}
-                    document.getElementById("id_day_1").checked = true;
-                {% endif %}
-                {% if form.day_2.value %}
-                    document.getElementById("id_day_2").checked = true;
-                {% endif %}
-                {% if form.day_3.value %}
-                    document.getElementById("id_day_3").checked = true;
-                {% endif %}
-                {% if form.day_4.value %}
-                    document.getElementById("id_day_4").checked = true;
-                {% endif %}
-                {% if form.day_5.value %}
-                    document.getElementById("id_day_5").checked = true;
-                {% endif %}
-                {% if form.day_6.value %}
-                    document.getElementById("id_day_6").checked = true;
-                {% endif %}
-            } else if ('{{ form.datetime_type.value }}' == 'occasional') {
-                document.getElementById('id_datetime_type').value = 'occasional';
-            } else if ('{{ form.datetime_type.value }}' == 'weekly_occasional') {
-                document.getElementById('id_datetime_type').value = 'weekly_occasional';
-                {% if form.day_0.value %}
-                    document.getElementById("id_day_0").checked = true;
-                {% endif %}
-                {% if form.day_1.value %}
-                    document.getElementById("id_day_1").checked = true;
-                {% endif %}
-                {% if form.day_2.value %}
-                    document.getElementById("id_day_2").checked = true;
-                {% endif %}
-                {% if form.day_3.value %}
-                    document.getElementById("id_day_3").checked = true;
-                {% endif %}
-                {% if form.day_4.value %}
-                    document.getElementById("id_day_4").checked = true;
-                {% endif %}
-                {% if form.day_5.value %}
-                    document.getElementById("id_day_5").checked = true;
-                {% endif %}
-                {% if form.day_6.value %}
-                    document.getElementById("id_day_6").checked = true;
-                {% endif %}
-            }
+            datetime_type_value = '{{ form.datetime_type.value }}';
+            day_0 = '{{ form.day_0.value }}';
+            day_1 = '{{ form.day_1.value }}';
+            day_2 = '{{ form.day_2.value }}';
+            day_3 = '{{ form.day_3.value }}';
+            day_4 = '{{ form.day_4.value }}';
+            day_5 = '{{ form.day_5.value }}';
+            day_6 = '{{ form.day_6.value }}';
         {% elif program.datetime_type != None %}
-            if ('{{ program.datetime_type }}' == 'weekly') {
-                document.getElementById('id_datetime_type').value = 'weekly';
-                {% if program.day_0 %}
-                    document.getElementById("id_day_0").checked = true;
-                {% endif %}
-                {% if program.day_1 %}
-                    document.getElementById("id_day_1").checked = true;
-                {% endif %}
-                {% if program.day_2 %}
-                    document.getElementById("id_day_2").checked = true;
-                {% endif %}
-                {% if program.day_3 %}
-                    document.getElementById("id_day_3").checked = true;
-                {% endif %}
-                {% if program.day_4 %}
-                    document.getElementById("id_day_4").checked = true;
-                {% endif %}
-                {% if program.day_5 %}
-                    document.getElementById("id_day_5").checked = true;
-                {% endif %}
-                {% if program.day_6 %}
-                    document.getElementById("id_day_6").checked = true;
-                {% endif %}
-            } else if ('{{ program.datetime_type }}' == 'occasional') {
-                document.getElementById('id_datetime_type').value = 'occasional';
-            } else if ('{{ program.datetime_type }}' == 'weekly_occasional') {
-                document.getElementById('id_datetime_type').value = 'weekly_occasional';
-                {% if program.day_0 %}
-                    document.getElementById("id_day_0").checked = true;
-                {% endif %}
-                {% if program.day_1 %}
-                    document.getElementById("id_day_1").checked = true;
-                {% endif %}
-                {% if program.day_2 %}
-                    document.getElementById("id_day_2").checked = true;
-                {% endif %}
-                {% if program.day_3 %}
-                    document.getElementById("id_day_3").checked = true;
-                {% endif %}
-                {% if program.day_4 %}
-                    document.getElementById("id_day_4").checked = true;
-                {% endif %}
-                {% if program.day_5 %}
-                    document.getElementById("id_day_5").checked = true;
-                {% endif %}
-                {% if program.day_6 %}
-                    document.getElementById("id_day_6").checked = true;
-                {% endif %}
-            }
+            datetime_type_value = '{{ program.datetime_type }}';
+            day_0 = '{{ program.day_0 }}';
+            day_1 = '{{ program.day_1 }}';
+            day_2 = '{{ program.day_2 }}';
+            day_3 = '{{ program.day_3 }}';
+            day_4 = '{{ program.day_4 }}';
+            day_5 = '{{ program.day_5 }}';
+            day_6 = '{{ program.day_6 }}';
         {% endif %}
-
-        function show_hide_week_day(id) {
-            let conditions_day = [
-                document.getElementById('id_day_0').checked,
-                document.getElementById('id_day_1').checked,
-                document.getElementById('id_day_2').checked,
-                document.getElementById('id_day_3').checked,
-                document.getElementById('id_day_4').checked,
-                document.getElementById('id_day_5').checked,
-                document.getElementById('id_day_6').checked,
-            ]
-            if (id == '0') {
-                if (conditions_day[0]) {
-                    document.getElementById('hr_id_end_weekly_table').style.display = "block";
-                    document.getElementById('div_id_day_0').style.display = "block"
-                } else {
-                    document.getElementById('div_id_day_0').style.display = "none"
-                }
-            } else if (id == '1') {
-                if (conditions_day[1]) {
-                    document.getElementById('hr_id_end_weekly_table').style.display = "block";
-                    document.getElementById('div_id_day_1').style.display = "block"
-                } else {
-                    document.getElementById('div_id_day_1').style.display = "none"
-                }
-            } else if (id == '2') {
-                if (conditions_day[2]) {
-                    document.getElementById('hr_id_end_weekly_table').style.display = "block";
-                    document.getElementById('div_id_day_2').style.display = "block"
-                } else {
-                    document.getElementById('div_id_day_2').style.display = "none"
-                }
-            } else if (id == '3') {
-                if (conditions_day[3]) {
-                    document.getElementById('hr_id_end_weekly_table').style.display = "block";
-                    document.getElementById('div_id_day_3').style.display = "block"
-                } else {
-                    document.getElementById('div_id_day_3').style.display = "none"
-                }
-            } else if (id == '4') {
-                if (conditions_day[4]) {
-                    document.getElementById('hr_id_end_weekly_table').style.display = "block";
-                    document.getElementById('div_id_day_4').style.display = "block"
-                } else {
-                    document.getElementById('div_id_day_4').style.display = "none"
-                }
-            } else if (id == '5') {
-                if (conditions_day[5]) {
-                    document.getElementById('hr_id_end_weekly_table').style.display = "block";
-                    document.getElementById('div_id_day_5').style.display = "block"
-                } else {
-                    document.getElementById('div_id_day_5').style.display = "none"
-                }
-            } else {
-                if (conditions_day[6]) {
-                    document.getElementById('hr_id_end_weekly_table').style.display = "block";
-                    document.getElementById('div_id_day_6').style.display = "block"
-                } else {
-                    document.getElementById('div_id_day_6').style.display = "none"
-                }
-            }
-            if (!(conditions_day[0]) && !(conditions_day[1]) && !(conditions_day[2]) && !(conditions_day[3]) && !(conditions_day[4]) && !(conditions_day[5]) && !(conditions_day[6])) {
-                document.getElementById('hr_id_end_weekly_table').style.display = "none";
-            }
-        }
-
-        show_hide_week_day('0');
-        show_hide_week_day('1');
-        show_hide_week_day('2');
-        show_hide_week_day('3');
-        show_hide_week_day('4');
-        show_hide_week_day('5');
-        show_hide_week_day('6');
-
-        function show_hide_datetime_type() {
-            let get_datetime_type = document.getElementById("id_datetime_type");
-            let datetime_type_selected = get_datetime_type.options[get_datetime_type.selectedIndex].text;
-            if (datetime_type_selected == '---------') {
-                {#Hide weekly#}
-                weekly = document.getElementById("div_id_weekly");
-                weekly.style.display = "none";
-                {#Hide specified_date#}
-                specified_date = document.getElementById("div_id_occasional");
-                specified_date.style.display = "none";
-                {#Hide hr_between_weekly_specified_date#}
-                hr_between_weekly_specified_date = document.getElementById("hr_id_between_weekly_specified_date");
-                hr_between_weekly_specified_date.style.display = "none";
-            } else if (datetime_type_selected == 'هفتگی') {
-                {#Show weekly#}
-                weekly = document.getElementById("div_id_weekly");
-                weekly.style.display = "block";
-                {#Hide specified_date#}
-                specified_date = document.getElementById("div_id_occasional");
-                specified_date.style.display = "none";
-                {#Show hr_between_weekly_specified_date#}
-                hr_between_weekly_specified_date = document.getElementById("hr_id_between_weekly_specified_date");
-                hr_between_weekly_specified_date.style.display = "block";
-            } else if (datetime_type_selected == 'مناسبتی') {
-                {#Show specified_date#}
-                specified_date = document.getElementById("div_id_occasional");
-                specified_date.style.display = "block";
-                {#Hide weekly#}
-                weekly = document.getElementById("div_id_weekly");
-                weekly.style.display = "none";
-                {#Hide hr_between_weekly_specified_date#}
-                hr_between_weekly_specified_date = document.getElementById("hr_id_between_weekly_specified_date");
-                hr_between_weekly_specified_date.style.display = "none";
-            } else if (datetime_type_selected == 'هفتگی - مناسبتی') {
-                {#Show weekly#}
-                weekly = document.getElementById("div_id_weekly");
-                weekly.style.display = "block";
-                {#Show specified_date#}
-                specified_date = document.getElementById("div_id_occasional");
-                specified_date.style.display = "block";
-                {#Hide hr_between_weekly_specified_date#}
-                hr_between_weekly_specified_date = document.getElementById("hr_id_between_weekly_specified_date");
-                hr_between_weekly_specified_date.style.display = "none";
-            }
-        }
-
-        show_hide_datetime_type();
-
-        function use_flatpickr() {
-            config = {
-                dateFormat: "Y-m-d",
-            }
-            flatpickr("input[type=date]", config);
-            config = {
-                enableTime: true,
-                noCalendar: true,
-                dateFormat: "H:i:S",
-            }
-            flatpickr("input[type=time]", config);
-        }
-
-        use_flatpickr();
-
-
-        {#stream_type#}
-        {% if form.stream_type.value != None %}
-            if ('{{ form.stream_type.value }}' == 'audio') {
-                document.getElementById('id_stream_type').value = 'audio';
-
-                {#audio_platform_type#}
-                if ('{{ form.audio_platform_type.value }}' == 'shoutcast') {
-                    document.getElementById('id_audio_platform_type').value = 'shoutcast';
-                } else if ('{{ form.audio_platform_type.value }}' == 'wowza') {
-                    document.getElementById('id_audio_platform_type').value = 'wowza';
-                }
-            } else if ('{{ form.stream_type.value }}' == 'video') {
-                document.getElementById('id_stream_type').value = 'video';
-
-                {#video_platform_type#}
-                document.getElementById('id_video_platform_type').value = 'wowza';
-            } else if ('{{ form.stream_type.value }}' == 'audio_video') {
-                document.getElementById('id_stream_type').value = 'audio_video';
-
-                {#audio_platform_type#}
-                if ('{{ form.audio_platform_type.value }}' == 'shoutcast') {
-                    document.getElementById('id_audio_platform_type').value = 'shoutcast';
-                } else if ('{{ form.audio_platform_type.value }}' == 'wowza') {
-                    document.getElementById('id_audio_platform_type').value = 'wowza';
-                }
-
-                {#video_platform_type#}
-                document.getElementById('id_video_platform_type').value = 'wowza';
-            }
-        {% elif program.stream_type != None %}
-            if ('{{ program.stream_type }}' == 'audio') {
-                document.getElementById('id_stream_type').value = 'audio';
-
-                {#audio_platform_type#}
-                if ('{{ program.audio_platform_type }}' == 'shoutcast') {
-                    document.getElementById('id_audio_platform_type').value = 'shoutcast';
-                } else if ('{{ program.audio_platform_type }}' == 'wowza') {
-                    document.getElementById('id_audio_platform_type').value = 'wowza';
-                }
-            } else if ('{{ program.stream_type }}' == 'video') {
-                document.getElementById('id_stream_type').value = 'video';
-
-                {#video_platform_type#}
-                document.getElementById('id_video_platform_type').value = 'wowza';
-            } else if ('{{ program.stream_type }}' == 'audio_video') {
-                document.getElementById('id_stream_type').value = 'audio_video';
-
-                {#audio_platform_type#}
-                if ('{{ program.audio_platform_type }}' == 'shoutcast') {
-                    document.getElementById('id_audio_platform_type').value = 'shoutcast';
-                } else if ('{{ program.audio_platform_type }}' == 'wowza') {
-                    document.getElementById('id_audio_platform_type').value = 'wowza';
-                }
-
-                {#video_platform_type#}
-                document.getElementById('id_video_platform_type').value = 'wowza';
-            }
-        {% endif %}
-
-        function show_hide_stream_type() {
-            let get_stream_type = document.getElementById("id_stream_type");
-            let stream_type_selected = get_stream_type.options[get_stream_type.selectedIndex].text;
-            if (stream_type_selected == '---------') {
-                {#Hide audio#}
-                audio = document.getElementById("div_id_audio");
-                audio.style.display = "none";
-                {#Hide video#}
-                video = document.getElementById("div_id_video");
-                video.style.display = "none";
-            } else if (stream_type_selected == 'صوتی') {
-                {#Show audio#}
-                audio = document.getElementById("div_id_audio");
-                audio.style.display = "block";
-                {#Hide video#}
-                video = document.getElementById("div_id_video");
-                video.style.display = "none";
-            } else if (stream_type_selected == 'تصویری') {
-                {#Show video#}
-                video = document.getElementById("div_id_video");
-                video.style.display = "block";
-                {#Hide audio#}
-                audio = document.getElementById("div_id_audio");
-                audio.style.display = "none";
-            } else if (stream_type_selected == 'صوتی و تصویری') {
-                {#Show audio#}
-                audio = document.getElementById("div_id_audio");
-                audio.style.display = "block";
-                {#Show video#}
-                video = document.getElementById("div_id_video");
-                video.style.display = "block";
-            }
-        }
-
-        show_hide_stream_type();
-
-        function add_occasional_elements(element, value = "") {
-            let div = document.createElement("div");
-            let input = document.createElement("input");
-            let span = document.createElement("span");
-            let i = document.createElement("i");
-            let name_occasional;
-            let remove_occasional_input;
-            let input_placeholder;
-            if (element == "specified_date") {
-                name_occasional = element + count_specified_date;
-                remove_occasional_input = count_specified_date;
-                input_placeholder = count_specified_date + 1;
-                input.setAttribute("type", "date");
-                input.setAttribute("placeholder", "تاریخ " + input_placeholder);
-            } else if (element == "specified_start_time") {
-                name_occasional = element + count_specified_start_time;
-                remove_occasional_input = count_specified_start_time;
-                input_placeholder = count_specified_start_time + 1;
-                input.setAttribute("type", "time");
-                input.setAttribute("placeholder", "ساعت شروع " + input_placeholder);
-            } else {
-                name_occasional = element + count_specified_end_time;
-                remove_occasional_input = count_specified_end_time;
-                input_placeholder = count_specified_end_time + 1;
-                input.setAttribute("type", "time");
-                input.setAttribute("placeholder", "ساعت پایان " + input_placeholder);
-            }
-            div.setAttribute("id", "div_id_" + name_occasional);
-            div.setAttribute("class", "input-group");
-            div.setAttribute("style", "margin-top: 5px");
-            document.getElementById("div_id_" + element + "_add").appendChild(div);
-            input.setAttribute("id", name_occasional);
-            input.setAttribute("name", name_occasional);
-            input.setAttribute("class", "form-control");
-            input.setAttribute("value", value);
-            document.getElementById("div_id_" + name_occasional).appendChild(input);
-            div = document.createElement("div");
-            div.setAttribute("id", "div_div_id_" + name_occasional);
-            div.setAttribute("class", "input-group-append");
-            document.getElementById("div_id_" + name_occasional).appendChild(div);
-            span.setAttribute("class", "input-group-text btn btn-danger btn-sm");
-            span.setAttribute("onclick", "remove_occasional(" + JSON.stringify(remove_occasional_input) + ")");
-            i.setAttribute("class", "fas fa-times");
-            i.setAttribute("aria-hidden", "true");
-            span.appendChild(i);
-            document.getElementById("div_div_id_" + name_occasional).appendChild(span);
-            let list;
-            if (element == "specified_date") {
-                count_specified_date++;
-                list = document.getElementById("id_list_specified_date").value;
-                document.getElementById("id_list_specified_date").value = list + "," + name_occasional;
-            } else if (element == "specified_start_time") {
-                count_specified_start_time++;
-                list = document.getElementById("id_list_specified_start_time").value;
-                document.getElementById("id_list_specified_start_time").value = list + "," + name_occasional;
-            } else {
-                count_specified_end_time++;
-                list = document.getElementById("id_list_specified_end_time").value;
-                document.getElementById("id_list_specified_end_time").value = list + "," + name_occasional;
-            }
-            use_flatpickr();
-        }
-
-        function add_occasional() {
-            add_occasional_elements("specified_date");
-            add_occasional_elements("specified_start_time");
-            add_occasional_elements("specified_end_time");
-        }
-
-        function remove_occasional(id) {
-            let my_element = document.getElementById("div_id_specified_date" + id);
-            my_element.remove();
-            let specified_date_removed_old = document.getElementById("id_list_specified_date_removed").value;
-            if (specified_date_removed_old == "") {
-                document.getElementById("id_list_specified_date_removed").value = "specified_date" + id;
-            } else {
-                document.getElementById("id_list_specified_date_removed").value = specified_date_removed_old + ",specified_date" + id;
-            }
-
-            my_element = document.getElementById("div_id_specified_start_time" + id);
-            my_element.remove();
-            let specified_start_time_removed_old = document.getElementById("id_list_specified_start_time_removed").value;
-            if (specified_start_time_removed_old == "") {
-                document.getElementById("id_list_specified_start_time_removed").value = "specified_start_time" + id;
-            } else {
-                document.getElementById("id_list_specified_start_time_removed").value = specified_start_time_removed_old + ",specified_start_time" + id;
-            }
-
-            my_element = document.getElementById("div_id_specified_end_time" + id);
-            my_element.remove();
-            let specified_end_time_removed_old = document.getElementById("id_list_specified_end_time_removed").value;
-            if (specified_end_time_removed_old == "") {
-                document.getElementById("id_list_specified_end_time_removed").value = "specified_end_time" + id;
-            } else {
-                document.getElementById("id_list_specified_end_time_removed").value = specified_end_time_removed_old + ",specified_end_time" + id;
-            }
-        }
+        set_datetime_type(datetime_type_value, day_0, day_1, day_2, day_3, day_4, day_5, day_6);
 
         {% if is_add == True %}
             {% if is_valid == False %}
                 {% if form.datetime_type.value != 'weekly' %}
                     {% for this_specified_date in specified_date %}
-                        add_occasional_elements("specified_date", '{{ this_specified_date }}')
+                        add_occasional_elements("specified_date", '{{ this_specified_date }}');
                     {% endfor %}
                     {% for this_specified_start_time in specified_start_time %}
-                        add_occasional_elements("specified_start_time", '{{ this_specified_start_time }}')
+                        add_occasional_elements("specified_start_time", '{{ this_specified_start_time }}');
                     {% endfor %}
                     {% for this_specified_end_time in specified_end_time %}
-                        add_occasional_elements("specified_end_time", '{{ this_specified_end_time }}')
+                        add_occasional_elements("specified_end_time", '{{ this_specified_end_time }}');
                     {% endfor %}
                 {% endif %}
             {% endif %}
@@ -1657,49 +1253,69 @@
                 {% if form.datetime_type.value != None %}
                     {% if form.datetime_type.value != 'weekly' %}
                         {% for this_specified_date in specified_date %}
-                            add_occasional_elements("specified_date", '{{ this_specified_date }}')
+                            add_occasional_elements("specified_date", '{{ this_specified_date }}');
                         {% endfor %}
                         {% for this_specified_start_time in specified_start_time %}
-                            add_occasional_elements("specified_start_time", '{{ this_specified_start_time }}')
+                            add_occasional_elements("specified_start_time", '{{ this_specified_start_time }}');
                         {% endfor %}
                         {% for this_specified_end_time in specified_end_time %}
-                            add_occasional_elements("specified_end_time", '{{ this_specified_end_time }}')
+                            add_occasional_elements("specified_end_time", '{{ this_specified_end_time }}');
                         {% endfor %}
                     {% endif %}
                 {% else %}
                     {% if program.datetime_type != 'weekly' %}
                         {% for this_specified_date in specified_date %}
-                            add_occasional_elements("specified_date", '{{ this_specified_date|date:"Y-m-d" }}')
+                            add_occasional_elements("specified_date", '{{ this_specified_date|date:"Y-m-d" }}');
                         {% endfor %}
                         {% for this_specified_start_time in specified_start_time %}
-                            add_occasional_elements("specified_start_time", '{{ this_specified_start_time }}')
+                            add_occasional_elements("specified_start_time", '{{ this_specified_start_time }}');
                         {% endfor %}
                         {% for this_specified_end_time in specified_end_time %}
-                            add_occasional_elements("specified_end_time", '{{ this_specified_end_time }}')
+                            add_occasional_elements("specified_end_time", '{{ this_specified_end_time }}');
                         {% endfor %}
                     {% endif %}
                 {% endif %}
             {% else %}
                 {% if program.datetime_type != 'weekly' %}
                     {% for this_specified_date in specified_date %}
-                        add_occasional_elements("specified_date", '{{ this_specified_date|date:"Y-m-d" }}')
+                        add_occasional_elements("specified_date", '{{ this_specified_date|date:"Y-m-d" }}');
                     {% endfor %}
                     {% for this_specified_start_time in specified_start_time %}
-                        add_occasional_elements("specified_start_time", '{{ this_specified_start_time }}')
+                        add_occasional_elements("specified_start_time", '{{ this_specified_start_time }}');
                     {% endfor %}
                     {% for this_specified_end_time in specified_end_time %}
-                        add_occasional_elements("specified_end_time", '{{ this_specified_end_time }}')
+                        add_occasional_elements("specified_end_time", '{{ this_specified_end_time }}');
                     {% endfor %}
                 {% endif %}
             {% endif %}
         {% endif %}
-    </script>
-    <!-- bs-custom-file-input -->
-    <script src="{% static 'AdminPanel/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
-    <!-- Page specific script -->
-    <script>
-        $(function () {
-            bsCustomFileInput.init();
-        });
+
+        let conditions_day;
+        show_hide_week_day(0);
+        show_hide_week_day(1);
+        show_hide_week_day(2);
+        show_hide_week_day(3);
+        show_hide_week_day(4);
+        show_hide_week_day(5);
+        show_hide_week_day(6);
+
+        show_hide_datetime_type();
+
+        {#stream_type#}
+        let stream_type_value;
+        let audio_platform_type_value;
+        {% if form.stream_type.value != None %}
+            stream_type_value = '{{ form.stream_type.value }}';
+            audio_platform_type_value = '{{ form.audio_platform_type.value }}';
+            set_stream_type(stream_type_value, audio_platform_type_value);
+        {% elif program.stream_type != None %}
+            stream_type_value = '{{ program.stream_type }}';
+            audio_platform_type_value = '{{ program.audio_platform_type }}';
+            set_stream_type(stream_type_value, audio_platform_type_value);
+        {% endif %}
+
+        show_hide_stream_type();
+
+        use_flatpickr();
     </script>
 {% endblock %}

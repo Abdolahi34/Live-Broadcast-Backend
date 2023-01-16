@@ -1,16 +1,24 @@
 <!DOCTYPE html>
+
+{% load static %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>کپی کردن برنامه</title>
+    <title>همانند سازی برنامه</title>
+    <script src="{% static 'AdminPanel/custom/admin_program_duplicate.js' %}"></script>
     <script>
+        let alert_text;
+        let url;
         {% if is_exist is False %}
-            alert('برنامه مدنظر شما وجود ندارد.');
-            location.replace("{% url 'AdminPanel:admin_panel_program' %}");
+            alert_text = 'برنامه مدنظر شما وجود ندارد.';
+            url = "{% url 'AdminPanel:admin_panel_program' %}";
+            redirect_to(url, alert_text);
         {% endif %}
         {% if is_copy is True %}
-            alert('برنامه مدنظر شما کپی شد.');
-            location.replace("{% url 'AdminPanel:admin_panel_program' %}");
+            alert_text = 'برنامه مدنظر شما کپی شد.';
+            url = "{% url 'AdminPanel:admin_panel_program' %}";
+            redirect_to(url, alert_text);
         {% endif %}
     </script>
 </head>

@@ -1,10 +1,14 @@
 {% extends 'AdminPanel/admin_base.html' %}
 
+{% load static %}
+
 {% block head %}
+    <script src="{% static 'AdminPanel/custom/admin_program_view.js' %}"></script>
     {% if is_exist is False %}
         <script>
-            alert('برنامه مدنظر شما وجود ندارد.');
-            location.replace("{% url 'AdminPanel:admin_panel_program' %}");
+            let url = "{% url 'AdminPanel:admin_panel_program' %}";
+            let alert_text = 'برنامه مدنظر شما وجود ندارد.';
+            redirect_to(url, alert_text);
         </script>
     {% endif %}
 {% endblock %}
@@ -322,69 +326,21 @@
     </div>
 {% endblock %}
 {% block body_script %}
+    <script src="{% static 'AdminPanel/custom/admin_program_view.js' %}"></script>
     <script>
-        {#datetime_type#}
-        if ('{{ program.datetime_type }}' == 'weekly') {
-            {#Show weekly#}
-            weekly = document.getElementById("div_weekly");
-            weekly.style.display = "block";
-        } else if ('{{ program.datetime_type }}' == 'occasional') {
-            {#Show occasional#}
-            occasional = document.getElementById("div_occasional");
-            occasional.style.display = "block";
-        } else if ('{{ program.datetime_type }}' == 'weekly_occasional') {
-            {#Show weekly#}
-            weekly = document.getElementById("div_weekly");
-            weekly.style.display = "block";
-            {#Show occasional#}
-            occasional = document.getElementById("div_occasional");
-            occasional.style.display = "block";
-        }
+        let datetime_type_value, day_0, day_1, day_2, day_3, day_4, day_5, day_6;
+        datetime_type_value = '{{ program.datetime_type }}';
+        day_0 = '{{ program.day_0 }}';
+        day_1 = '{{ program.day_1 }}';
+        day_2 = '{{ program.day_2 }}';
+        day_3 = '{{ program.day_3 }}';
+        day_4 = '{{ program.day_4 }}';
+        day_5 = '{{ program.day_5 }}';
+        day_6 = '{{ program.day_6 }}';
+        set_datetime_type(datetime_type_value, day_0, day_1, day_2, day_3, day_4, day_5, day_6);
 
-        if ('{{ program.stream_type }}' == 'audio') {
-            {#Show audio#}
-            audio = document.getElementById("div_audio");
-            audio.style.display = "block";
-        } else if ('{{ program.stream_type }}' == 'video') {
-            {#Show video#}
-            video = document.getElementById("div_video");
-            video.style.display = "block";
-        } else {
-            {#Show audio#}
-            audio = document.getElementById("div_audio");
-            audio.style.display = "block";
-            {#Show video#}
-            video = document.getElementById("div_video");
-            video.style.display = "block";
-        }
-
-        if ('{{ program.day_0 }}' == 'True') {
-            document.getElementById("day_0").checked = true;
-            document.getElementById("div_id_day_0").style.display = "block";
-        }
-        if ('{{ program.day_1 }}' == 'True') {
-            document.getElementById("day_1").checked = true;
-            document.getElementById("div_id_day_1").style.display = "block";
-        }
-        if ('{{ program.day_2 }}' == 'True') {
-            document.getElementById("day_2").checked = true;
-            document.getElementById("div_id_day_2").style.display = "block";
-        }
-        if ('{{ program.day_3 }}' == 'True') {
-            document.getElementById("day_3").checked = true;
-            document.getElementById("div_id_day_3").style.display = "block";
-        }
-        if ('{{ program.day_4 }}' == 'True') {
-            document.getElementById("day_4").checked = true;
-            document.getElementById("div_id_day_4").style.display = "block";
-        }
-        if ('{{ program.day_5 }}' == 'True') {
-            document.getElementById("day_5").checked = true;
-            document.getElementById("div_id_day_5").style.display = "block";
-        }
-        if ('{{ program.day_6 }}' == 'True') {
-            document.getElementById("day_6").checked = true;
-            document.getElementById("div_id_day_6").style.display = "block";
-        }
+        let stream_type_value;
+        stream_type_value = '{{ program.stream_type }}';
+        set_stream_type(stream_type_value);
     </script>
 {% endblock %}
