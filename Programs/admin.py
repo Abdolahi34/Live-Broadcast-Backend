@@ -7,7 +7,7 @@ from Programs import models
 class MenuAdmin(admin.ModelAdmin):
     search_fields = ['title', 'page_url', 'creator', 'latest_modifier', 'date_created', 'date_modified']
     list_per_page = 20
-    list_display = ['title', 'page_url', 'num_order', 'creator']
+    list_display = ['title', 'page_url', 'num_order', 'latest_modifier']
     list_editable = ['num_order']
     list_display_links = ['title']
     ordering = ['num_order']
