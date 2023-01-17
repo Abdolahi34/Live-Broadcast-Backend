@@ -1,8 +1,3 @@
-function redirect_to(url, alert_text) {
-    alert(alert_text);
-    location.replace(url);
-}
-
 function set_datetime_type(datetime_type_value, day_0, day_1, day_2, day_3, day_4, day_5, day_6) {
     function set_week_days(day_0, day_1, day_2, day_3, day_4, day_5, day_6) {
         if (day_0 === 'True') {
@@ -34,6 +29,7 @@ function set_datetime_type(datetime_type_value, day_0, day_1, day_2, day_3, day_
             document.getElementById("div_id_day_6").style.display = "block";
         }
     }
+
     if (datetime_type_value === 'weekly') {
         // Show weekly
         weekly = document.getElementById("div_weekly");

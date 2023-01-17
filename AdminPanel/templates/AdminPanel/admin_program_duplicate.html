@@ -10,11 +10,6 @@
     <script>
         let alert_text;
         let url;
-        {% if is_exist is False %}
-            alert_text = 'برنامه مدنظر شما وجود ندارد.';
-            url = "{% url 'AdminPanel:admin_panel_program' %}";
-            redirect_to(url, alert_text);
-        {% endif %}
         {% if is_copy is True %}
             alert_text = 'برنامه مدنظر شما کپی شد.';
             url = "{% url 'AdminPanel:admin_panel_program' %}";

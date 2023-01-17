@@ -164,9 +164,7 @@ def AdminProgramView(request, num):
         args = {'username': get_user(request), 'program': program, 'is_exist': is_exist}
         return render(request, 'AdminPanel/admin_program_view.html', args)
     except:
-        is_exist = False
-        args = {'is_exist': is_exist}
-        return render(request, 'AdminPanel/admin_program_view.html', args)
+        return render(request, 'AdminPanel/admin_program_does_not_exist.html')
 
 
 @staff_member_required
@@ -184,9 +182,7 @@ def AdminProgramEdit(request, num):
                     'specified_end_time': specified_end_time}
             return render(request, 'AdminPanel/admin_program_add_edit.html', args)
         except:
-            is_exist = False
-            args = {'is_exist': is_exist}
-            return render(request, 'AdminPanel/admin_program_add_edit.html', args)
+            return render(request, 'AdminPanel/admin_program_does_not_exist.html')
 
     if request.method == 'POST':
         is_valid = False
@@ -313,6 +309,4 @@ def AdminProgramDuplicate(request, num):
         args = {'is_copy': is_copy}
         return render(request, 'AdminPanel/admin_program_duplicate.html', args)
     except:
-        is_exist = False
-        args = {'is_exist': is_exist}
-        return render(request, 'AdminPanel/admin_program_duplicate.html', args)
+        return render(request, 'AdminPanel/admin_program_does_not_exist.html')

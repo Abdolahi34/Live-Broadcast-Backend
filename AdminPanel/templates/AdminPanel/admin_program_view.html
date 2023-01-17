@@ -2,17 +2,6 @@
 
 {% load static %}
 
-{% block head %}
-    <script src="{% static 'AdminPanel/custom/admin_program_view.js' %}"></script>
-    {% if is_exist is False %}
-        <script>
-            let url = "{% url 'AdminPanel:admin_panel_program' %}";
-            let alert_text = 'برنامه مدنظر شما وجود ندارد.';
-            redirect_to(url, alert_text);
-        </script>
-    {% endif %}
-{% endblock %}
-
 {% block main_content %}
     <div class="card">
         <div class="card-header">

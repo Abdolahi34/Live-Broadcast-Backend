@@ -9,11 +9,6 @@
     <script>
         let alert_text;
         let url;
-        {% if is_exist is False %}
-            alert_text = 'برنامه مدنظر شما وجود ندارد.';
-            url = "{% url 'AdminPanel:admin_panel_program' %}";
-            redirect_to(url, alert_text);
-        {% endif %}
         {% if is_valid is False %}
             alert_text = 'اطلاعات، اشتباه وارد شده است.';
             alert_func(alert_text);
@@ -52,7 +47,7 @@
 
 {% block message %}
     {% if form.errors %}
-        <blockquote class="quote-danger">
+        <blockquote class="quote-danger" style="direction: rtl">
             <h5 id="note">هشدار!</h5>
             <p>{{ form.errors }}</p>
         </blockquote>

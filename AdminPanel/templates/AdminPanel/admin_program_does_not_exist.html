@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>وجود ندارد!</title>
+    <script src="{% static 'AdminPanel/custom/admin_program_does_not_exist.js' %}"></script>
+    <script>
+        let url = "{% url 'AdminPanel:admin_panel_program' %}";
+        let alert_text = 'برنامه مدنظر شما وجود ندارد.';
+        redirect_to(url, alert_text);
+    </script>
+</head>
+<body>
+
+</body>
+</html>
