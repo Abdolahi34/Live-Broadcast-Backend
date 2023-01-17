@@ -319,8 +319,3 @@ function remove_occasional(id) {
         document.getElementById("id_list_specified_end_time_removed").value = specified_end_time_removed_old + ",specified_end_time" + id;
     }
 }
-
-// Page specific script
-$(function () {
-    bsCustomFileInput.init();
-});

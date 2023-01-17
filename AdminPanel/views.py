@@ -189,6 +189,7 @@ def AdminProgramEdit(request, num):
         specified_date = None
         specified_start_time = None
         specified_end_time = None
+        program = models.Program.objects.get(pk=num)
         change_data = request.POST.copy()
         if change_data['datetime_type'] != 'weekly':
             # Set occasional
@@ -270,19 +271,55 @@ def AdminProgramEdit(request, num):
             change_data['specified_date'] = None
             change_data['specified_start_time'] = None
             change_data['specified_end_time'] = None
-        program = models.Program.objects.get(pk=num)
+
         form = forms.AdminAddProgramForm(change_data, request.FILES, instance=program)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.last_modified_by = request.user
-            # remove old logo
-            logo_path = program.logo.path
-            if os.path.exists(logo_path):
-                os.remove(logo_path)
-            # remove old player_background
-            player_background_path = program.player_background.path
-            if os.path.exists(player_background_path):
-                os.remove(player_background_path)
+
+            send_logo = False
+            send_player_background = False
+            # set logo and player_background
+            # logo has sent
+            try:
+                if change_data['logo'] != '':
+                    pass
+                else:
+                    # logo doesn't send
+                    # set before logo
+                    obj.logo = program.logo
+                    send_logo = False
+            except:
+                send_logo = True
+            if program.stream_type != 'video':
+                # player_background has sent
+                try:
+                    if change_data['player_background'] != '':
+                        pass
+                    else:
+                        # player_background doesn't send
+                        # set before player_background
+                        obj.player_background = program.player_background
+                        send_player_background = False
+                except:
+                    send_player_background = True
+            # End set logo and player_background
+
+            program = models.Program.objects.get(pk=num)
+
+            # remove old logo and player_background
+            # remove old logo if new logo is sent
+            if send_logo:
+                logo_path = program.logo.path
+                if os.path.exists(logo_path):
+                    os.remove(logo_path)
+            # remove old player_background if new player_background is sent
+            if send_player_background:
+                player_background_path = program.player_background.path
+                if os.path.exists(player_background_path):
+                    os.remove(player_background_path)
+            # End remove old logo and player_background
+
             obj.save()
             is_valid = True
         else:

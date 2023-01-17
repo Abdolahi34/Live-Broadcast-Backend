@@ -1254,6 +1254,8 @@
     <script src="{% static 'AdminPanel/plugins/flatpickr/flatpickr.min.js' %}"></script>
     <!-- bs-custom-file-input -->
     <script src="{% static 'AdminPanel/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+    <!-- jquery -->
+    <script src="{% static 'AdminPanel/plugins/jquery/jquery.min.js' %}"></script>
 
     <script src="{% static 'AdminPanel/custom/admin_program_add_edit.js' %}"></script>
     <script>
@@ -1388,6 +1390,11 @@
 
         show_hide_datetime_type();
 
+        {% if is_edit %}
+            //set logo not required
+            document.getElementById("id_logo").required = false;
+        {% endif %}
+
         {#stream_type#}
         let stream_type_value;
         let audio_platform_type_value;
@@ -1404,5 +1411,10 @@
         show_hide_stream_type();
 
         use_flatpickr();
+
+        // Page specific script
+        $(function () {
+            bsCustomFileInput.init();
+        });
     </script>
 {% endblock %}
