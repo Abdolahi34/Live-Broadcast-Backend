@@ -48,6 +48,9 @@
                     <table class="table table-striped projects">
                         <thead>
                         <tr>
+                            <th style="text-align: center">
+                                لوگو
+                            </th>
                             <th style="text-align: center; direction: rtl">
                                 عنوان
                             </th>
@@ -74,6 +77,11 @@
                         <tbody>
                         {% for program in programs %}
                             <tr>
+                                <td>
+                                    <img class="img-circle img-bordered-sm" src="{{ program.logo.url }}"
+                                         alt="Logo"
+                                         style="height: 75px; width: 75px">
+                                </td>
                                 <td style="text-align: center; direction: rtl">
                                     {{ program.title }}
                                 </td>
