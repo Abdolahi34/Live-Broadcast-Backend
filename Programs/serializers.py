@@ -53,7 +53,9 @@ class ProgramSerializer(serializers.ModelSerializer):
 
     def get_logo(self, obj):
         request = self.context.get('request')
-        return request.build_absolute_uri(obj.logo.url)
+        logo = request.build_absolute_uri(obj.logo.url)
+        logo = "https" + logo[4:]
+        return logo
 
     def get_isLive(self, obj):
         return obj.isLive
@@ -64,6 +66,7 @@ class ProgramSerializer(serializers.ModelSerializer):
         if obj.is_audio_active:
             request = self.context.get('request')
             player_background = request.build_absolute_uri(obj.player_background.url)
+            player_background = "https" + player_background[4:]
             streams['audio'] = {
                 'url': obj.audio_link,
                 'stats': {
