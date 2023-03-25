@@ -8,6 +8,7 @@ urlpatterns = [
     path('v1/check-on-planning/', views.check_on_planning, name='check_on_planning'),
     path('v1/create-programs-json/', views.create_programs_json, name='create_programs_json'),
     path('v1/send-message-to-channel/', views.send_message_to_channel, name='send_message_to_channel'),
+    path('v1/set-timestamps/', views.set_timestamps, name='set_timestamps'),
     path('v1/menu/', views.MenuApi.as_view(), name='menu'),
     path('v1/create-menu-json/', views.create_menu_json, name='create_menu_json'),
 ]
