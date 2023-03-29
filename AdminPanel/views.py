@@ -21,7 +21,7 @@ def Admin(request):
 
 @staff_member_required
 def AdminProgram(request):
-    programs = models.Program.objects.all().order_by('-status', 'timestamp_earliest')
+    programs = models.Program.objects.order_by('-status', 'timestamp_earliest')
     program_id = request.GET.get('delete_id')
     is_exist = True
     is_deleted = False

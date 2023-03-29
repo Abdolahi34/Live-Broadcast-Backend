@@ -15,7 +15,6 @@ import xml.etree.ElementTree as ET
 from urllib.request import urlopen
 from django.shortcuts import HttpResponse
 from django.urls import reverse
-import requests
 
 from Programs import models, serializers
 
@@ -27,114 +26,19 @@ class ProgramApi(views.APIView):
         return response.Response(serializer.data, status=status.HTTP_200_OK)
 
 
-# Every 10 Sec
-def check_live(request):
-    # Start Check Shoutcast Stream Status
-    # TODO Check based on shoutcast version
-    def check_shoutcast_stream_status(stats_url):
-        url_var = urlopen(stats_url, timeout=5)
-        # We're at the root node (<main tag>)
-        root_node = ET.parse(url_var).getroot()
-        # Find interested in tag
-        shoutcast_status = root_node.find('STREAMSTATUS').text
-        return int(shoutcast_status)
+class MenuApi(views.APIView):
+    def get(self, request):
+        queryset = models.Menu.objects.all().order_by('num_order')
+        serializer_data = serializers.MenuSerializer(queryset, many=True)
+        serializer = {'menuItems': serializer_data.data}
+        return response.Response(serializer, status=status.HTTP_200_OK)
 
-    # End Check Shoutcast Stream Status
 
-    # Start Check Wowza Stream Status
-    # TODO Check based on wowza version
-    def check_wowza_stream_status(stats_url):
-        url_var = urlopen(stats_url, timeout=5)
-        # We're at the root node (<main tag>)
-        root_node = ET.parse(url_var).getroot()
-        # We need to go one level below to get (interested in tag)
-        i = 1
-        for tag in root_node.findall('ConnectionCount/'):
-            # Get the value of the heading attribute
-            if i == 3:
-                wowza_status = tag.text
-                return int(wowza_status)
-            i += 1
-
-    # End Check Wowza Stream Status
-
+def create_programs_json(request):
     queryset = models.Program.objects.filter(status='publish')
 
     try:
         for program in queryset:
-            if program.is_on_planning:
-                if program.stream_type == 'audio':
-                    if program.audio_platform_type == 'shoutcast':
-                        if check_shoutcast_stream_status(program.audio_stats_link):
-                            program.is_audio_active = True
-                        else:
-                            program.is_audio_active = False
-                    else:
-                        if check_wowza_stream_status(program.audio_stats_link):
-                            program.is_audio_active = True
-                        else:
-                            program.is_audio_active = False
-                elif program.stream_type == 'video':
-                    if check_wowza_stream_status(program.video_stats_link):
-                        program.is_video_active = True
-                    else:
-                        program.is_video_active = False
-                else:
-                    # audio
-                    if program.audio_platform_type == 'shoutcast':
-                        if check_shoutcast_stream_status(program.audio_stats_link):
-                            program.is_audio_active = True
-                        else:
-                            program.is_audio_active = False
-                    else:
-                        if check_wowza_stream_status(program.audio_stats_link):
-                            program.is_audio_active = True
-                        else:
-                            program.is_audio_active = False
-                    # video
-                    if check_wowza_stream_status(program.video_stats_link):
-                        program.is_video_active = True
-                    else:
-                        program.is_video_active = False
-            else:
-                program.is_audio_active = False
-                program.is_video_active = False
-
-            program.save()
-        return HttpResponse('Status Of Programs is Checked.')
-
-    except:
-        return HttpResponse('An <span style="color: #ff0000">Error</span> occurred.')
-
-
-# Every 10 Sec
-def check_on_planning(request):
-    queryset = models.Program.objects.filter(status='publish')
-
-    try:
-        for program in queryset:
-            # Start Set_Timestamps
-            def set_timestamp_earliest():
-                try:
-                    if program.datetime_type == 'weekly':
-                        program.timestamp_earliest = min(program.timestamps_start_weekly)
-                        if not program.timestamps_start_weekly:
-                            program.timestamp_earliest = 0
-                    elif program.datetime_type == 'occasional':
-                        program.timestamp_earliest = min(program.timestamps_start_occasional)
-                        if not program.timestamps_start_occasional:
-                            program.timestamp_earliest = 0
-                    else:
-                        timestamps_weekly_earliest = min(program.timestamps_start_weekly)
-                        timestamps_occasional_earliest = min(program.timestamps_start_occasional)
-                        program.timestamp_earliest = min(timestamps_weekly_earliest, timestamps_occasional_earliest)
-                        if not program.timestamps_start_weekly and not program.timestamps_start_occasional:
-                            program.timestamp_earliest = 0
-                except:
-                    pass
-
-            # End Set_Timestamps
-
             # Start Check Time of Stream
             def check_stream_time():
                 def check_timestamp(start_timestamp, end_timestamp):
@@ -166,47 +70,41 @@ def check_on_planning(request):
 
             # End Check Time of Stream
 
+            # Start Set_Timestamps
+            def set_timestamp_earliest():
+                try:
+                    if program.datetime_type == 'weekly':
+                        program.timestamp_earliest = min(program.timestamps_start_weekly)
+                    elif program.datetime_type == 'occasional':
+                        program.timestamp_earliest = min(program.timestamps_start_occasional)
+                    else:
+                        timestamps_weekly_earliest = min(program.timestamps_start_weekly)
+                        timestamps_occasional_earliest = min(program.timestamps_start_occasional)
+                        program.timestamp_earliest = min(timestamps_weekly_earliest, timestamps_occasional_earliest)
+                except:
+                    program.timestamp_earliest = 0
+
+            # End Set_Timestamps
+
             set_timestamp_earliest()
-            if program.timestamp_earliest == 0:
-                program.status = 'archive'
-
             if check_stream_time():
-                program.is_on_planning = True
-            else:
-                program.is_on_planning = False
-            program.save()
-
-        return HttpResponse('Programs (On Planning) Checked.')
-
-    except:
-        return HttpResponse('An <span style="color: #ff0000">Error</span> occurred.')
-
-
-# Every 10 Sec
-def create_programs_json(request):
-    queryset = models.Program.objects.filter(status='publish')
-
-    try:
-        for program in queryset:
-            if program.is_on_planning:
-                if program.error_count == 0:
+                error_count = program.error_count
+                if error_count == 0:
                     if program.is_audio_active is True or program.is_video_active is True:
                         program.isLive = True
                     else:
                         if program.isLive:
                             program.error_count = 1
-                elif 0 < program.error_count < 5:
+                elif 0 < error_count < 5:
                     if program.is_audio_active is True or program.is_video_active is True:
                         program.error_count = 0
-                        program.isLive = True
                     else:
-                        program.error_count = program.error_count + 1
-                else:
+                        program.error_count = error_count + 1
+                elif error_count == 5:
                     program.isLive = False
                     program.error_count = 0
-            else:
-                program.error_count = 0
-                program.isLive = False
+            if program.timestamp_earliest == 0:
+                program.status = 'archive'
             program.save()
 
         # Start Create programs.json
@@ -234,6 +132,7 @@ def create_programs_json(request):
                 program.is_video_active = True
             program.isLive = False
             program.error_count = 0
+
             program.save()
 
         # Start Create programs.json
@@ -249,185 +148,134 @@ def create_programs_json(request):
         return HttpResponse('An <span style="color: #ff0000">Error</span> occurred.')
 
 
-# Every 10 Sec
-def send_message_to_channel(request):
-    # Send Message On Start and End Program
-    """
-    on start time - program started
-    0 = Program not started
-    10 = on start time message sent
-    11 = on start time and start program message sent
-    """
+def check_live(request):
+    # Start Check Shoutcast Stream Status
+    def check_shoutcast_stream_status(stats_url):
+        url_var = urlopen(stats_url, timeout=5)
+        # We're at the root node (<main tag>)
+        root_node = ET.parse(url_var).getroot()
+        # Find interested in tag
+        shoutcast_status = root_node.find('STREAMSTATUS').text
+        return int(shoutcast_status)
 
-    def send_message(message):
-        url = "https://tapi.bale.ai/939503755:Q5trlNp3vQqhTtgkjBnEB7nKbHtQxlBom3hVqmdC/sendMessage"  # TODO
-        headers = {"Content-Type": "application/json"}
-        data = {"chat_id": "@radio_rahh_test", "text": message, "disable_notification": True}  # TODO
-        requests.post(url=url, json=data, headers=headers, timeout=3)
+    # End Check Shoutcast Stream Status
 
-    # Send Message On Start and End Program
+    # Start Check Wowza Stream Status
+    def check_wowza_stream_status(stats_url):
+        url_var = urlopen(stats_url, timeout=5)
+        # We're at the root node (<main tag>)
+        root_node = ET.parse(url_var).getroot()
+        # We need to go one level below to get (interested in tag)
+        i = 1
+        for tag in root_node.findall('ConnectionCount/'):
+            # Get the value of the heading attribute
+            if i == 3:
+                wowza_status = tag.text
+                return int(wowza_status)
+            i += 1
+
+    # End Check Wowza Stream Status
 
     queryset = models.Program.objects.filter(status='publish')
 
     try:
         for program in queryset:
-            if program.is_on_planning:
-                if program.send_message == 0:
-                    message = f"▶️ برنامه رادیو راه به زودی شروع می شود\n\n*{program.title}*\n{program.date_display}\n{program.time_display}\n📣 {program.description}"
-                    send_message(message)
-                    program.send_message = 10
-                if program.is_audio_active is True or program.is_video_active is True:
-                    if program.send_message == 10:
-                        if program.stream_type == 'audio':
-                            message = f"💡پخش زنده *{program.title}* شروع شد\n\n🔊 صوتی\n\n📶 rahh.ir"
-                        elif program.stream_type == 'video':
-                            message = f"💡پخش زنده *{program.title}* شروع شد\n\n🖥 تصویری\n\n📶 rahh.ir"
-                        else:
-                            message = f"💡پخش زنده *{program.title}* شروع شد\n\n🔊 صوتی\n🖥 تصویری\n\n📶 rahh.ir"
-                        send_message(message)
-                        program.send_message = 11
-            else:
-                program.send_message = 0
-            program.save()
+            # Start Check Time of Stream
+            def check_stream_time():
+                def check_timestamp(start_timestamp, end_timestamp):
+                    obj_len = len(start_timestamp)
+                    for i in range(obj_len):
+                        if start_timestamp[i] <= now_timestamp:
+                            if now_timestamp < end_timestamp[i]:
+                                return True
+                    return False
 
-        return HttpResponse('Messages have been sent.')
-
-    except:
-        return HttpResponse('An <span style="color: #ff0000">Error</span> occurred.')
-
-
-# Every 1 Min
-def set_timestamps(request):
-    try:
-        queryset = models.Program.objects.filter(status='publish')
-
-        for program in queryset:
-            def timestamps_weekly_func():
-                def append_days_timestamps_func(start_date, start_time, end_time):
-                    while start_date <= program.end_date:
-                        this_timestamp_start = datetime.datetime(start_date.year, start_date.month, start_date.day,
-                                                                 start_time.hour, start_time.minute,
-                                                                 start_time.second, 0).timestamp()
-                        if end_time < start_time:
-                            start_date += datetime.timedelta(days=1)
-                            this_timestamp_end = datetime.datetime(start_date.year, start_date.month, start_date.day,
-                                                                   end_time.hour, end_time.minute,
-                                                                   end_time.second, 0).timestamp()
-                            start_date -= datetime.timedelta(days=1)
-                        else:
-                            this_timestamp_end = datetime.datetime(start_date.year, start_date.month, start_date.day,
-                                                                   end_time.hour, end_time.minute,
-                                                                   end_time.second, 0).timestamp()
-                        program.timestamps_start_weekly.append(this_timestamp_start)
-                        program.timestamps_end_weekly.append(this_timestamp_end)
-                        start_date += datetime.timedelta(days=7)
-
-                days = [program.day_0, program.day_1, program.day_2, program.day_3, program.day_4, program.day_5,
-                        program.day_6]
-                start_time_days = [program.start_time_day_0, program.start_time_day_1, program.start_time_day_2,
-                                   program.start_time_day_3, program.start_time_day_4, program.start_time_day_5,
-                                   program.start_time_day_6]
-                end_time_days = [program.end_time_day_0, program.end_time_day_1, program.end_time_day_2,
-                                 program.end_time_day_3, program.end_time_day_4, program.end_time_day_5,
-                                 program.end_time_day_6]
-
-                if program.start_date <= datetime.datetime.now().date():
-                    now_weekday = datetime.datetime.now().weekday()
-                    now_date = datetime.datetime.now().date()
-                    iso_weekday_nums = [5, 6, 0, 1, 2, 3, 4]
-                    for i in range(7):
-                        if days[i]:
-                            if now_weekday != iso_weekday_nums[i]:
-                                now_date += datetime.timedelta(days=now_weekday - iso_weekday_nums[i])
-                                append_days_timestamps_func(now_date, start_time_days[i], end_time_days[i])
-                                now_date -= datetime.timedelta(days=now_weekday - iso_weekday_nums[i])
-                            else:
-                                append_days_timestamps_func(now_date, start_time_days[i], end_time_days[i])
+                now_timestamp = datetime.datetime.now().timestamp()
+                if program.datetime_type == 'weekly':
+                    if check_timestamp(program.timestamps_start_weekly, program.timestamps_end_weekly):
+                        return True
+                    else:
+                        return False
+                elif program.datetime_type == 'occasional':
+                    if check_timestamp(program.timestamps_start_occasional, program.timestamps_end_occasional):
+                        return True
+                    else:
+                        return False
                 else:
-                    date_start = program.start_date
-                    for i in range(7):
-                        if days[i]:
-                            append_days_timestamps_func(date_start, start_time_days[i], end_time_days[i])
+                    if check_timestamp(program.timestamps_start_weekly,
+                                       program.timestamps_end_weekly) or check_timestamp(
+                        program.timestamps_start_occasional, program.timestamps_end_occasional):
+                        return True
+                    else:
+                        return False
 
-            def timestamps_occasional_func():
-                try:
-                    program_len = len(program.specified_date)
-                    for i in range(program_len):
-                        this_specified_date = program.specified_date[i]
-                        if datetime.datetime.now().date() <= this_specified_date:
-                            this_specified_start_time = program.specified_start_time[i]
-                            this_specified_end_time = program.specified_end_time[i]
-                            this_timestamp_start = datetime.datetime(this_specified_date.year,
-                                                                     this_specified_date.month,
-                                                                     this_specified_date.day,
-                                                                     this_specified_start_time.hour,
-                                                                     this_specified_start_time.minute,
-                                                                     this_specified_start_time.second, 0).timestamp()
-                            # agar shoroe ghable 12 pm bood va payan bade 12 pm
-                            if this_specified_end_time < this_specified_start_time:
-                                this_specified_date += datetime.timedelta(days=1)
-                            this_timestamp_end = datetime.datetime(this_specified_date.year, this_specified_date.month,
-                                                                   this_specified_date.day,
-                                                                   this_specified_end_time.hour,
-                                                                   this_specified_end_time.minute,
-                                                                   this_specified_end_time.second, 0).timestamp()
-                            program.timestamps_start_occasional.append(this_timestamp_start)
-                            program.timestamps_end_occasional.append(this_timestamp_end)
-                except IndexError:
-                    pass
+            # End Check Time of Stream
 
-            if program.datetime_type == 'weekly':
-                # set occasional timestamps None
-                program.timestamps_start_occasional = None
-                program.timestamps_end_occasional = None
-                # set weekly timestamps
-                program.timestamps_start_weekly = []
-                program.timestamps_end_weekly = []
-                timestamps_weekly_func()
-            elif program.datetime_type == 'occasional':
-                # set weekly timestamps None
-                program.timestamps_start_weekly = None
-                program.timestamps_end_weekly = None
-                # set occasional timestamps
-                program.timestamps_start_occasional = []
-                program.timestamps_end_occasional = []
-                timestamps_occasional_func()
+            if check_stream_time():
+                if program.stream_type == 'audio':
+                    if program.audio_platform_type == 'shoutcast':
+                        if check_shoutcast_stream_status(program.audio_stats_link):
+                            program.is_audio_active = True
+                            program.isLive = True
+                        else:
+                            program.is_audio_active = False
+                            program.isLive = False
+                    else:
+                        if check_wowza_stream_status(program.audio_stats_link):
+                            program.is_audio_active = True
+                            program.isLive = True
+                        else:
+                            program.is_audio_active = False
+                            program.isLive = False
+                elif program.stream_type == 'video':
+                    if check_wowza_stream_status(program.video_stats_link):
+                        program.is_video_active = True
+                        program.isLive = True
+                    else:
+                        program.is_video_active = False
+                        program.isLive = False
+                else:
+                    # audio
+                    if program.audio_platform_type == 'shoutcast':
+                        if check_shoutcast_stream_status(program.audio_stats_link):
+                            program.is_audio_active = True
+                            program.isLive = True
+                        else:
+                            program.is_audio_active = False
+                            program.isLive = False
+                    else:
+                        if check_wowza_stream_status(program.audio_stats_link):
+                            program.is_audio_active = True
+                            program.isLive = True
+                        else:
+                            program.is_audio_active = False
+                            program.isLive = False
+                    # video
+                    if check_wowza_stream_status(program.video_stats_link):
+                        program.is_video_active = True
+                        program.isLive = True
+                    else:
+                        program.is_video_active = False
+                        program.isLive = False
             else:
-                program.timestamps_start_weekly = []
-                program.timestamps_end_weekly = []
-                timestamps_weekly_func()
-                program.timestamps_start_occasional = []
-                program.timestamps_end_occasional = []
-                timestamps_occasional_func()
+                program.is_audio_active = False
+                program.is_video_active = False
+                program.isLive = False
+
             program.save()
-
-        return HttpResponse('Timestamp of Programs checked.')
-
+        return HttpResponse('live status is Checked.')
     except:
         return HttpResponse('An <span style="color: #ff0000">Error</span> occurred.')
 
 
-class MenuApi(views.APIView):
-    def get(self, request):
-        queryset = models.Menu.objects.all().order_by('num_order')
-        serializer_data = serializers.MenuSerializer(queryset, many=True)
-        serializer = {'menuItems': serializer_data.data}
-        return response.Response(serializer, status=status.HTTP_200_OK)
-
-
-# Every 1 Min
 def create_menu_json(request):
+    # Start Create menu.json
+    file = open("static/menu.json", "w+", encoding="utf-8")  # TODO Path
+    json_var = urlopen(request.build_absolute_uri(reverse('Programs-api:menu')), timeout=5).read().decode("utf-8")
     try:
-        # Start Create menu.json
-        file = open("static/menu.json", "w+", encoding="utf-8")  # TODO Path
-        json_var = urlopen(request.build_absolute_uri(reverse('Programs-api:menu')), timeout=5).read().decode("utf-8")
-        try:
-            file.write(json_var)
-        finally:
-            file.close()
-        # End Create programs.json
+        file.write(json_var)
+    finally:
+        file.close()
+    # End Create programs.json
 
-        return HttpResponse('menu.json is Created.')
-
-    except:
-        return HttpResponse('An <span style="color: #ff0000">Error</span> occurred.')
+    return HttpResponse('menu.json is Created.')

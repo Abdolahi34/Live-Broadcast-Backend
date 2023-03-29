@@ -117,12 +117,10 @@ class Program(models.Model):
                                        verbose_name='لینک آمار پخش زنده تصویری')
     video_platform_type = models.CharField(blank=True, null=True, max_length=9, choices=video_platform_type_choices,
                                            verbose_name='نوع پلتفرم پخش زنده تصویری')
-    is_on_planning = models.BooleanField(default=False, editable=False)
     is_audio_active = models.BooleanField(default=False, editable=False)
     is_video_active = models.BooleanField(default=False, editable=False)
     isLive = models.BooleanField(default=False, editable=False)
     error_count = models.PositiveSmallIntegerField(default=0, editable=False)
-    send_message = models.PositiveSmallIntegerField(default=0, editable=False)
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False, verbose_name='سازنده',
                                 related_name='creator_program')
     latest_modifier = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False,
