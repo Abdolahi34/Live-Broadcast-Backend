@@ -1,6 +1,6 @@
 from django import forms
 
-from Programs import models
+from Api import models
 
 
 class AdminAddProgramForm(forms.ModelForm):

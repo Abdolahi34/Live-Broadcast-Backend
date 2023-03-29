@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from Programs import models
+from Api import models
 
 
 @admin.register(models.Menu)

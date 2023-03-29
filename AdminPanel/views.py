@@ -3,7 +3,7 @@ from django.contrib.auth import get_user
 from django.contrib.admin.views.decorators import staff_member_required
 import os
 
-from Programs import models
+from Api import models
 
 from AdminPanel import forms
 

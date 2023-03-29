@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'widget_tweaks',
-    'Programs.apps.ProgramsConfig',
+    'Api.apps.ApiConfig',
     'AdminPanel.apps.AdminPanelConfig',
     'RadioRahh',
 ]

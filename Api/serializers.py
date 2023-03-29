@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from Programs import models
+from Api import models
 
 
 class MenuSerializer(serializers.ModelSerializer):

@@ -95,13 +95,13 @@ class Program(models.Model):
     timestamps_end_occasional = ArrayField(models.PositiveBigIntegerField(blank=True, null=True), editable=False,
                                            blank=True, null=True)
     timestamp_earliest = models.PositiveBigIntegerField(blank=True, null=True, editable=False, default=0)
-    logo = models.ImageField(upload_to='Programs/logo/',
+    logo = models.ImageField(upload_to='Api/Program/logo/',
                              help_text='نسبت طول و عرض لوگو باید 1:1 باشد. (حداکثر سایز 250KB)',
                              verbose_name='لوگو')
     logo_link = models.URLField(default='https://lesansedgh.ir',
                                 help_text='تعداد کاراکتر مجاز 200 عدد می باشد.',
                                 verbose_name='لینک لوگو')
-    player_background = models.ImageField(upload_to='Programs/player_background/', blank=True, null=True,
+    player_background = models.ImageField(upload_to='Api/Program/player_background/', blank=True, null=True,
                                           help_text='نسبت طول و عرض تصویر پس زمینه پخش زنده باید 16:9 باشد. (حداکثر سایز 250KB)',
                                           verbose_name='تصویر پس زمینه پخش زنده')
     stream_type = models.CharField(max_length=11, choices=stream_type_choices, verbose_name='نوع پخش زنده')
