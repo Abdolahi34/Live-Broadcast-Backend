@@ -117,10 +117,12 @@ class Program(models.Model):
                                        verbose_name='لینک آمار پخش زنده تصویری')
     video_platform_type = models.CharField(blank=True, null=True, max_length=9, choices=video_platform_type_choices,
                                            verbose_name='نوع پلتفرم پخش زنده تصویری')
+    is_on_planning = models.BooleanField(default=False, editable=False)
     is_audio_active = models.BooleanField(default=False, editable=False)
     is_video_active = models.BooleanField(default=False, editable=False)
     isLive = models.BooleanField(default=False, editable=False)
     error_count = models.PositiveSmallIntegerField(default=0, editable=False)
+    send_message = models.PositiveSmallIntegerField(default=0, editable=False)
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False, verbose_name='سازنده',
                                 related_name='creator_program')
     latest_modifier = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False,
@@ -380,59 +382,62 @@ class Program(models.Model):
                     this_timestamp_start = datetime.datetime(start_date.year, start_date.month, start_date.day,
                                                              start_time.hour, start_time.minute,
                                                              start_time.second, 0).timestamp()
-                    if end_time < start_time:
+                    if start_time < end_time:
+                        this_timestamp_end = datetime.datetime(start_date.year, start_date.month, start_date.day,
+                                                               end_time.hour, end_time.minute,
+                                                               end_time.second, 0).timestamp()
+                    else:
+                        # start_time before 12 pm and end_time after 12 pm
                         start_date += datetime.timedelta(days=1)
                         this_timestamp_end = datetime.datetime(start_date.year, start_date.month, start_date.day,
                                                                end_time.hour, end_time.minute,
                                                                end_time.second, 0).timestamp()
                         start_date -= datetime.timedelta(days=1)
-                    else:
-                        this_timestamp_end = datetime.datetime(start_date.year, start_date.month, start_date.day,
-                                                               end_time.hour, end_time.minute,
-                                                               end_time.second, 0).timestamp()
                     self.timestamps_start_weekly.append(this_timestamp_start)
                     self.timestamps_end_weekly.append(this_timestamp_end)
                     start_date += datetime.timedelta(days=7)
 
-            days = [self.day_0, self.day_1, self.day_2, self.day_3, self.day_4, self.day_5, self.day_6]
+            days = [self.day_0, self.day_1, self.day_2, self.day_3, self.day_4, self.day_5,
+                    self.day_6]
             start_time_days = [self.start_time_day_0, self.start_time_day_1, self.start_time_day_2,
                                self.start_time_day_3, self.start_time_day_4, self.start_time_day_5,
                                self.start_time_day_6]
-            end_time_days = [self.end_time_day_0, self.end_time_day_1, self.end_time_day_2, self.end_time_day_3,
-                             self.end_time_day_4, self.end_time_day_5, self.end_time_day_6]
+            end_time_days = [self.end_time_day_0, self.end_time_day_1, self.end_time_day_2,
+                             self.end_time_day_3, self.end_time_day_4, self.end_time_day_5,
+                             self.end_time_day_6]
 
-            if self.start_date <= datetime.datetime.now().date():
+            now_date = datetime.datetime.now().date()
+            if now_date <= self.start_date:
+                for i in range(7):
+                    if days[i]:
+                        append_days_timestamps_func(self.start_date, start_time_days[i], end_time_days[i])
+            elif now_date <= self.end_date:
                 now_weekday = datetime.datetime.now().weekday()
-                now_date = datetime.datetime.now().date()
                 iso_weekday_nums = [5, 6, 0, 1, 2, 3, 4]
                 for i in range(7):
                     if days[i]:
-                        if now_weekday != iso_weekday_nums[i]:
+                        if now_weekday == iso_weekday_nums[i]:
+                            append_days_timestamps_func(now_date, start_time_days[i], end_time_days[i])
+                        else:
                             now_date += datetime.timedelta(days=now_weekday - iso_weekday_nums[i])
                             append_days_timestamps_func(now_date, start_time_days[i], end_time_days[i])
                             now_date -= datetime.timedelta(days=now_weekday - iso_weekday_nums[i])
-                        else:
-                            append_days_timestamps_func(now_date, start_time_days[i], end_time_days[i])
-            else:
-                date_start = self.start_date
-                for i in range(7):
-                    if days[i]:
-                        append_days_timestamps_func(date_start, start_time_days[i], end_time_days[i])
 
         def timestamps_occasional_func():
             try:
-                self_len = len(self.specified_date)
-                for i in range(self_len):
+                program_len = len(self.specified_date)
+                for i in range(program_len):
                     this_specified_date = self.specified_date[i]
                     if datetime.datetime.now().date() <= this_specified_date:
                         this_specified_start_time = self.specified_start_time[i]
                         this_specified_end_time = self.specified_end_time[i]
-                        this_timestamp_start = datetime.datetime(this_specified_date.year, this_specified_date.month,
+                        this_timestamp_start = datetime.datetime(this_specified_date.year,
+                                                                 this_specified_date.month,
                                                                  this_specified_date.day,
                                                                  this_specified_start_time.hour,
                                                                  this_specified_start_time.minute,
                                                                  this_specified_start_time.second, 0).timestamp()
-                        # agar shoroe ghable 12 pm bood va payan bade 12 pm
+                        # start_time before 12 pm and end_time after 12 pm
                         if this_specified_end_time < this_specified_start_time:
                             this_specified_date += datetime.timedelta(days=1)
                         this_timestamp_end = datetime.datetime(this_specified_date.year, this_specified_date.month,
@@ -488,3 +493,7 @@ class Menu(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super(Menu, self).save(*args, **kwargs)
