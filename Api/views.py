@@ -31,7 +31,6 @@ class ProgramApi(views.APIView):
 # Every 10 Sec
 def check_on_planning(request):
     queryset = models.Program.objects.filter(status='publish')
-
     try:
         for program in queryset:
             # Start Check Time of Stream
@@ -73,9 +72,7 @@ def check_on_planning(request):
             else:
                 program.is_on_planning = False
             program.save()
-
         return HttpResponse('Programs (On Planning) Checked.')
-
     except:
         return HttpResponseServerError('Internal Server Error')
 
@@ -112,7 +109,6 @@ def check_live(request):
     # End Check Wowza Stream Status
 
     queryset = models.Program.objects.filter(status='publish')
-
     try:
         for program in queryset:
             if program.is_on_planning:
@@ -152,7 +148,6 @@ def check_live(request):
             else:
                 program.is_audio_active = False
                 program.is_video_active = False
-
             program.save()
         return HttpResponse('Status Of Programs is Checked.')
 
@@ -160,10 +155,9 @@ def check_live(request):
         return HttpResponseServerError('Internal Server Error')
 
 
-# Every 10 Sec
+# programs.json will be created automatically.
 def create_programs_json(request):
     queryset = models.Program.objects.filter(status='publish')
-
     try:
         for program in queryset:
             if program.is_on_planning:
@@ -188,14 +182,12 @@ def create_programs_json(request):
 
         # Start Create programs.json
         file = open("static/programs.json", "w+", encoding="utf-8")  # TODO Path
-        json_var = urlopen(request.build_absolute_uri(reverse('Api:programs')), timeout=5).read().decode(
-            "utf-8")
+        json_var = urlopen(request.build_absolute_uri(reverse('Api:programs')), timeout=5).read().decode("utf-8")
         try:
             file.write(json_var)
         finally:
             file.close()
         # End Create programs.json
-
         return HttpResponse('programs.json is Created.')
 
     except:
@@ -215,14 +207,12 @@ def create_programs_json(request):
 
         # Start Create programs.json
         file = open("static/programs.json", "w+", encoding="utf-8")  # TODO Path
-        json_var = urlopen(request.build_absolute_uri(reverse('Api:programs')), timeout=5).read().decode(
-            "utf-8")
+        json_var = urlopen(request.build_absolute_uri(reverse('Api:programs')), timeout=5).read().decode("utf-8")
         try:
             file.write(json_var)
         finally:
             file.close()
         # End Create programs.json
-
         return HttpResponseServerError('Internal Server Error')
 
 
@@ -236,10 +226,10 @@ def send_message_to_channel(request):
     """
 
     def send_message(message):
-        url = "https://tapi.bale.ai/939503755:Q5trlNp3vQqhTtgkjBnEB7nKbHtQxlBom3hVqmdC/sendMessage"  # TODO
+        url = "https://tapi.bale.ai/939503755:Q5trlNp3vQqhTtgkjBnEB7nKbHtQxlBom3hVqmdC/sendMessage"  # TODO api url
         headers = {"Content-Type": "application/json"}
-        data = {"chat_id": "@radio_rahh_test", "text": message, "disable_notification": True}  # TODO
-        requests.post(url=url, json=data, headers=headers, timeout=3)
+        data = {"chat_id": "@radio_rahh_test", "text": message, "disable_notification": True}  # TODO chat_id
+        requests.post(url=url, json=data, headers=headers, timeout=5)
 
     queryset = models.Program.objects.filter(status='publish')
     try:
@@ -263,7 +253,6 @@ def send_message_to_channel(request):
             else:
                 program.send_message = 0
             program.save()
-
         return HttpResponse('Messages have been sent.')
 
     except:
@@ -274,7 +263,6 @@ def send_message_to_channel(request):
 def set_timestamps(request):
     try:
         queryset = models.Program.objects.filter(status='publish')
-
         for program in queryset:
             def timestamps_weekly_func():
                 def append_days_timestamps_func(start_date, start_time, end_time):
@@ -404,7 +392,6 @@ def set_timestamps(request):
                 program.timestamps_end_occasional = []
                 timestamps_occasional_func()
             program.save()
-
         return HttpResponse('Timestamp of Programs checked.')
 
     except:
@@ -419,7 +406,7 @@ class MenuApi(views.APIView):
         return response.Response(serializer, status=status.HTTP_200_OK)
 
 
-# Every 1 Min
+# menu.json will be created automatically.
 def create_menu_json(request):
     try:
         # Start Create menu.json
@@ -437,16 +424,12 @@ def create_menu_json(request):
         return HttpResponseServerError('Internal Server Error')
 
 
-# Every 10 Sec
 def every_10_second(request):
     # TODO Urls
-    check_on_planning_status_code = requests.get('http://127.0.0.1:8000/api/v1/check-on-planning/').status_code
-    check_live_status_code = requests.get('http://127.0.0.1:8000/api/v1/check-live/').status_code
-    create_programs_json_status_code = requests.get('http://127.0.0.1:8000/api/v1/create-programs-json/').status_code
+    check_on_planning_status_code = requests.get('http://127.0.0.1:8000' + reverse('Api:check_on_planning'), timeout=5).status_code
+    check_live_status_code = requests.get('http://127.0.0.1:8000' + reverse('Api:check_live'), timeout=5).status_code
     send_message_to_channel_status_code = requests.get(
-        'http://127.0.0.1:8000/api/v1/send-message-to-channel/').status_code
-    set_timestamps_status_code = requests.get('http://127.0.0.1:8000/api/v1/set-timestamps/').status_code
-    create_menu_json_status_code = requests.get('http://127.0.0.1:8000/api/v1/create-menu-json/').status_code
-    if check_on_planning_status_code != 200 or check_live_status_code != 200 or create_programs_json_status_code != 200 or send_message_to_channel_status_code != 200 or set_timestamps_status_code != 200 or create_menu_json_status_code != 200:
+        'http://127.0.0.1:8000' + reverse('Api:send_message_to_channel'), timeout=5).status_code
+    if check_on_planning_status_code != 200 or check_live_status_code != 200:
         return HttpResponseServerError('Internal Server Error')
     return HttpResponse('Everything was done successfully.')
