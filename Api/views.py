@@ -383,8 +383,11 @@ def create_menu_json(request):
 
 def every_10_second(request):
     # TODO Urls
-    check_on_planning_status_code = requests.get('http://127.0.0.1:8000' + reverse('Api:check_on_planning'), timeout=5).status_code
+    check_on_planning_status_code = requests.get('http://127.0.0.1:8000' + reverse('Api:check_on_planning'),
+                                                 timeout=5).status_code
     check_live_status_code = requests.get('http://127.0.0.1:8000' + reverse('Api:check_live'), timeout=5).status_code
-    if check_on_planning_status_code != 200 or check_live_status_code != 200:
+    create_programs_json_status_code = requests.get('http://127.0.0.1:8000' + reverse('Api:create_programs_json'),
+                                                    timeout=5).status_code
+    if check_on_planning_status_code != 200 or check_live_status_code != 200 or create_programs_json_status_code != 200:
         return HttpResponseServerError('Internal Server Error')
     return HttpResponse('Everything was done successfully.')

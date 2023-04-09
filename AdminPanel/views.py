@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.contrib.auth import get_user
 from django.contrib.admin.views.decorators import staff_member_required
 import os
+from django.urls import reverse
+import requests
 
 from Api import models
 
@@ -144,6 +146,11 @@ def AdminProgramAdd(request):
             obj.creator = request.user
             obj.latest_modifier = request.user
             obj.save()
+            # set timestamps
+            try:
+                requests.get('http://127.0.0.1:8000' + reverse('Api:set_timestamps'), timeout=5)
+            except:
+                pass
             is_valid = True
         else:
             specified_date = change_data['specified_date']
@@ -319,8 +326,13 @@ def AdminProgramEdit(request, num):
                 if os.path.exists(player_background_path):
                     os.remove(player_background_path)
             # End remove old logo and player_background
-
             obj.save()
+            # set timestamps
+            try:
+                requests.get('http://127.0.0.1:8000' + reverse('Api:set_timestamps'), timeout=5)
+            except:
+                pass
+
             is_valid = True
         else:
             specified_date = change_data['specified_date']
