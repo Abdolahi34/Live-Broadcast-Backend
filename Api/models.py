@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.contrib.postgres.fields import ArrayField
-import datetime
 
 
 class Program(models.Model):
@@ -117,10 +116,12 @@ class Program(models.Model):
                                        verbose_name='لینک آمار پخش زنده تصویری')
     video_platform_type = models.CharField(blank=True, null=True, max_length=9, choices=video_platform_type_choices,
                                            verbose_name='نوع پلتفرم پخش زنده تصویری')
+    is_on_planning = models.BooleanField(default=False, editable=False)
     is_audio_active = models.BooleanField(default=False, editable=False)
     is_video_active = models.BooleanField(default=False, editable=False)
     isLive = models.BooleanField(default=False, editable=False)
     error_count = models.PositiveSmallIntegerField(default=0, editable=False)
+    send_message = models.PositiveSmallIntegerField(default=0, editable=False)
     creator = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False, verbose_name='سازنده',
                                 related_name='creator_program')
     latest_modifier = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, editable=False,
@@ -213,7 +214,7 @@ class Program(models.Model):
             if self.end_date is None:
                 errors['end_date'] = 'این مقدار نمی تواند خالی باشد.'
 
-        def validate_weekly_not_occasional():
+        def validate_not_occasional():
             if self.specified_date:
                 errors['specified_date'] = 'تاریخ در برنامه های هفتگی نباید وارد شود.'
             if self.specified_start_time:
@@ -238,7 +239,7 @@ class Program(models.Model):
                 errors['specified_start_time'] = 'در برنامه های مناسبتی تعداد تاریخ و ساعت ها باید یکسان باشد.'
                 errors['specified_end_time'] = 'در برنامه های مناسبتی تعداد تاریخ و ساعت ها باید یکسان باشد.'
 
-        def validate_occasional_not_weekly():
+        def validate_not_weekly():
             if self.day_0:
                 errors['day_0'] = 'با توجه به اینکه برنامه مناسبتی است، هیچ روزی را نباید انتخاب نمایید.'
             if self.day_1:
@@ -294,7 +295,7 @@ class Program(models.Model):
             if self.audio_platform_type is None:
                 errors['audio_platform_type'] = 'این مقدار نمی تواند خالی باشد.'
 
-        def validate_audio_not_video():
+        def validate_not_video():
             if self.video_link is not None:
                 errors['video_link'] = 'این مقدار باید خالی باشد.'
             if self.video_stats_link is not None:
@@ -310,7 +311,7 @@ class Program(models.Model):
             if self.video_platform_type is None:
                 errors['video_platform_type'] = 'این مقدار نمی تواند خالی باشد.'
 
-        def validate_video_not_audio():
+        def validate_not_audio():
             if self.audio_link is not None:
                 errors['audio_link'] = 'این مقدار باید خالی باشد.'
             if self.audio_stats_link is not None:
@@ -346,12 +347,10 @@ class Program(models.Model):
 
         if self.datetime_type == 'weekly':
             validate_weekly()
-            validate_weekly_not_occasional()
-
+            validate_not_occasional()
         elif self.datetime_type == 'occasional':
             validate_occasional()
-            validate_occasional_not_weekly()
-
+            validate_not_weekly()
         else:
             validate_weekly()
             validate_occasional()
@@ -359,10 +358,10 @@ class Program(models.Model):
         if self.stream_type == 'audio':
             validate_audio()
             validate_player_background()
-            validate_audio_not_video()
+            validate_not_video()
         elif self.stream_type == 'video':
             validate_video()
-            validate_video_not_audio()
+            validate_not_audio()
             validate_not_player_background()
         else:
             validate_audio()
@@ -373,102 +372,7 @@ class Program(models.Model):
 
     def save(self, *args, **kwargs):
         self.full_clean()
-
-        def timestamps_weekly_func():
-            def append_days_timestamps_func(start_date, start_time, end_time):
-                while start_date <= self.end_date:
-                    this_timestamp_start = datetime.datetime(start_date.year, start_date.month, start_date.day,
-                                                             start_time.hour, start_time.minute,
-                                                             start_time.second, 0).timestamp()
-                    if end_time < start_time:
-                        start_date += datetime.timedelta(days=1)
-                        this_timestamp_end = datetime.datetime(start_date.year, start_date.month, start_date.day,
-                                                               end_time.hour, end_time.minute,
-                                                               end_time.second, 0).timestamp()
-                        start_date -= datetime.timedelta(days=1)
-                    else:
-                        this_timestamp_end = datetime.datetime(start_date.year, start_date.month, start_date.day,
-                                                               end_time.hour, end_time.minute,
-                                                               end_time.second, 0).timestamp()
-                    self.timestamps_start_weekly.append(this_timestamp_start)
-                    self.timestamps_end_weekly.append(this_timestamp_end)
-                    start_date += datetime.timedelta(days=7)
-
-            days = [self.day_0, self.day_1, self.day_2, self.day_3, self.day_4, self.day_5, self.day_6]
-            start_time_days = [self.start_time_day_0, self.start_time_day_1, self.start_time_day_2,
-                               self.start_time_day_3, self.start_time_day_4, self.start_time_day_5,
-                               self.start_time_day_6]
-            end_time_days = [self.end_time_day_0, self.end_time_day_1, self.end_time_day_2, self.end_time_day_3,
-                             self.end_time_day_4, self.end_time_day_5, self.end_time_day_6]
-
-            if self.start_date <= datetime.datetime.now().date():
-                now_weekday = datetime.datetime.now().weekday()
-                now_date = datetime.datetime.now().date()
-                iso_weekday_nums = [5, 6, 0, 1, 2, 3, 4]
-                for i in range(7):
-                    if days[i]:
-                        if now_weekday != iso_weekday_nums[i]:
-                            now_date += datetime.timedelta(days=now_weekday - iso_weekday_nums[i])
-                            append_days_timestamps_func(now_date, start_time_days[i], end_time_days[i])
-                            now_date -= datetime.timedelta(days=now_weekday - iso_weekday_nums[i])
-                        else:
-                            append_days_timestamps_func(now_date, start_time_days[i], end_time_days[i])
-            else:
-                date_start = self.start_date
-                for i in range(7):
-                    if days[i]:
-                        append_days_timestamps_func(date_start, start_time_days[i], end_time_days[i])
-
-        def timestamps_occasional_func():
-            try:
-                self_len = len(self.specified_date)
-                for i in range(self_len):
-                    this_specified_date = self.specified_date[i]
-                    if datetime.datetime.now().date() <= this_specified_date:
-                        this_specified_start_time = self.specified_start_time[i]
-                        this_specified_end_time = self.specified_end_time[i]
-                        this_timestamp_start = datetime.datetime(this_specified_date.year, this_specified_date.month,
-                                                                 this_specified_date.day,
-                                                                 this_specified_start_time.hour,
-                                                                 this_specified_start_time.minute,
-                                                                 this_specified_start_time.second, 0).timestamp()
-                        # agar shoroe ghable 12 pm bood va payan bade 12 pm
-                        if this_specified_end_time < this_specified_start_time:
-                            this_specified_date += datetime.timedelta(days=1)
-                        this_timestamp_end = datetime.datetime(this_specified_date.year, this_specified_date.month,
-                                                               this_specified_date.day,
-                                                               this_specified_end_time.hour,
-                                                               this_specified_end_time.minute,
-                                                               this_specified_end_time.second, 0).timestamp()
-                        self.timestamps_start_occasional.append(this_timestamp_start)
-                        self.timestamps_end_occasional.append(this_timestamp_end)
-            except IndexError:
-                pass
-
-        if self.datetime_type == 'weekly':
-            # set occasional timestamps None
-            self.timestamps_start_occasional = None
-            self.timestamps_end_occasional = None
-            # set weekly timestamps
-            self.timestamps_start_weekly = []
-            self.timestamps_end_weekly = []
-            timestamps_weekly_func()
-        elif self.datetime_type == 'occasional':
-            # set weekly timestamps None
-            self.timestamps_start_weekly = None
-            self.timestamps_end_weekly = None
-            # set occasional timestamps
-            self.timestamps_start_occasional = []
-            self.timestamps_end_occasional = []
-            timestamps_occasional_func()
-        else:
-            self.timestamps_start_weekly = []
-            self.timestamps_end_weekly = []
-            timestamps_weekly_func()
-            self.timestamps_start_occasional = []
-            self.timestamps_end_occasional = []
-            timestamps_occasional_func()
-        return super(Program, self).save(*args, **kwargs)
+        super(Program, self).save(*args, **kwargs)
 
 
 class Menu(models.Model):

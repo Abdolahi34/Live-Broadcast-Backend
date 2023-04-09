@@ -1276,20 +1276,20 @@
         {#description#}
         let description_value;
         {% if form.description.value != None %}
-            description_value = '{{ form.description.value }}';
+            description_value = '{{ form.description.value|escapejs }}';
             set_description(description_value);
         {% elif program.description != None %}
-            description_value = '{{ program.description }}';
+            description_value = '{{ program.description|escapejs }}';
             set_description(description_value);
         {% endif %}
 
         {#description_in_player#}
         let description_in_player_value;
         {% if form.description_in_player.value != None %}
-            description_in_player_value = '{{ form.description_in_player.value }}';
+            description_in_player_value = '{{ form.description_in_player.value|escapejs }}';
             set_description_in_player(description_in_player_value);
         {% elif program.description_in_player != None %}
-            description_in_player_value = '{{ program.description_in_player }}';
+            description_in_player_value = '{{ program.description_in_player|escapejs }}';
             set_description_in_player(description_in_player_value);
         {% endif %}
 
