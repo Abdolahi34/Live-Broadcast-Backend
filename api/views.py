@@ -216,6 +216,7 @@ def create_programs_json(request):
         return HttpResponseServerError('Internal Server Error')
 
 
+# TODO Synchronize the set_timestamps function with the save function of the Program model.
 # Every day
 def set_timestamps(request):
     try:
@@ -295,11 +296,34 @@ def set_timestamps(request):
                 except IndexError:
                     pass
 
+            if program.datetime_type == 'weekly':
+                # set occasional timestamps None
+                program.timestamps_start_occasional = None
+                program.timestamps_end_occasional = None
+                # set weekly timestamps
+                program.timestamps_start_weekly = []
+                program.timestamps_end_weekly = []
+                timestamps_weekly_func()
+            elif program.datetime_type == 'occasional':
+                # set weekly timestamps None
+                program.timestamps_start_weekly = None
+                program.timestamps_end_weekly = None
+                # set occasional timestamps
+                program.timestamps_start_occasional = []
+                program.timestamps_end_occasional = []
+                timestamps_occasional_func()
+            else:
+                program.timestamps_start_weekly = []
+                program.timestamps_end_weekly = []
+                timestamps_weekly_func()
+                program.timestamps_start_occasional = []
+                program.timestamps_end_occasional = []
+                timestamps_occasional_func()
+
             # Start Set_Timestamp_Earliest
             def set_outdated_program():
                 program.timestamp_earliest = 0
                 program.status = 'archive'
-
             if program.datetime_type == 'weekly':
                 try:
                     program.timestamp_earliest = min(program.timestamps_start_weekly)
@@ -324,30 +348,6 @@ def set_timestamps(request):
                         else:
                             program.timestamp_earliest = min(program.timestamps_start_weekly)
             # End Set_Timestamp_Earliest
-
-            if program.datetime_type == 'weekly':
-                # set occasional timestamps None
-                program.timestamps_start_occasional = None
-                program.timestamps_end_occasional = None
-                # set weekly timestamps
-                program.timestamps_start_weekly = []
-                program.timestamps_end_weekly = []
-                timestamps_weekly_func()
-            elif program.datetime_type == 'occasional':
-                # set weekly timestamps None
-                program.timestamps_start_weekly = None
-                program.timestamps_end_weekly = None
-                # set occasional timestamps
-                program.timestamps_start_occasional = []
-                program.timestamps_end_occasional = []
-                timestamps_occasional_func()
-            else:
-                program.timestamps_start_weekly = []
-                program.timestamps_end_weekly = []
-                timestamps_weekly_func()
-                program.timestamps_start_occasional = []
-                program.timestamps_end_occasional = []
-                timestamps_occasional_func()
             program.save()
         return HttpResponse('Timestamp of Programs checked.')
 

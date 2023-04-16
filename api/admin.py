@@ -50,4 +50,3 @@ class ProgramAdmin(admin.ModelAdmin):
         obj.latest_modifier = request.user
         # End set Creator and Latest Modifier
         super(ProgramAdmin, self).save_model(request, obj, form, change)
-        # TODO call set timestamps url after save model in default admin (in new admin panel This is set.)

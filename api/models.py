@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.contrib.postgres.fields import ArrayField
+import datetime
 
 
 class Program(models.Model):
@@ -372,6 +373,133 @@ class Program(models.Model):
 
     def save(self, *args, **kwargs):
         self.full_clean()
+        # TODO Synchronize the set_timestamps function with the save function of the Program model.
+        def timestamps_weekly_func():
+            def append_days_timestamps_func(start_date, start_time, end_time):
+                while start_date <= self.end_date:
+                    this_timestamp_start = datetime.datetime(start_date.year, start_date.month, start_date.day,
+                                                             start_time.hour, start_time.minute,
+                                                             start_time.second, 0).timestamp()
+                    if start_time < end_time:
+                        this_timestamp_end = datetime.datetime(start_date.year, start_date.month, start_date.day,
+                                                               end_time.hour, end_time.minute,
+                                                               end_time.second, 0).timestamp()
+                    else:
+                        # start_time before 12 pm and end_time after 12 pm
+                        start_date += datetime.timedelta(days=1)
+                        this_timestamp_end = datetime.datetime(start_date.year, start_date.month, start_date.day,
+                                                               end_time.hour, end_time.minute,
+                                                               end_time.second, 0).timestamp()
+                        start_date -= datetime.timedelta(days=1)
+                    self.timestamps_start_weekly.append(this_timestamp_start)
+                    self.timestamps_end_weekly.append(this_timestamp_end)
+                    start_date += datetime.timedelta(days=7)
+
+            days = [self.day_0, self.day_1, self.day_2, self.day_3, self.day_4, self.day_5,
+                    self.day_6]
+            start_time_days = [self.start_time_day_0, self.start_time_day_1, self.start_time_day_2,
+                               self.start_time_day_3, self.start_time_day_4, self.start_time_day_5,
+                               self.start_time_day_6]
+            end_time_days = [self.end_time_day_0, self.end_time_day_1, self.end_time_day_2,
+                             self.end_time_day_3, self.end_time_day_4, self.end_time_day_5,
+                             self.end_time_day_6]
+
+            now_date = datetime.datetime.now().date()
+            if now_date <= self.start_date:
+                for i in range(7):
+                    if days[i]:
+                        append_days_timestamps_func(self.start_date, start_time_days[i], end_time_days[i])
+            elif now_date <= self.end_date:
+                now_weekday = datetime.datetime.now().weekday()
+                iso_weekday_nums = [5, 6, 0, 1, 2, 3, 4]
+                for i in range(7):
+                    if days[i]:
+                        if now_weekday == iso_weekday_nums[i]:
+                            append_days_timestamps_func(now_date, start_time_days[i], end_time_days[i])
+                        else:
+                            now_date += datetime.timedelta(days=now_weekday - iso_weekday_nums[i])
+                            append_days_timestamps_func(now_date, start_time_days[i], end_time_days[i])
+                            now_date -= datetime.timedelta(days=now_weekday - iso_weekday_nums[i])
+
+        def timestamps_occasional_func():
+            try:
+                program_len = len(self.specified_date)
+                for i in range(program_len):
+                    this_specified_date = self.specified_date[i]
+                    if datetime.datetime.now().date() <= this_specified_date:
+                        this_specified_start_time = self.specified_start_time[i]
+                        this_specified_end_time = self.specified_end_time[i]
+                        this_timestamp_start = datetime.datetime(this_specified_date.year,
+                                                                 this_specified_date.month,
+                                                                 this_specified_date.day,
+                                                                 this_specified_start_time.hour,
+                                                                 this_specified_start_time.minute,
+                                                                 this_specified_start_time.second, 0).timestamp()
+                        # start_time before 12 pm and end_time after 12 pm
+                        if this_specified_end_time < this_specified_start_time:
+                            this_specified_date += datetime.timedelta(days=1)
+                        this_timestamp_end = datetime.datetime(this_specified_date.year, this_specified_date.month,
+                                                               this_specified_date.day,
+                                                               this_specified_end_time.hour,
+                                                               this_specified_end_time.minute,
+                                                               this_specified_end_time.second, 0).timestamp()
+                        self.timestamps_start_occasional.append(this_timestamp_start)
+                        self.timestamps_end_occasional.append(this_timestamp_end)
+            except IndexError:
+                pass
+
+        if self.datetime_type == 'weekly':
+            # set occasional timestamps None
+            self.timestamps_start_occasional = None
+            self.timestamps_end_occasional = None
+            # set weekly timestamps
+            self.timestamps_start_weekly = []
+            self.timestamps_end_weekly = []
+            timestamps_weekly_func()
+        elif self.datetime_type == 'occasional':
+            # set weekly timestamps None
+            self.timestamps_start_weekly = None
+            self.timestamps_end_weekly = None
+            # set occasional timestamps
+            self.timestamps_start_occasional = []
+            self.timestamps_end_occasional = []
+            timestamps_occasional_func()
+        else:
+            self.timestamps_start_weekly = []
+            self.timestamps_end_weekly = []
+            timestamps_weekly_func()
+            self.timestamps_start_occasional = []
+            self.timestamps_end_occasional = []
+            timestamps_occasional_func()
+
+        # Start Set_Timestamp_Earliest
+        def set_outdated_program():
+            self.timestamp_earliest = 0
+            self.status = 'archive'
+        if self.datetime_type == 'weekly':
+            try:
+                self.timestamp_earliest = min(self.timestamps_start_weekly)
+            except:
+                set_outdated_program()
+        elif self.datetime_type == 'occasional':
+            try:
+                self.timestamp_earliest = min(self.timestamps_start_occasional)
+            except:
+                set_outdated_program()
+        else:
+            try:
+                timestamps_weekly_earliest = min(self.timestamps_start_weekly)
+                timestamps_occasional_earliest = min(self.timestamps_start_occasional)
+                self.timestamp_earliest = min(timestamps_weekly_earliest, timestamps_occasional_earliest)
+            except:
+                if not self.timestamps_start_weekly and not self.timestamps_start_occasional:
+                    set_outdated_program()
+                else:
+                    if not self.timestamps_start_weekly:
+                        self.timestamp_earliest = min(self.timestamps_start_occasional)
+                    else:
+                        self.timestamp_earliest = min(self.timestamps_start_weekly)
+        # End Set_Timestamp_Earliest
         super(Program, self).save(*args, **kwargs)
 
 

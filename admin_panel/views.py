@@ -146,11 +146,6 @@ def AdminProgramAdd(request):
             obj.creator = request.user
             obj.latest_modifier = request.user
             obj.save()
-            # set timestamps
-            try:
-                requests.get('http://127.0.0.1:8000' + reverse('api:set_timestamps'), timeout=5)
-            except:
-                pass
             is_valid = True
         else:
             specified_date = change_data['specified_date']
@@ -327,12 +322,6 @@ def AdminProgramEdit(request, num):
                     os.remove(player_background_path)
             # End remove old logo and player_background
             obj.save()
-            # set timestamps
-            try:
-                requests.get('http://127.0.0.1:8000' + reverse('api:set_timestamps'), timeout=5)
-            except:
-                pass
-
             is_valid = True
         else:
             specified_date = change_data['specified_date']
