@@ -1,0 +1,45 @@
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <!-- Add icons to the links using the .nav-icon class
+             with font-awesome or any other icon font library -->
+        <li class="nav-item menu-open">
+            <a href="#" class="nav-link active">
+                <i class="fa fa-address-book nav-icon" aria-hidden="true"></i>
+                <p>
+                    امور کاربران
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="/admin2/auth/user/" class="nav-link active" target="_blank">
+                        <i class="fa fa-address-card nav-icon" aria-hidden="true"></i>
+                        <p>کاربر ها</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin2/auth/group/" class="nav-link active" target="_blank">
+                        <i class="fa fa-users nav-icon" aria-hidden="true"></i>
+                        <p>گروه ها</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'admin_panel:admin_panel_program' %}" class="nav-link">
+                <i class="fa fa-list nav-icon"></i>
+                <p>
+                    برنامه ها
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/admin2/api/menu/" target="_blank" class="nav-link">
+                <i class="fa fa-list nav-icon"></i>
+                <p>
+                    منو ها
+                </p>
+            </a>
+        </li>
+    </ul>
+</nav>
