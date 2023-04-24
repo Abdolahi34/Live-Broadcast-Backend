@@ -2,8 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth import get_user
 from django.contrib.admin.views.decorators import staff_member_required
 import os
-from django.urls import reverse
-import requests
+import logging
 
 from api import models
 
@@ -34,6 +33,7 @@ def AdminProgram(request):
                 program_to_del.delete()
                 is_deleted = True
         except:
+            logging.exception('The try block part encountered an error.')
             is_exist = False
     program_null = False
     if programs.count() == 0:
@@ -76,7 +76,7 @@ def AdminProgramAdd(request):
                     if change_data[i] != '' and change_data[i] is not None:
                         change_data['specified_date'].append(change_data[i])
                 except:
-                    pass
+                    logging.exception('The try block part encountered an error.')
 
             list_specified_start_time = change_data['list_specified_start_time']
             list_specified_start_time_splitted = list_specified_start_time.split(",")
@@ -92,7 +92,7 @@ def AdminProgramAdd(request):
                     if change_data[i] != '' and change_data[i] is not None:
                         change_data['specified_start_time'].append(change_data[i])
                 except:
-                    pass
+                    logging.exception('The try block part encountered an error.')
 
             list_specified_end_time = change_data['list_specified_end_time']
             list_specified_end_time_splitted = list_specified_end_time.split(",")
@@ -108,7 +108,7 @@ def AdminProgramAdd(request):
                     if change_data[i] != '' and change_data[i] is not None:
                         change_data['specified_end_time'].append(change_data[i])
                 except:
-                    pass
+                    logging.exception('The try block part encountered an error.')
 
             if change_data['datetime_type'] == 'occasional':
                 # None weekly
@@ -174,6 +174,7 @@ def AdminProgramView(request, num):
         args = {'username': get_user(request), 'program': program, 'is_exist': is_exist}
         return render(request, 'admin_panel/admin_program_view.html', args)
     except:
+        logging.exception('The try block part encountered an error.')
         return render(request, 'admin_panel/admin_program_does_not_exist.html')
 
 
@@ -192,6 +193,7 @@ def AdminProgramEdit(request, num):
                     'specified_end_time': specified_end_time}
             return render(request, 'admin_panel/admin_program_add_edit.html', args)
         except:
+            logging.exception('The try block part encountered an error.')
             return render(request, 'admin_panel/admin_program_does_not_exist.html')
 
     if request.method == 'POST':
@@ -217,7 +219,7 @@ def AdminProgramEdit(request, num):
                     if change_data[i] != '' and change_data[i] is not None:
                         change_data['specified_date'].append(change_data[i])
                 except:
-                    pass
+                    logging.exception('The try block part encountered an error.')
 
             list_specified_start_time = change_data['list_specified_start_time']
             list_specified_start_time_splitted = list_specified_start_time.split(",")
@@ -233,7 +235,7 @@ def AdminProgramEdit(request, num):
                     if change_data[i] != '' and change_data[i] is not None:
                         change_data['specified_start_time'].append(change_data[i])
                 except:
-                    pass
+                    logging.exception('The try block part encountered an error.')
 
             list_specified_end_time = change_data['list_specified_end_time']
             list_specified_end_time_splitted = list_specified_end_time.split(",")
@@ -249,7 +251,7 @@ def AdminProgramEdit(request, num):
                     if change_data[i] != '' and change_data[i] is not None:
                         change_data['specified_end_time'].append(change_data[i])
                 except:
-                    pass
+                    logging.exception('The try block part encountered an error.')
 
             if change_data['datetime_type'] == 'occasional':
                 # None weekly
@@ -308,6 +310,7 @@ def AdminProgramEdit(request, num):
                     obj.logo = program.logo
                     send_logo = False
             except:
+                logging.exception('The try block part encountered an error.')
                 send_logo = True
             if program.stream_type != 'video':
                 # player_background has sent
@@ -320,6 +323,7 @@ def AdminProgramEdit(request, num):
                         obj.player_background = program.player_background
                         send_player_background = False
                 except:
+                    logging.exception('The try block part encountered an error.')
                     send_player_background = True
             # End set logo and player_background
 
@@ -363,4 +367,5 @@ def AdminProgramDuplicate(request, num):
         args = {'is_copy': is_copy}
         return render(request, 'admin_panel/admin_program_duplicate.html', args)
     except:
+        logging.exception('The try block part encountered an error.')
         return render(request, 'admin_panel/admin_program_does_not_exist.html')

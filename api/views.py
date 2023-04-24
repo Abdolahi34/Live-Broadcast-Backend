@@ -17,6 +17,7 @@ from django.shortcuts import HttpResponse
 from django.http import HttpResponseServerError
 from django.urls import reverse
 import requests
+import logging
 
 from api import models, serializers
 
@@ -44,6 +45,7 @@ def check_on_planning(request):
                                     return True
                         return False
                     except:
+                        logging.exception('The try block part encountered an error.')
                         return False
 
                 now_timestamp = datetime.datetime.now().timestamp()
@@ -74,6 +76,7 @@ def check_on_planning(request):
             program.save()
         return HttpResponse('Programs (On Planning) Checked.')
     except:
+        logging.exception('The try block part encountered an error.')
         return HttpResponseServerError('Internal Server Error')
 
 
@@ -152,6 +155,7 @@ def check_live(request):
         return HttpResponse('Status Of Programs is Checked.')
 
     except:
+        logging.exception('The try block part encountered an error.')
         return HttpResponseServerError('Internal Server Error')
 
 
@@ -185,12 +189,15 @@ def create_programs_json(request):
         json_var = urlopen(request.build_absolute_uri(reverse('api:programs')), timeout=5).read().decode("utf-8")
         try:
             file.write(json_var)
+        except:
+            logging.exception('The try block part encountered an error.')
         finally:
             file.close()
         # End Create programs.json
         return HttpResponse('programs.json is Created.')
 
     except:
+        logging.exception('The try block part encountered an error.')
         for program in queryset:
             if program.stream_type == 'audio':
                 program.is_audio_active = True
@@ -210,6 +217,8 @@ def create_programs_json(request):
         json_var = urlopen(request.build_absolute_uri(reverse('api:programs')), timeout=5).read().decode("utf-8")
         try:
             file.write(json_var)
+        except:
+            logging.exception('The try block part encountered an error.')
         finally:
             file.close()
         # End Create programs.json
@@ -293,8 +302,8 @@ def set_timestamps(request):
                                                                    this_specified_end_time.second, 0).timestamp()
                             program.timestamps_start_occasional.append(this_timestamp_start)
                             program.timestamps_end_occasional.append(this_timestamp_end)
-                except IndexError:
-                    pass
+                except:
+                    logging.exception('The try block part encountered an error.')
 
             if program.datetime_type == 'weekly':
                 # set occasional timestamps None
@@ -328,11 +337,13 @@ def set_timestamps(request):
                 try:
                     program.timestamp_earliest = min(program.timestamps_start_weekly)
                 except:
+                    logging.exception('The try block part encountered an error.')
                     set_outdated_program()
             elif program.datetime_type == 'occasional':
                 try:
                     program.timestamp_earliest = min(program.timestamps_start_occasional)
                 except:
+                    logging.exception('The try block part encountered an error.')
                     set_outdated_program()
             else:
                 try:
@@ -340,6 +351,7 @@ def set_timestamps(request):
                     timestamps_occasional_earliest = min(program.timestamps_start_occasional)
                     program.timestamp_earliest = min(timestamps_weekly_earliest, timestamps_occasional_earliest)
                 except:
+                    logging.exception('The try block part encountered an error.')
                     if not program.timestamps_start_weekly and not program.timestamps_start_occasional:
                         set_outdated_program()
                     else:
@@ -352,6 +364,7 @@ def set_timestamps(request):
         return HttpResponse('Timestamp of Programs checked.')
 
     except:
+        logging.exception('The try block part encountered an error.')
         return HttpResponseServerError('Internal Server Error')
 
 
@@ -371,6 +384,8 @@ def create_menu_json(request):
         json_var = urlopen(request.build_absolute_uri(reverse('api:menu')), timeout=5).read().decode("utf-8")
         try:
             file.write(json_var)
+        except:
+            logging.exception('The try block part encountered an error.')
         finally:
             file.close()
         # End Create programs.json
@@ -378,6 +393,7 @@ def create_menu_json(request):
         return HttpResponse('menu.json is Created.')
 
     except:
+        logging.exception('The try block part encountered an error.')
         return HttpResponseServerError('Internal Server Error')
 
 

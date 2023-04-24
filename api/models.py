@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.contrib.postgres.fields import ArrayField
 import datetime
+import logging
 
 
 class Program(models.Model):
@@ -330,6 +331,7 @@ class Program(models.Model):
                     if self.player_background.size > 256000:
                         errors['player_background'] = 'حداکثر اندازه قابل قبول برای پس زمینه پخش زنده 250Kb است.'
             except:
+                logging.exception('The try block part encountered an error.')
                 errors['player_background'] = 'این مقدار نمی تواند خالی باشد.'
 
         def validate_not_player_background():
@@ -337,7 +339,7 @@ class Program(models.Model):
                 if 0 < self.player_background.height:
                     errors['player_background'] = 'پخش زنده تصویری به پس زمینه نیاز ندارد.'
             except:
-                pass
+                logging.exception('The try block part encountered an error.')
 
         logo_ratio = self.logo.height / self.logo.width
         if logo_ratio != 1:
@@ -445,8 +447,8 @@ class Program(models.Model):
                                                                this_specified_end_time.second, 0).timestamp()
                         self.timestamps_start_occasional.append(this_timestamp_start)
                         self.timestamps_end_occasional.append(this_timestamp_end)
-            except IndexError:
-                pass
+            except:
+                logging.exception('The try block part encountered an error.')
 
         if self.datetime_type == 'weekly':
             # set occasional timestamps None
@@ -480,11 +482,13 @@ class Program(models.Model):
             try:
                 self.timestamp_earliest = min(self.timestamps_start_weekly)
             except:
+                logging.exception('The try block part encountered an error.')
                 set_outdated_program()
         elif self.datetime_type == 'occasional':
             try:
                 self.timestamp_earliest = min(self.timestamps_start_occasional)
             except:
+                logging.exception('The try block part encountered an error.')
                 set_outdated_program()
         else:
             try:
@@ -492,6 +496,7 @@ class Program(models.Model):
                 timestamps_occasional_earliest = min(self.timestamps_start_occasional)
                 self.timestamp_earliest = min(timestamps_weekly_earliest, timestamps_occasional_earliest)
             except:
+                logging.exception('The try block part encountered an error.')
                 if not self.timestamps_start_weekly and not self.timestamps_start_occasional:
                     set_outdated_program()
                 else:

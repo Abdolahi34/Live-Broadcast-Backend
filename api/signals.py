@@ -2,6 +2,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from urllib.request import urlopen
 from django.urls import reverse
+import logging
 
 from api.models import Menu
 
@@ -12,4 +13,4 @@ def run_after_save_menu_model(sender, instance, created, **kwargs):
         # Create menu.json
         urlopen('http://127.0.0.1:8000' + reverse('api:create_menu_json'), timeout=5)  # TODO Domain
     except:
-        pass
+        logging.exception('The try block part encountered an error.')
