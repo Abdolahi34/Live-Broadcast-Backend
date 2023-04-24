@@ -140,6 +140,14 @@ def AdminProgramAdd(request):
             change_data['specified_date'] = None
             change_data['specified_start_time'] = None
             change_data['specified_end_time'] = None
+        if change_data['stream_type'] == 'audio':
+            change_data['video_link'] = None
+            change_data['video_stats_link'] = None
+            change_data['video_platform_type'] = None
+        elif change_data['stream_type'] == 'video':
+            change_data['audio_link'] = None
+            change_data['audio_stats_link'] = None
+            change_data['audio_platform_type'] = None
         form = forms.AdminAddProgramForm(change_data, request.FILES)
         if form.is_valid():
             obj = form.save(commit=False)
@@ -273,6 +281,14 @@ def AdminProgramEdit(request, num):
             change_data['specified_date'] = None
             change_data['specified_start_time'] = None
             change_data['specified_end_time'] = None
+        if change_data['stream_type'] == 'audio':
+            change_data['video_link'] = None
+            change_data['video_stats_link'] = None
+            change_data['video_platform_type'] = None
+        elif change_data['stream_type'] == 'video':
+            change_data['audio_link'] = None
+            change_data['audio_stats_link'] = None
+            change_data['audio_platform_type'] = None
 
         form = forms.AdminAddProgramForm(change_data, request.FILES, instance=program)
         if form.is_valid():
