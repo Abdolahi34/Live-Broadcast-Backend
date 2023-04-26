@@ -141,6 +141,31 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'assets')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': os.getenv('LOG_LEVEL'),
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'errors.log',
+            'formatter': 'standard',
+        },
+    },
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': os.getenv('LOG_LEVEL'),
+            'propagate': True,
+        },
+    },
+}
+
 TIME_FORMAT = 'G:i:s'
 DATETIME_FORMAT = 'N j, Y, G:i:s'
 SHORT_DATETIME_FORMAT = 'm/d/Y G:i:s'

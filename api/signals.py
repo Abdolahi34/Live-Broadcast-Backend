@@ -6,11 +6,13 @@ import logging
 
 from api.models import Menu
 
+logger = logging.getLogger(__name__)
+
 
 @receiver(post_save, sender=Menu)
 def run_after_save_menu_model(sender, instance, created, **kwargs):
     try:
         # Create menu.json
         urlopen('http://127.0.0.1:8000' + reverse('api:create_menu_json'), timeout=5)  # TODO Domain
-    except:
-        logging.exception('The try block part encountered an error.')
+    except Exception as e:
+        logger.error('The try block part encountered an error: %s', str(e), exc_info=True)

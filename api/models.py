@@ -5,6 +5,8 @@ from django.contrib.postgres.fields import ArrayField
 import datetime
 import logging
 
+logger = logging.getLogger(__name__)
+
 
 class Program(models.Model):
     class Meta:
@@ -330,16 +332,16 @@ class Program(models.Model):
                             'player_background'] = 'نسبت اندازه های پس زمینه پخش زنده باید 9:16 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
                     if self.player_background.size > 256000:
                         errors['player_background'] = 'حداکثر اندازه قابل قبول برای پس زمینه پخش زنده 250Kb است.'
-            except:
-                logging.exception('The try block part encountered an error.')
+            except Exception as e:
+                logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
                 errors['player_background'] = 'این مقدار نمی تواند خالی باشد.'
 
         def validate_not_player_background():
             try:
                 if 0 < self.player_background.height:
                     errors['player_background'] = 'پخش زنده تصویری به پس زمینه نیاز ندارد.'
-            except:
-                logging.exception('The try block part encountered an error.')
+            except Exception as e:
+                logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
 
         logo_ratio = self.logo.height / self.logo.width
         if logo_ratio != 1:
@@ -375,6 +377,7 @@ class Program(models.Model):
 
     def save(self, *args, **kwargs):
         self.full_clean()
+
         # TODO Synchronize the set_timestamps function with the save function of the Program model.
         def timestamps_weekly_func():
             def append_days_timestamps_func(start_date, start_time, end_time):
@@ -447,8 +450,8 @@ class Program(models.Model):
                                                                this_specified_end_time.second, 0).timestamp()
                         self.timestamps_start_occasional.append(this_timestamp_start)
                         self.timestamps_end_occasional.append(this_timestamp_end)
-            except:
-                logging.exception('The try block part encountered an error.')
+            except Exception as e:
+                logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
 
         if self.datetime_type == 'weekly':
             # set occasional timestamps None
@@ -478,25 +481,26 @@ class Program(models.Model):
         def set_outdated_program():
             self.timestamp_earliest = 0
             self.status = 'archive'
+
         if self.datetime_type == 'weekly':
             try:
                 self.timestamp_earliest = min(self.timestamps_start_weekly)
-            except:
-                logging.exception('The try block part encountered an error.')
+            except Exception as e:
+                logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
                 set_outdated_program()
         elif self.datetime_type == 'occasional':
             try:
                 self.timestamp_earliest = min(self.timestamps_start_occasional)
-            except:
-                logging.exception('The try block part encountered an error.')
+            except Exception as e:
+                logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
                 set_outdated_program()
         else:
             try:
                 timestamps_weekly_earliest = min(self.timestamps_start_weekly)
                 timestamps_occasional_earliest = min(self.timestamps_start_occasional)
                 self.timestamp_earliest = min(timestamps_weekly_earliest, timestamps_occasional_earliest)
-            except:
-                logging.exception('The try block part encountered an error.')
+            except Exception as e:
+                logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
                 if not self.timestamps_start_weekly and not self.timestamps_start_occasional:
                     set_outdated_program()
                 else:
