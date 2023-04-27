@@ -228,6 +228,50 @@ def create_programs_json(request):
         return HttpResponseServerError('Internal Server Error')
 
 
+# Every 10 Sec
+def send_message_to_channel(request):
+    """
+    on start time - program started
+    0 = Program not started
+    10 = on start time message sent
+    11 = on start time and start program message sent
+    """
+
+    def send_message(message):
+        url = "https://tapi.bale.ai/API_TOKEN/sendMessage"  # TODO api url
+        headers = {"Content-Type": "application/json"}
+        data = {"chat_id": "@chat_id", "text": message, "disable_notification": True}  # TODO chat_id
+        requests.post(url=url, json=data, headers=headers, timeout=5)
+
+    queryset = models.Program.objects.filter(status='publish')
+    try:
+        for program in queryset:
+            if program.is_on_planning:
+                if program.send_message == 0:
+                    message = f"▶️ برنامه رادیو راه به زودی شروع می شود\n\n*{program.title}*\n{program.date_display}\n{program.time_display}\n📣 {program.description}"
+                    send_message(message)
+                    program.send_message = 10
+                    program.save()
+                if program.is_audio_active is True or program.is_video_active is True:
+                    if program.send_message == 10:
+                        if program.stream_type == 'audio':
+                            message = f"💡پخش زنده *{program.title}* شروع شد\n\n🔊 صوتی\n\n📶 rahh.ir"
+                        elif program.stream_type == 'video':
+                            message = f"💡پخش زنده *{program.title}* شروع شد\n\n🖥 تصویری\n\n📶 rahh.ir"
+                        else:
+                            message = f"💡پخش زنده *{program.title}* شروع شد\n\n🔊 صوتی\n🖥 تصویری\n\n📶 rahh.ir"
+                        send_message(message)
+                        program.send_message = 11
+            else:
+                program.send_message = 0
+            program.save()
+
+        return HttpResponse('Messages have been sent.')
+
+    except:
+        return HttpResponseServerError('Internal Server Error')
+
+
 # TODO Synchronize the set_timestamps function with the save function of the Program model.
 # Every day
 def set_timestamps(request):
@@ -402,12 +446,23 @@ def create_menu_json(request):
 
 
 def every_10_second(request):
-    # TODO Urls
+    # TODO Domains
     check_on_planning_status_code = requests.get('http://127.0.0.1:8000' + reverse('api:check_on_planning'),
                                                  timeout=5).status_code
     check_live_status_code = requests.get('http://127.0.0.1:8000' + reverse('api:check_live'), timeout=5).status_code
     create_programs_json_status_code = requests.get('http://127.0.0.1:8000' + reverse('api:create_programs_json'),
                                                     timeout=5).status_code
-    if check_on_planning_status_code != 200 or check_live_status_code != 200 or create_programs_json_status_code != 200:
+    send_message_to_channel_status_code = requests.get('http://127.0.0.1:8000' + reverse('api:send_message_to_channel'),
+                                                       timeout=5).status_code
+    if check_on_planning_status_code != 200 or check_live_status_code != 200 or create_programs_json_status_code != 200 or send_message_to_channel_status_code != 200:
+        return HttpResponseServerError('Internal Server Error')
+    return HttpResponse('Everything was done successfully.')
+
+
+def every_day(request):
+    # TODO Domains
+    set_timestamps_status_code = requests.get('http://127.0.0.1:8000' + reverse('api:set_timestamps'),
+                                              timeout=5).status_code
+    if set_timestamps_status_code != 200:
         return HttpResponseServerError('Internal Server Error')
     return HttpResponse('Everything was done successfully.')
