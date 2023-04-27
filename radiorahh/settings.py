@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'widget_tweaks',
-    'django_crontab',
     'api.apps.ApiConfig',
     'admin_panel.apps.AdminPanelConfig',
     'radiorahh',
@@ -166,10 +165,6 @@ LOGGING = {
         },
     },
 }
-
-CRONJOBS = [
-    ('*/10 * * * * *', 'radiorahh.cron.every_10_second')
-]
 
 TIME_FORMAT = 'G:i:s'
 DATETIME_FORMAT = 'N j, Y, G:i:s'
