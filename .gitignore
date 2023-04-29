@@ -116,3 +116,5 @@ dmypy.json
 .idea/
 migrations/
 assets/
+menu.json
+programs.json
