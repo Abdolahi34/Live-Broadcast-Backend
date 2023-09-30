@@ -40,7 +40,7 @@ class Program(models.Model):
         ('wowza', 'Wowza'),
     )
 
-    status = models.CharField(max_length=7, choices=status_choices, db_index=True, verbose_name='وضعیت برنامه')
+    status = models.CharField(max_length=7, choices=status_choices, verbose_name='وضعیت برنامه')
     title = models.CharField(max_length=50, help_text='تعداد کاراکتر مجاز 50 عدد می باشد.', verbose_name='عنوان')
     description = models.TextField(max_length=250, help_text='تعداد کاراکتر مجاز 250 عدد می باشد.',
                                    verbose_name='توضیحات')
@@ -48,7 +48,7 @@ class Program(models.Model):
                                        verbose_name='عنوان در صفحه پخش زنده')
     description_in_player = models.TextField(max_length=250, help_text='تعداد کاراکتر مجاز 250 عدد می باشد.',
                                              verbose_name='توضیحات در صفحه پخش زنده')
-    slug = models.SlugField(max_length=70, help_text='تعداد کاراکتر مجاز 70 عدد می باشد.', unique=True,
+    slug = models.SlugField(max_length=70, help_text='تعداد کاراکتر مجاز 70 عدد می باشد.', unique=True, db_index=True,
                             verbose_name='Slug')
     date_display = models.CharField(max_length=30, help_text='تعداد کاراکتر مجاز 30 عدد می باشد.',
                                     verbose_name='تاریخ نمایش داده شده به کاربر')
@@ -529,3 +529,7 @@ class Menu(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super(Menu, self).save(*args, **kwargs)
