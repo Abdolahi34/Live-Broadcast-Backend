@@ -173,7 +173,7 @@
     </div>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
-        <strong>پخش زنده - رادیو راه 1367 - 1401</strong>
+        <strong>پخش زنده - رادیو راه 1367 - 1402</strong>
         <div class="float-right d-none d-sm-inline-block">
             <b><a href="https://rahh.ir">Rahh.ir</a></b>
         </div>
@@ -187,6 +187,8 @@
 </div>
 <!-- ./wrapper -->
 
+<!-- jquery -->
+<script src="{% static 'admin_panel/plugins/jquery/jquery.min.js' %}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
     $.widget.bridge('uibutton', $.ui.button)
@@ -198,13 +200,11 @@
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="{% static 'admin_panel/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
 <!-- Summernote -->
-<script src="
-{% static 'admin_panel/plugins/summernote/summernote-bs4.min.js' %}"></script>
+<script src="{% static 'admin_panel/plugins/summernote/summernote-bs4.min.js' %}"></script>
 <!-- overlayScrollbars -->
 <script src="{% static 'admin_panel/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
 <!-- AdminLTE App -->
-<script src="
-{% static 'admin_panel/dist2/js/adminlte.min.js' %}"></script>
+<script src="{% static 'admin_panel/dist2/js/adminlte.min.js' %}"></script>
 {% block body_script %}
 
 {% endblock %}
