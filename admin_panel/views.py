@@ -11,6 +11,7 @@ from admin_panel import forms
 logger = logging.getLogger(__name__)
 
 
+# Home page of New admin panel
 @staff_member_required
 def Admin(request):
     programs_publish = models.Program.objects.filter(status='publish').count()
@@ -22,12 +23,14 @@ def Admin(request):
     return render(request, 'admin_panel/admin_main.html', args)
 
 
+# All program page
 @staff_member_required
 def AdminProgram(request):
     programs = models.Program.objects.order_by('-status', 'timestamp_earliest')
     program_id = request.GET.get('delete_id')
     is_exist = True
     is_deleted = False
+    # delete program with arguman
     if program_id is not None:
         try:
             if programs.get(pk=program_id) is not None:
@@ -45,6 +48,7 @@ def AdminProgram(request):
     return render(request, 'admin_panel/admin_program.html', args)
 
 
+# add program page
 @staff_member_required
 def AdminProgramAdd(request):
     if request.method == 'GET':
@@ -61,6 +65,8 @@ def AdminProgramAdd(request):
         specified_date = None
         specified_start_time = None
         specified_end_time = None
+        # Arranging information related to the date and time of occasional programs
+        # create change_data for change Information posted
         change_data = request.POST.copy()
         if change_data['datetime_type'] != 'weekly':
             # Set occasional
@@ -168,6 +174,7 @@ def AdminProgramAdd(request):
         return render(request, 'admin_panel/admin_program_add_edit.html', args)
 
 
+# Display all the information of a program
 @staff_member_required
 def AdminProgramView(request, num):
     try:
@@ -180,6 +187,7 @@ def AdminProgramView(request, num):
         return render(request, 'admin_panel/admin_program_does_not_exist.html')
 
 
+# Program information editing page
 @staff_member_required
 def AdminProgramEdit(request, num):
     if request.method == 'GET':
@@ -204,6 +212,8 @@ def AdminProgramEdit(request, num):
         specified_start_time = None
         specified_end_time = None
         program = models.Program.objects.get(pk=num)
+        # Arranging information related to the date and time of occasional programs
+        # create change_data for change Information posted
         change_data = request.POST.copy()
         if change_data['datetime_type'] != 'weekly':
             # Set occasional
@@ -302,7 +312,7 @@ def AdminProgramEdit(request, num):
             send_logo = False
             send_player_background = False
             # set logo and player_background
-            # logo has sent
+            # Check that the logo has been sent
             try:
                 if change_data['logo'] != '':
                     pass
@@ -315,7 +325,7 @@ def AdminProgramEdit(request, num):
                 logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
                 send_logo = True
             if program.stream_type != 'video':
-                # player_background has sent
+                # Check if the player_background is sent
                 try:
                     if change_data['player_background'] != '':
                         pass
@@ -356,6 +366,7 @@ def AdminProgramEdit(request, num):
         return render(request, 'admin_panel/admin_program_add_edit.html', args)
 
 
+# Duplicating a program
 @staff_member_required
 def AdminProgramDuplicate(request, num):
     try:

@@ -24,6 +24,7 @@ from api import models, serializers
 logger = logging.getLogger(__name__)
 
 
+# Home page of program api
 class ProgramApi(views.APIView):
     def get(self, request):
         queryset = models.Program.objects.filter(status='publish').order_by('-isLive', 'timestamp_earliest')
@@ -38,6 +39,7 @@ def check_on_planning(request):
         for program in queryset:
             # Start Check Time of Stream
             def check_stream_time():
+                # Are we in the time frame of this program?
                 def check_timestamp(start_timestamp, end_timestamp):
                     try:
                         obj_len = len(start_timestamp)
@@ -116,6 +118,7 @@ def check_live(request):
 
     queryset = models.Program.objects.filter(status='publish')
     try:
+        # Check that the stream is active
         for program in queryset:
             if program.is_on_planning:
                 if program.stream_type == 'audio':
@@ -174,12 +177,13 @@ def create_programs_json(request):
                     else:
                         if program.isLive:
                             program.error_count = 1
+                # isLive (blinker on the program) will be turned off if the playback is interrupted and not connected for 40 seconds
                 elif 0 < program.error_count < 5:
                     if program.is_audio_active is True or program.is_video_active is True:
                         program.error_count = 0
                     else:
                         program.error_count = program.error_count + 1
-                else:
+                else:  # if program.error_count = 5
                     program.error_count = 0
                     program.isLive = False
             else:
@@ -231,7 +235,7 @@ def create_programs_json(request):
 # Every 10 Sec
 def send_message_to_channel(request):
     """
-    on start time - program started
+    A message is sent to the channel when we enter the program's time limit, and a message is sent to the channel when audio or video links are activated.
     0 = Program not started
     10 = on start time message sent
     11 = on start time and start program message sent
@@ -268,7 +272,8 @@ def send_message_to_channel(request):
 
         return HttpResponse('Messages have been sent.')
 
-    except:
+    except Exception as e:
+        logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
         return HttpResponseServerError('Internal Server Error')
 
 
@@ -299,6 +304,7 @@ def set_timestamps(request):
                         program.timestamps_end_weekly.append(this_timestamp_end)
                         start_date += datetime.timedelta(days=7)
 
+                # create list for set timestamps
                 days = [program.day_0, program.day_1, program.day_2, program.day_3, program.day_4, program.day_5,
                         program.day_6]
                 start_time_days = [program.start_time_day_0, program.start_time_day_1, program.start_time_day_2,
@@ -309,18 +315,22 @@ def set_timestamps(request):
                                  program.end_time_day_6]
 
                 now_date = datetime.datetime.now().date()
+                # When we are before the start date of the weekly program
                 if now_date <= program.start_date:
                     for i in range(7):
                         if days[i]:
                             append_days_timestamps_func(program.start_date, start_time_days[i], end_time_days[i])
+                # When we are before the end date of the weekly program
                 elif now_date <= program.end_date:
                     now_weekday = datetime.datetime.now().weekday()
                     iso_weekday_nums = [5, 6, 0, 1, 2, 3, 4]
                     for i in range(7):
                         if days[i]:
                             if now_weekday == iso_weekday_nums[i]:
+                                # Set timestamps for the current day of the week that is active
                                 append_days_timestamps_func(now_date, start_time_days[i], end_time_days[i])
                             else:
+                                # Jump to the next day of the week that is active
                                 now_date += datetime.timedelta(days=now_weekday - iso_weekday_nums[i])
                                 append_days_timestamps_func(now_date, start_time_days[i], end_time_days[i])
                                 now_date -= datetime.timedelta(days=now_weekday - iso_weekday_nums[i])
@@ -342,6 +352,7 @@ def set_timestamps(request):
                             # start_time before 12 pm and end_time after 12 pm
                             if this_specified_end_time < this_specified_start_time:
                                 this_specified_date += datetime.timedelta(days=1)
+
                             this_timestamp_end = datetime.datetime(this_specified_date.year, this_specified_date.month,
                                                                    this_specified_date.day,
                                                                    this_specified_end_time.hour,
@@ -369,9 +380,11 @@ def set_timestamps(request):
                 program.timestamps_end_occasional = []
                 timestamps_occasional_func()
             else:
+                # set weekly timestamps
                 program.timestamps_start_weekly = []
                 program.timestamps_end_weekly = []
                 timestamps_weekly_func()
+                # set occasional timestamps
                 program.timestamps_start_occasional = []
                 program.timestamps_end_occasional = []
                 timestamps_occasional_func()
@@ -393,7 +406,7 @@ def set_timestamps(request):
                 except Exception as e:
                     logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
                     set_outdated_program()
-            else:
+            else:  # weekly-occasional
                 try:
                     timestamps_weekly_earliest = min(program.timestamps_start_weekly)
                     timestamps_occasional_earliest = min(program.timestamps_start_occasional)
@@ -402,7 +415,7 @@ def set_timestamps(request):
                     logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
                     if not program.timestamps_start_weekly and not program.timestamps_start_occasional:
                         set_outdated_program()
-                    else:
+                    else:  # If one of the weekly or occasional cycles is left
                         if not program.timestamps_start_weekly:
                             program.timestamp_earliest = min(program.timestamps_start_occasional)
                         else:

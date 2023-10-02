@@ -3,6 +3,7 @@ from rest_framework import serializers
 from api import models
 
 
+# Set api output (json)
 class MenuSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Menu
@@ -14,6 +15,7 @@ class MenuSerializer(serializers.ModelSerializer):
         return obj.page_url
 
 
+# Set api output (json)
 class ProgramSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Program

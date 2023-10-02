@@ -21,11 +21,12 @@ from django.conf import settings
 
 urlpatterns = [
     path('api/', include('api.urls')),
-    path('admin/', include('admin_panel.urls')),
-    path('admin2/', admin.site.urls),
+    path('admin/', include('admin_panel.urls')),  # New admin panel
+    path('admin2/', admin.site.urls),  # Django's default admin panel
     path('accounts/', include('django.contrib.auth.urls')),
 ]
 
+# Personalization of error pages
 handler403 = 'radiorahh.views.status_code_403_forbidden'
 handler404 = 'radiorahh.views.status_code_404_not_found'
 handler500 = 'radiorahh.views.status_code_500_internal_server_error'

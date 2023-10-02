@@ -8,6 +8,11 @@ from api.models import Menu
 
 logger = logging.getLogger(__name__)
 
+'''
+فایل progrms.json با بازکردن لینک create-programs-json ساخته می شود،
+ولی فایل menu.json بعد اجرا شدن تابع سیو مدل منو ساخته خواهد شد (یعنی بعد از ساخت اولیه هر مورد از منو یا بعد ویرایش آن)
+'''
+
 
 @receiver(post_save, sender=Menu)
 def run_after_save_menu_model(sender, instance, created, **kwargs):

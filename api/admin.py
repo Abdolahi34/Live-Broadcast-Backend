@@ -3,6 +3,7 @@ from django.contrib import admin
 from api import models
 
 
+# Customize the menu model in the management panel
 @admin.register(models.Menu)
 class MenuAdmin(admin.ModelAdmin):
     search_fields = ['title', 'page_url', 'creator', 'latest_modifier', 'date_created', 'date_modified']
@@ -13,12 +14,14 @@ class MenuAdmin(admin.ModelAdmin):
     ordering = ['num_order']
 
     def save_model(self, request, obj, form, change):
+        # Set creator and latest modifier when saving each menu item
         if obj.creator_id is None:
             obj.creator = request.user
         obj.latest_modifier = request.user
         super(MenuAdmin, self).save_model(request, obj, form, change)
 
 
+# Customization of the program model in the management panel
 @admin.register(models.Program)
 class ProgramAdmin(admin.ModelAdmin):
     list_filter = ['status', 'datetime_type', 'stream_type', 'audio_platform_type', 'video_platform_type', 'day_0',
@@ -44,9 +47,8 @@ class ProgramAdmin(admin.ModelAdmin):
     ordering = ['-status', 'timestamp_earliest']
 
     def save_model(self, request, obj, form, change):
-        # set Creator and Latest Modifier
+        # Set creator and latest modifier when saving each program item
         if obj.creator_id is None:
             obj.creator = request.user
         obj.latest_modifier = request.user
-        # End set Creator and Latest Modifier
         super(ProgramAdmin, self).save_model(request, obj, form, change)

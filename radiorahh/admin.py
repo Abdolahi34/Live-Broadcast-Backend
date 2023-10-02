@@ -6,6 +6,7 @@ from django.contrib import admin
 admin.site.unregister(get_user_model())
 
 
+# Customizing the admin page in the management panel
 @admin.register(get_user_model())
 class CustomUserAdmin(UserAdmin):
     fieldsets = (

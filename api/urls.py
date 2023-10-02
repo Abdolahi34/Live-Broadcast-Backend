@@ -1,3 +1,8 @@
+'''
+بوسیله کران جاب باید every-10-sec را هر 10 ثانیه و every-day را هر روز یکبار اجرا کرد.
+این 2 url خودشان چند url دیگر را فراخوانی می کنند.
+'''
+
 from django.urls import path
 from api import views
 
