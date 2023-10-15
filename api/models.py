@@ -143,7 +143,8 @@ class Program(models.Model):
                                          editable=False)  # True, if we are between the start and end times of the program
     is_audio_active = models.BooleanField(default=False, editable=False)  # True, if audio_link is active
     is_video_active = models.BooleanField(default=False, editable=False)  # True, if video_link is active
-    isLive = models.BooleanField(default=False, editable=False)  # True, if audio_link or video_link is active
+    isLive = models.BooleanField(default=False, editable=False,
+                                 verbose_name='زنده')  # True, if audio_link or video_link is active
     # Every 10 seconds, a command is executed that adds a number to error_count if the program is interrupted suddenly. error_count can be between 0 and 4.
     error_count = models.PositiveSmallIntegerField(default=0, editable=False)
     """

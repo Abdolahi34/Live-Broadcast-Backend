@@ -36,6 +36,7 @@ class ProgramAdmin(admin.ModelAdmin):
                      'date_created', 'date_modified']
     list_per_page = 20
     list_display = [
+        'isLive',
         'title',
         'slug',
         'date_display',
@@ -45,6 +46,7 @@ class ProgramAdmin(admin.ModelAdmin):
         'latest_modifier',
     ]
     ordering = ['-status', 'timestamp_earliest']
+    list_display_links = ['isLive', 'title']
 
     def save_model(self, request, obj, form, change):
         # Set creator and latest modifier when saving each program item
