@@ -397,30 +397,53 @@ def set_timestamps(request):
 
             if program.datetime_type == 'weekly':
                 try:
-                    program.timestamp_earliest = min(program.timestamps_start_weekly)
+                    # اگر الان در محدوده زمانی برنامه باشیم، برنامه فعلی را هم در timestamp_earliest در نظر میگیرد
+                    if program.is_on_planning:
+                        program.timestamp_earliest = min(program.timestamps_end_weekly)
+                    else:
+                        program.timestamp_earliest = min(program.timestamps_start_weekly)
                 except Exception as e:
                     logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
                     set_outdated_program()
             elif program.datetime_type == 'occasional':
                 try:
-                    program.timestamp_earliest = min(program.timestamps_start_occasional)
+                    # اگر الان در محدوده زمانی برنامه باشیم، برنامه فعلی را هم در timestamp_earliest در نظر میگیرد
+                    if program.is_on_planning:
+                        program.timestamp_earliest = min(program.timestamps_end_occasional)
+                    else:
+                        program.timestamp_earliest = min(program.timestamps_start_occasional)
                 except Exception as e:
                     logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
                     set_outdated_program()
-            else:  # weekly-occasional
+                # weekly-occasional
+            else:
                 try:
-                    timestamps_weekly_earliest = min(program.timestamps_start_weekly)
-                    timestamps_occasional_earliest = min(program.timestamps_start_occasional)
-                    program.timestamp_earliest = min(timestamps_weekly_earliest, timestamps_occasional_earliest)
+                    # اگر الان در محدوده زمانی برنامه باشیم، برنامه فعلی را هم در timestamp_earliest در نظر میگیرد
+                    if program.is_on_planning:
+                        timestamps_weekly_earliest = min(program.timestamps_end_weekly)
+                        timestamps_occasional_earliest = min(program.timestamps_end_occasional)
+                        program.timestamp_earliest = min(timestamps_weekly_earliest, timestamps_occasional_earliest)
+                    else:
+                        timestamps_weekly_earliest = min(program.timestamps_start_weekly)
+                        timestamps_occasional_earliest = min(program.timestamps_start_occasional)
+                        program.timestamp_earliest = min(timestamps_weekly_earliest, timestamps_occasional_earliest)
                 except Exception as e:
                     logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
                     if not program.timestamps_start_weekly and not program.timestamps_start_occasional:
                         set_outdated_program()
-                    else:  # If one of the weekly or occasional cycles is left
-                        if not program.timestamps_start_weekly:
-                            program.timestamp_earliest = min(program.timestamps_start_occasional)
+                    # If one of the weekly or occasional cycles is left
+                    else:
+                        # اگر الان در محدوده زمانی برنامه باشیم، برنامه فعلی را هم در timestamp_earliest در نظر میگیرد
+                        if program.is_on_planning:
+                            if not program.timestamps_end_weekly:
+                                program.timestamp_earliest = min(program.timestamps_end_occasional)
+                            else:
+                                program.timestamp_earliest = min(program.timestamps_end_weekly)
                         else:
-                            program.timestamp_earliest = min(program.timestamps_start_weekly)
+                            if not program.timestamps_start_weekly:
+                                program.timestamp_earliest = min(program.timestamps_start_occasional)
+                            else:
+                                program.timestamp_earliest = min(program.timestamps_start_weekly)
             # End Set_Timestamp_Earliest
             program.save()
         return HttpResponse('Timestamp of Programs checked.')

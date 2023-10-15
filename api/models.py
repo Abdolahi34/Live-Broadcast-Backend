@@ -538,30 +538,53 @@ class Program(models.Model):
 
         if self.datetime_type == 'weekly':
             try:
-                self.timestamp_earliest = min(self.timestamps_start_weekly)
+                # اگر الان در محدوده زمانی برنامه باشیم، برنامه فعلی را هم در timestamp_earliest در نظر میگیرد
+                if self.is_on_planning:
+                    self.timestamp_earliest = min(self.timestamps_end_weekly)
+                else:
+                    self.timestamp_earliest = min(self.timestamps_start_weekly)
             except Exception as e:
                 logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
                 set_outdated_program()
         elif self.datetime_type == 'occasional':
             try:
-                self.timestamp_earliest = min(self.timestamps_start_occasional)
+                # اگر الان در محدوده زمانی برنامه باشیم، برنامه فعلی را هم در timestamp_earliest در نظر میگیرد
+                if self.is_on_planning:
+                    self.timestamp_earliest = min(self.timestamps_end_occasional)
+                else:
+                    self.timestamp_earliest = min(self.timestamps_start_occasional)
             except Exception as e:
                 logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
                 set_outdated_program()
-        else:  # weekly-occasional
+            # weekly-occasional
+        else:
             try:
-                timestamps_weekly_earliest = min(self.timestamps_start_weekly)
-                timestamps_occasional_earliest = min(self.timestamps_start_occasional)
-                self.timestamp_earliest = min(timestamps_weekly_earliest, timestamps_occasional_earliest)
+                # اگر الان در محدوده زمانی برنامه باشیم، برنامه فعلی را هم در timestamp_earliest در نظر میگیرد
+                if self.is_on_planning:
+                    timestamps_weekly_earliest = min(self.timestamps_end_weekly)
+                    timestamps_occasional_earliest = min(self.timestamps_end_occasional)
+                    self.timestamp_earliest = min(timestamps_weekly_earliest, timestamps_occasional_earliest)
+                else:
+                    timestamps_weekly_earliest = min(self.timestamps_start_weekly)
+                    timestamps_occasional_earliest = min(self.timestamps_start_occasional)
+                    self.timestamp_earliest = min(timestamps_weekly_earliest, timestamps_occasional_earliest)
             except Exception as e:
                 logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
                 if not self.timestamps_start_weekly and not self.timestamps_start_occasional:
                     set_outdated_program()
-                else:  # If one of the weekly or occasional cycles is left
-                    if not self.timestamps_start_weekly:
-                        self.timestamp_earliest = min(self.timestamps_start_occasional)
+                # If one of the weekly or occasional cycles is left
+                else:
+                    # اگر الان در محدوده زمانی برنامه باشیم، برنامه فعلی را هم در timestamp_earliest در نظر میگیرد
+                    if self.is_on_planning:
+                        if not self.timestamps_end_weekly:
+                            self.timestamp_earliest = min(self.timestamps_end_occasional)
+                        else:
+                            self.timestamp_earliest = min(self.timestamps_end_weekly)
                     else:
-                        self.timestamp_earliest = min(self.timestamps_start_weekly)
+                        if not self.timestamps_start_weekly:
+                            self.timestamp_earliest = min(self.timestamps_start_occasional)
+                        else:
+                            self.timestamp_earliest = min(self.timestamps_start_weekly)
         # End Set_Timestamp_Earliest
         super(Program, self).save(*args, **kwargs)
 
