@@ -56,7 +56,7 @@ class Program(models.Model):
         ('wowza', 'Wowza'),
     )
 
-    status = models.CharField(max_length=7, choices=status_choices, verbose_name='وضعیت برنامه')
+    status = models.CharField(max_length=7, choices=status_choices, db_index=True, verbose_name='وضعیت برنامه')
     title = models.CharField(max_length=50, help_text='تعداد کاراکتر مجاز 50 عدد می باشد.', verbose_name='عنوان')
     description = models.TextField(max_length=250, help_text='تعداد کاراکتر مجاز 250 عدد می باشد.',
                                    verbose_name='توضیحات')
@@ -64,7 +64,7 @@ class Program(models.Model):
                                        verbose_name='عنوان در صفحه پخش زنده')
     description_in_player = models.TextField(max_length=250, help_text='تعداد کاراکتر مجاز 250 عدد می باشد.',
                                              verbose_name='توضیحات در صفحه پخش زنده')
-    slug = models.SlugField(max_length=70, help_text='تعداد کاراکتر مجاز 70 عدد می باشد.', unique=True, db_index=True,
+    slug = models.SlugField(max_length=70, help_text='تعداد کاراکتر مجاز 70 عدد می باشد.', unique=True,
                             verbose_name='Slug')
     date_display = models.CharField(max_length=30, help_text='تعداد کاراکتر مجاز 30 عدد می باشد.',
                                     verbose_name='تاریخ نمایش داده شده به کاربر')
@@ -382,12 +382,16 @@ class Program(models.Model):
                 logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
 
         # Logo validation
-        logo_ratio = self.logo.height / self.logo.width
-        if logo_ratio != 1:
-            errors[
-                'logo'] = 'نسبت اندازه های لوگو باید 1:1 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
-        if self.logo.size > 256000:
-            errors['logo'] = 'حداکثر اندازه قابل قبول برای لوگو 250Kb است.'
+        try:
+            logo_ratio = self.logo.height / self.logo.width
+            if logo_ratio != 1:
+                errors[
+                    'logo'] = 'نسبت اندازه های لوگو باید 1:1 باشد. برای تغییر سایز می توانید از سایت https://resizeimage.net کمک بگیرید.'
+            if self.logo.size > 256000:
+                errors['logo'] = 'حداکثر اندازه قابل قبول برای لوگو 250Kb است.'
+        except Exception as e:
+            logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
+            errors['logo'] = 'این مقدار نمی تواند خالی باشد.'
 
         # program date and time validation
         if self.datetime_type == 'weekly':
