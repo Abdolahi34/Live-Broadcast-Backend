@@ -427,6 +427,9 @@ class Program(models.Model):
         def timestamps_weekly_func():
             def append_days_timestamps_func(start_date, start_time, end_time):
                 while start_date <= self.end_date:
+                    if datetime.datetime.now().date() == start_date and end_time < datetime.datetime.now().time():
+                        start_date += datetime.timedelta(days=7)
+                        continue
                     this_timestamp_start = datetime.datetime(start_date.year, start_date.month, start_date.day,
                                                              start_time.hour, start_time.minute,
                                                              start_time.second, 0).timestamp()
@@ -456,34 +459,32 @@ class Program(models.Model):
                              self.end_time_day_6]
 
             now_date = datetime.datetime.now().date()
-            # When we are before the start date of the weekly program
-            if now_date <= self.start_date:
-                for i in range(7):
-                    if days[i]:
-                        append_days_timestamps_func(self.start_date, start_time_days[i], end_time_days[i])
-            # When we are before the end date of the weekly program
-            elif now_date <= self.end_date:
-                now_weekday = datetime.datetime.now().weekday()
-                iso_weekday_nums = [5, 6, 0, 1, 2, 3, 4]
-                for i in range(7):
-                    if days[i]:
-                        if now_weekday == iso_weekday_nums[i]:
-                            # Set timestamps for the current day of the week that is active
-                            append_days_timestamps_func(now_date, start_time_days[i], end_time_days[i])
-                        else:
-                            # Jump to the next day of the week that is active
-                            now_date += datetime.timedelta(days=now_weekday - iso_weekday_nums[i])
-                            append_days_timestamps_func(now_date, start_time_days[i], end_time_days[i])
-                            now_date -= datetime.timedelta(days=now_weekday - iso_weekday_nums[i])
+            now_weekday = datetime.datetime.now().isoweekday()
+            iso_weekday_nums = [6, 7, 1, 2, 3, 4, 5]
+            for i in range(7):
+                if days[i]:
+                    if now_weekday == iso_weekday_nums[i]:
+                        # Set timestamps for the current day of the week that is active
+                        append_days_timestamps_func(now_date, start_time_days[i], end_time_days[i])
+                    else:
+                        # Jump to the next day of the week that is active
+                        for j in range(6):
+                            now_date += datetime.timedelta(days=1)
+                            if now_date.isoweekday() == iso_weekday_nums[i]:
+                                append_days_timestamps_func(now_date, start_time_days[i], end_time_days[i])
+                                break
+                        now_date = datetime.datetime.now().date()
 
         def timestamps_occasional_func():
             try:
                 program_len = len(self.specified_date)
                 for i in range(program_len):
                     this_specified_date = self.specified_date[i]
+                    this_specified_start_time = self.specified_start_time[i]
+                    this_specified_end_time = self.specified_end_time[i]
                     if datetime.datetime.now().date() <= this_specified_date:
-                        this_specified_start_time = self.specified_start_time[i]
-                        this_specified_end_time = self.specified_end_time[i]
+                        if datetime.datetime.now().date() == this_specified_date and this_specified_end_time < datetime.datetime.now().time():
+                            continue
                         this_timestamp_start = datetime.datetime(this_specified_date.year,
                                                                  this_specified_date.month,
                                                                  this_specified_date.day,
