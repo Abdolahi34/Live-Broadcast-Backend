@@ -21,13 +21,29 @@
                          alt="Logo"
                          style="height: 150px; width: 150px; margin: 10px">
                     <br>
-                    <img class="img-circle img-bordered-sm" src="{{ program.player_background.url }}"
-                         alt="Player Background"
-                         style="height: 150px; width: 150px; margin: 10px">
+                    {% if program.stream_type == 'audio' %}
+                        <img class="img-circle img-bordered-sm" src="{{ program.player_background.url }}"
+                             alt="Player Background"
+                             style="height: 150px; width: 150px; margin: 10px">
+                    {% endif %}
                 </div>
                 <!-- /.program image -->
                 <div class="col-12 col-md-12 col-lg-8 order-2 order-md-1">
                     <div class="row">
+                        <div class="col-12 col-sm-4">
+                            <div class="info-box bg-light">
+                                <div class="info-box-content">
+                                    <span class="info-box-text text-center text-muted">زنده</span>
+                                    {% if program.isLive %}
+                                        <span class="info-box-number text-center text-muted mb-0"
+                                              style="color: #00ff00 !important;">فعال</span>
+                                    {% else %}
+                                        <span class="info-box-number text-center text-muted mb-0"
+                                              style="color: #ff0000 !important;">غیرفعال</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-12 col-sm-4">
                             <div class="info-box bg-light">
                                 <div class="info-box-content">
@@ -80,14 +96,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-4">
-                            <div class="info-box bg-light">
-                                <div class="info-box-content">
-                                    <span class="info-box-text text-center text-muted">آخرین تغییر دهنده</span>
-                                    <span class="info-box-number text-center text-muted mb-0">{{ program.date_modified }}</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
@@ -104,7 +112,7 @@
                                     <span style="font-weight: bold">توضیحات در صفحه پخش زنده :</span>
                                     <br> {{ program.description_in_player }}
                                 </p>
-                                <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                <p style="border-bottom: 2px solid #ff6200; padding-bottom: 10px">
                                     <span style="font-weight: bold">نوع برگزاری برنامه :</span>
                                     <br>
                                     {% if program.datetime_type == 'weekly' %}
@@ -120,7 +128,7 @@
                                         <span style="font-weight: bold">تاریخ شروع برنامه هفتگی :</span>
                                         <br> {{ program.start_date }}
                                     </p>
-                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                    <p style="border-bottom: 2px dotted #ff6200; padding-bottom: 10px">
                                         <span style="font-weight: bold">تاریخ پایان برنامه هفتگی :</span>
                                         <br> {{ program.end_date }}
                                     </p>
@@ -234,7 +242,7 @@
                                     <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
                                         <span style="font-weight: bold">تاریخ برنامه مناسبتی :</span>
                                         {% for this_program in program.specified_date %}
-                                            <br> {{ this_program }}
+                                            <br> <span dir="rtl">{{ this_program }}</span>
                                         {% endfor %}
                                     </p>
                                     <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
@@ -243,7 +251,7 @@
                                             <br> {{ this_program }}
                                         {% endfor %}
                                     </p>
-                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                    <p style="border-bottom: 2px solid #ff6200; padding-bottom: 10px">
                                         <span style="font-weight: bold">ساعت پایان برنامه مناسبتی :</span>
                                         {% for this_program in program.specified_end_time %}
                                             <br> {{ this_program }}
@@ -254,7 +262,7 @@
                                     <span style="font-weight: bold">لینک لوگو :</span>
                                     <br> {{ program.logo_link }}
                                 </p>
-                                <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                <p style="border-bottom: 2px solid #ff6200; padding-bottom: 10px">
                                     <span style="font-weight: bold">نوع پخش زنده :</span>
                                     <br>
                                     {% if program.stream_type == 'audio' %}
@@ -274,10 +282,18 @@
                                         <span style="font-weight: bold">لینک آمار پخش زنده صوتی :</span>
                                         <br> {{ program.audio_stats_link }}
                                     </p>
-                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
-                                        <span style="font-weight: bold">نوع پلتفرم پخش زنده صوتی :</span>
-                                        <br> {{ program.audio_platform_type }}
-                                    </p>
+                                    {#                                    زمانی که پخش صوتی باشه بین اطلاعات پخش صوتی و بخش بعدی یک خط نارنجی قرار میگیرد#}
+                                    {% if program.stream_type == 'audio' %}
+                                        <p style="border-bottom: 2px solid #ff6200; padding-bottom: 10px">
+                                            <span style="font-weight: bold">نوع پلتفرم پخش زنده صوتی :</span>
+                                            <br> {{ program.audio_platform_type }}
+                                        </p>
+                                    {% else %}
+                                        <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                            <span style="font-weight: bold">نوع پلتفرم پخش زنده صوتی :</span>
+                                            <br> {{ program.audio_platform_type }}
+                                        </p>
+                                    {% endif %}
                                 </div>
                                 <div id="div_video" style="display: none">
                                     <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
@@ -288,9 +304,27 @@
                                         <span style="font-weight: bold">لینک آمار پخش زنده تصویری :</span>
                                         <br> {{ program.video_stats_link }}
                                     </p>
-                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                    <p style="border-bottom: 2px solid #ff6200; padding-bottom: 10px">
                                         <span style="font-weight: bold">نوع پلتفرم پخش زنده تصویری :</span>
                                         <br> {{ program.video_platform_type }}
+                                    </p>
+                                </div>
+                                <div id="build_and_change_specifications">
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">سازنده :</span>
+                                        <br> <span>{{ program.creator }}</span>
+                                    </p>
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">آخرین تغییر دهنده :</span>
+                                        <br> <span>{{ program.latest_modifier }}</span>
+                                    </p>
+                                    <p style="border-bottom: 1px solid #adb5bd; padding-bottom: 10px">
+                                        <span style="font-weight: bold">تاریخ ایجاد :</span>
+                                        <br> <span dir="rtl">{{ program.date_created }}</span>
+                                    </p>
+                                    <p style="padding-bottom: 10px">
+                                        <span style="font-weight: bold">تاریخ آخرین تغییر :</span>
+                                        <br> <span dir="rtl">{{ program.date_modified }}</span>
                                     </p>
                                 </div>
                             </div>
@@ -306,7 +340,7 @@
             </a>
             <a class="btn btn-secondary"
                href="{% url 'admin_panel:admin_panel_program_duplicate' program.pk %}">
-                <i class="fas fa-copy">
+                <i class="fas fa-clone">
                 </i>
                 کپی
             </a>

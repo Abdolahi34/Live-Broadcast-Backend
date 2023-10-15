@@ -42,15 +42,15 @@
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="{% url 'admin_panel:admin_panel' %}" class="nav-link">صفحه اصلی</a>
+                <a href="{% url 'admin_panel:admin_panel' %}" class="nav-link btn btn-block btn-light">صفحه اصلی</a>
             </li>
         </ul>
 
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="{% url 'logout' %}" class="nav-link">خروج</a>
-            </li>
+            <a href="{% url 'logout' %}">
+                <button type="button" class="btn btn-block btn-danger">خروج</button>
+            </a>
             <!-- Navbar Search -->
             {#            <li class="nav-item">#}
             {##}
@@ -96,14 +96,14 @@
         <div class="sidebar">
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                <div class="image">
-                    <a href="/admin2/auth/user/{{ username.pk }}/change/">
+                <a href="/admin2/auth/user/{{ username.pk }}/change/" target="_blank">
+                    <div class="image">
                         <i class="img-circle elevation-2 fa fa-user-circle fa-2x" aria-hidden="true"></i>
-                    </a>
-                </div>
-                <div class="info">
-                    <a href="/admin2/auth/user/{{ username.pk }}/change/" class="d-block">{{ username }}</a>
-                </div>
+                    </div>
+                    <div class="info">
+                        <b class="d-block">{{ username }}</b>
+                    </div>
+                </a>
             </div>
 
             <!-- Sidebar Menu -->

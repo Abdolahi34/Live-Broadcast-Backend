@@ -4,6 +4,9 @@
 
 {% load widget_tweaks %}
 
+{#به دلیل اشتراکات صفحه افزودن برنامه و ویرایش برنامه، یک فایل html برای هردو آنها ساخته شد#}
+{#نقاط اختلافی بین صفحه افزودن برنامه و ویرایش برنامه توسط دستور if و با متغیر های is_add و is_edit جداسازی شده است#}
+
 {% block head %}
     <script src="{% static 'admin_panel/custom/admin_program_add_edit.js' %}"></script>
     <script>
@@ -13,6 +16,7 @@
             alert_text = 'اطلاعات، اشتباه وارد شده است.';
             alert_func(alert_text);
         {% endif %}
+        {#اگر در صفحه افزودن برنامه باشیم#}
         {% if is_add %}
             {% if is_valid %}
                 alert_text = 'برنامه با موفقیت اضافه شد.';
@@ -20,6 +24,7 @@
                 redirect_to(url, alert_text);
             {% endif %}
         {% endif %}
+        {#اگر در صفحه ویرایش برنامه باشیم#}
         {% if is_edit %}
             {% if is_valid %}
                 alert_text = "تغییرات مدنظر شما با موفقیت اعمال شد.";
@@ -1258,6 +1263,8 @@
     <script src="{% static 'admin_panel/plugins/jquery/jquery.min.js' %}"></script>
 
     <script src="{% static 'admin_panel/custom/admin_program_add_edit.js' %}"></script>
+    {#    اگر در هرکدام از فیلد ها از قبل مقدار داشته باشد، درون آن ثبت می شود.#}
+    {#    مقدار بعضی فیلد ها توسط اسکریپ های زیر جایگذاری می شود.#}
     <script>
         let count_specified_date = 1;
         let count_specified_start_time = 1;

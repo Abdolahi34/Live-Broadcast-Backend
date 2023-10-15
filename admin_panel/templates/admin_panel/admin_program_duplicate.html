@@ -11,7 +11,7 @@
         let alert_text;
         let url;
         {% if is_copy is True %}
-            alert_text = 'برنامه مدنظر شما کپی شد.';
+            alert_text = 'برنامه مدنظر شما کپی شد. (slug برنامه جدید = {{ program.slug }})';
             url = "{% url 'admin_panel:admin_panel_program' %}";
             redirect_to(url, alert_text);
         {% endif %}

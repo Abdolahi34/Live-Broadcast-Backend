@@ -26,7 +26,7 @@ def Admin(request):
 # All program page
 @staff_member_required
 def AdminProgram(request):
-    programs = models.Program.objects.order_by('-status', 'timestamp_earliest')
+    programs = models.Program.objects.order_by('-isLive', '-status', 'timestamp_earliest')
     program_id = request.GET.get('delete_id')
     is_exist = True
     is_deleted = False
@@ -377,7 +377,7 @@ def AdminProgramDuplicate(request, num):
         program.slug = program.slug + str(last_program_pk)
         program.save()
         is_copy = True
-        args = {'is_copy': is_copy}
+        args = {'is_copy': is_copy, 'program': program}
         return render(request, 'admin_panel/admin_program_duplicate.html', args)
     except Exception as e:
         logger.error('The try block part encountered an error: %s', str(e), exc_info=True)
